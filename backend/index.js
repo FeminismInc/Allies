@@ -1,6 +1,4 @@
 // Code  for mongoose config in backend
-
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -31,6 +29,5 @@ app.get('/getUsers', async (req, res) => {
   .then(users => res.json(users))
   .catch(err => res.json(err))
 });
-
 
 
