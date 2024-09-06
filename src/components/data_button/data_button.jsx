@@ -18,21 +18,26 @@ export default function Data_Button() {
             <div className="button-container">
                 <button onClick={fetchData}>Display Data</button>
             </div>
-            {/* Table container positioned to the right of the button */}
             <div className="table-container">
                 {users.length > 0 && (
                     <table>
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Value</th>
+                                <th>Username</th>
+                                <th>Handle</th>
+                                <th>Password</th>
+                                <th>Birthday</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
                             {users.map(user => (
                                 <tr key={user._id}>
-                                    <td>{user.name}</td>
-                                    <td>{user.value}</td>
+                                    <td>{user.username}</td>
+                                    <td>{user.handle}</td>
+                                    <td>{user.password}</td>
+                                    <td>{user.birthday}</td>
+                                    
                                 </tr>
                             ))}
                         </tbody>
