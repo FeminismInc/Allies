@@ -3,9 +3,14 @@ const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
   username: String,
-  password: String,
+  joined: Date,
   birthday: Date,
   handle: String,
+  bio: String,
+  blocked : [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users'
+  }]
 
 },{ collection: 'UserDetail' });
 

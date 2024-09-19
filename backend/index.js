@@ -1,10 +1,13 @@
 // Code  for mongoose config in backend
 
+// Code  for mongoose config in backend
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const UserModel = require('./models/Users')
-//const MongoDBClient = require('mongodb').MongoClient;    will probably need for later
+const PostModel = require('./models/Posts');
+const ConversationModel = require('./models/Conversations');
+const MongoDBClient = require('mongodb').MongoClient;
 const serverAPI = require('mongodb').ServerApiVersion;
 
 
@@ -38,7 +41,8 @@ app.use(express.json());
   // the route to get data
   app.get('/getUsers', async (req, res) => {
     try {
-      const users = await UserModel.find();  
+      //const users = await UserModel.find().populate('blocked', 'username');
+      const users = await UserModel.find()
       res.json(users);
     } catch (err) {
       console.error(err);
@@ -46,4 +50,24 @@ app.use(express.json());
     }
   });
 
+  // the route to get data
+  app.get('/getPosts', async (req, res) => {
+    try {
+      const posts = await PostModel.find();  
+      res.json(posts);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error fetching data' });
+    }
+  });
 
+    // the route to get data
+    app.get('/getConvos', async (req, res) => {
+      try {
+        const posts = await ConversationModel.find();  
+        res.json(posts);
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error fetching data' });
+      }
+    });
