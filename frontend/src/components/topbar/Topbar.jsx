@@ -1,5 +1,5 @@
+import SearchBar from "../search_bar/searchBar";
 import "./topbar.css"
-import { Search } from "@material-ui/icons"
 
 export default function Topbar() {
     return (
@@ -9,11 +9,7 @@ export default function Topbar() {
             </div>
             <div className="topbarCenter">
                 <div className="searchbar"></div>
-                <Search className="searchIcon" />
-                <input 
-                    placeholder="Search for friends or anything"
-                     className="searchInput"
-                 />
+                <SearchBar/>
             </div>
         </div>
     )

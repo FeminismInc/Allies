@@ -31,8 +31,8 @@ export default function Data_Button() {
                         <tbody>
                             {users.map(user => (
                                 <tr key={user._id}>
-                                    <td>{user.name}</td>
-                                    <td>{user.value}</td>
+                                    <td>{user.username}</td>
+                                    <td>{user.password}</td>
                                 </tr>
                             ))}
                         </tbody>
