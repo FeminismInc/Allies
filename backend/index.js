@@ -12,6 +12,7 @@ const serverAPI = require('mongodb').ServerApiVersion;
 
 
 const app = express();
+//deleted uri
 // NTS: move uri login credentials to config.env file 
 
 app.use(express.json());
