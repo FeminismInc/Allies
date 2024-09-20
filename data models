@@ -1,0 +1,67 @@
+{ "Accounts": 
+    {
+        "name": "String",
+        "handle": "String",
+        "password": "String",
+        "birthday": "Date",
+        "username": "String",
+        "joined": "Date",
+        "bio": "String",
+        "posts": [
+            {"Posts"}
+        ],
+        "tagged": [
+            {"Media"}
+        ],
+        "followers":[
+                {"Accounts"}
+        ],
+        "following":[
+                {"Accounts"}
+        ],
+        "blocked":[
+                {"Accounts"}
+        ],
+        "Awards":[
+            {"Accounts"}
+        ]
+    }
+}
+
+{ "Posts":
+    {
+        "datetime": "Datetime",
+        "media": [
+            {"media"}
+        ],
+        "description": "String",
+        "comments": [
+            {"comment"}
+        ],
+        "likes":[
+            {"Accounts"}
+        ],
+        "dislikes":[
+            {"Accounts"}
+        ]}}
+{"Comment": {
+    "poster": "Account",
+    "text": "String",
+    "replies": [
+            {"comment"}
+        ],
+        "likes":[
+            {"Accounts"}
+        ],
+        "dislikes":[
+            {"Accounts"}
+        ]}}
+
+{"Media": {
+    "url": "String",
+    "tags": [
+        {"Accounts"}
+    ],
+}
+}
+

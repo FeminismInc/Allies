@@ -1,43 +1,39 @@
 /* data_button.css */
-
-.button-container {
-    position: fixed;
-    top: 30%;
-    left: 15%;
-    transform: translate(-50%, -50%);
+/* Container for the buttons and tables */
+.container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100px;
-    font: Roboto;
-
+    flex-direction: column; /* vertical stack */
+    align-items: center; /* Center alignment  */
+    gap: 10px; 
+    margin-top: 50px;
 }
+
+
 button {
     background-color: rgba(234, 221, 255, 1);
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     border: none;
-    padding: 40px 70px;
-    font-size: 25px; 
+    padding: 10px 40px;
+    font-size: 25px;
     cursor: pointer;
     border-radius: 16px;
+    margin-bottom: 20px; 
 }
 
 button:hover {
     background-color: rgb(144, 102, 162);
 }
+
 /* Style for the table container */
 .table-container {
-    position: absolute;
-    top: 30%;
-    left: 25%; /* Position the table to the right of the button */
-    transform: translateY(-50%);
-    width: 50%; /* Adjust width as needed */
+    width: 90%; 
+    margin-bottom: 40px; 
 }
 
 table {
-    width: 100%;
+    width: 80%;
     border-collapse: collapse;
-    margin-top: 20px; /* Add space between the button and table */
+    margin-top: 20px;
 }
 
 table, th, td {
@@ -52,4 +48,3 @@ th, td {
 th {
     background-color: #f2f2f2;
 }
-
