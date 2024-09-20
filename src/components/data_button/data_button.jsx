@@ -138,10 +138,28 @@ export default function Data_Button() {
                                     <td>{user.blocked}</td>
                                     <td>{user.followers}</td>
                                     <td>{user.following}</td>
-                                    <td>{user.posts}</td>
+                                    <td>
+                                        <ul>
+                                            {user.tagged_media.map(tagged_media => (
+                                                <li key={tagged_media}>{tagged_media}</li>
+                                            ))}
+                                        </ul>
+                                    </td>
                                     <td>{user.pronouns}</td>
-                                    <td>{user.tagged_media}</td>
-                                    <td>{user.conversations}</td>
+                                    <td>
+                                        <ul>
+                                            {user.posts.map(post => (
+                                                <li key={post}>{post}</li>
+                                            ))}
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            {user.conversations.map(conversations => (
+                                                <li key={conversations}>{conversations}</li>
+                                            ))}
+                                        </ul>
+                                    </td>
                                     <td>{user.public_boolean ? 'True': 'False'}</td>
                                     <td>{user.profile_picture}</td>
                                 </tr>
@@ -176,11 +194,32 @@ export default function Data_Button() {
                                     <td>{post.text}</td>
                                     <td>{post.author}</td>
                                     <td>{post.datetime}</td>
-                                    <td>{post.comments}</td>
+                                    <td>
+                                        <ul>
+                                            {post.comments.map(comment => (
+                                                <li key={comment}>{comment}</li>
+                                            ))}
+                                        </ul>
+                                    </td>
+
                                     <td>{post.dislikes}</td>
-                                    <td>{post.media}</td>
+
+                                    <td>
+                                        <ul>
+                                            {post.media.map(media => (
+                                                <li key={media}>{media}</li>
+                                            ))}
+                                        </ul>
+                                    </td>
+
                                     <td>{post.likes}</td>
-                                    <td>{post.hashtags}</td>
+                                    <td>
+                                        <ul>
+                                            {post.hashtags.map((hashtag, index) => (
+                                                <li key={index}>{hashtag}</li>
+                                            ))}
+                                        </ul>
+                                    </td>
                                     <td>{post.repost}</td>
                                 </tr>
                             ))}
@@ -210,7 +249,13 @@ export default function Data_Button() {
                                             ))}
                                         </ul>
                                     </td>
-                                    <td>{convo.messages}</td>
+                                    <td>
+                                        <ul>
+                                            {convo.messages.map(message => (
+                                                <li key={message._id}>{message}</li>
+                                            ))}
+                                        </ul>
+                                    </td>
                                     
                                 </tr>
                             ))}
