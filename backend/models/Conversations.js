@@ -8,7 +8,6 @@ const ConversationSchema = new mongoose.Schema({
   messages: [{
     type: mongoose.Schema.Types.ObjectId,
   }],
-  dateTime: Date,
 },{ collection: 'Conversation' });
 
 const ConversationModel = mongoose.model('convos', ConversationSchema);

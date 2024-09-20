@@ -2,18 +2,40 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
+  
+  birthday: Date,
   username: String,
   joined: Date,
-  birthday: Date,
   handle: String,
   bio: String,
-  blocked : [{
+  blocked: { 
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'users'
-  }]
+ },
+  pronouns: String,
+  followers: { 
+    type: mongoose.Schema.Types.ObjectId,
+ },
+  following: { 
+    type: mongoose.Schema.Types.ObjectId,
+},
+  posts: [{ 
+    type: mongoose.Schema.Types.ObjectId,
+ }],
+  tagged_media: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+ }],
+  conversations: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+ }],
+  public_boolean: Boolean,
+  profile_picture: { 
+    type: mongoose.Schema.Types.ObjectId, 
+     } 
+
 
 },{ collection: 'UserDetail' });
 
 const UserModel = mongoose.model('users', UserSchema);
 
 module.exports = UserModel;
+

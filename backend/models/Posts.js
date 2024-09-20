@@ -2,16 +2,30 @@
 const mongoose = require('mongoose');
 
 const PostSchema = new mongoose.Schema({
-  textBox: String,
-  creatorAccountId: String,
-  dateTime: Date,
-  media: String,
+  text: String,
+  author: String,
+  comments: [{
+    type: mongoose.SchemaTypes.ObjectId
+  }],
+  datetime: Date,
+  dislikes: [{
+    type: mongoose.SchemaTypes.ObjectId
+  }],
+  media: [{
+    type: mongoose.SchemaTypes.ObjectId
+  }],
   likes: [{
     type: mongoose.SchemaTypes.ObjectId
   }],
-
+  hashtags: [{
+    type: String
+  }],
+  repost: [{
+    type: mongoose.SchemaTypes.ObjectId
+  }]
 },{ collection: 'Posts' });
 
 const PostModel = mongoose.model('posts', PostSchema);
 
 module.exports = PostModel;
+
