@@ -203,13 +203,13 @@ app.get('/getDislikes', async (req, res) => {
 
 
 const commentsSchema = new mongoose.Schema({
-  author: { 
+  author: {
     type: mongoose.Schema.Types.ObjectId,  // Reference to the author
   },
-  likes: { 
+  likes: {
     type: mongoose.Schema.Types.ObjectId,  // Reference to likes
   },
-  dislikes: { 
+  dislikes: {
     type: mongoose.Schema.Types.ObjectId,  // Reference to dislikes
   },
   replies: [{
@@ -222,7 +222,7 @@ const CommentModel = mongoose.model('comments', commentsSchema);
 
 app.get('/getComments', async (req, res) => {
   try {
-    const comments = await CommentModel.find();  
+    const comments = await CommentModel.find();
     console.log(comments);  // Logs the fetched comments to the console
     res.json(comments);  // Sends the comments data as a JSON response
   } catch (err) {
@@ -234,9 +234,9 @@ app.get('/getComments', async (req, res) => {
 
 // Define the Blocked schema
 const blockedSchema = new mongoose.Schema({
-  blocked_accounts: {
+  blocked_accounts: [{
     type: mongoose.Schema.Types.ObjectId,  // Assuming blocked_accounts refers to ObjectId
-  },
+  }],
 }, { collection: 'Blocked' });
 
 const BlockedModel = mongoose.model('blocked', blockedSchema);
@@ -252,4 +252,7 @@ app.get('/getBlocked', async (req, res) => {
     res.status(500).json({ message: 'Error fetching blocked accounts data' });
   }
 });
+
+
+
 

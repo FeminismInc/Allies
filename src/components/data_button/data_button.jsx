@@ -439,7 +439,17 @@ export default function Data_Button() {
                         <tbody>
                             {blockedAccounts.map(account => (
                                 <tr key={account._id}>
-                                    <td>{account.blocked_accounts}</td>  
+                                    <td>
+                                        {account.blocked_accounts && account.blocked_accounts.length > 0 ? (
+                                            <ul>
+                                                {account.blocked_accounts.map(blckd_acc => (
+                                                    <li key={blckd_acc}>{blckd_acc}</li>  
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            "No blocked accounts"
+                                        )}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
