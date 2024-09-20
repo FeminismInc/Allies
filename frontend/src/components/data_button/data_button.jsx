@@ -4,9 +4,12 @@ import axios from 'axios';
 import React, { useState } from "react";
 
 export default function Data_Button() {
+
+    const uri = 'http://localhost:5050'
+
     const [users, setUsers] = useState([]);
     const fetchData = () => {
-        axios.get('http://localhost:5050/getUsers')
+        axios.get(`${uri}/getUsers`)
             .then(response => {
                 console.log(response.data);
                 setUsers(response.data);
@@ -15,7 +18,7 @@ export default function Data_Button() {
     };
     const [posts, setPosts] = useState([]);
     const fetchPosts = () => {
-        axios.get('http://localhost:5050/getPosts')
+        axios.get(`${uri}/getPosts`)
             .then(response => {
                 setPosts(response.data);
             })
@@ -23,7 +26,7 @@ export default function Data_Button() {
     };
     const [convos, setConvos] = useState([]);
     const fetchConvos = () => {
-        axios.get('http://localhost:5050/getConvos')
+        axios.get(`${uri}/getConvos`)
             .then(response => {
                 setConvos(response.data);
             })
@@ -31,7 +34,7 @@ export default function Data_Button() {
     };
     const [messages, setMessages] = useState([]);
     const fetchMessages = () => {
-        axios.get('http://localhost:5050/getMessages')
+        axios.get(`${uri}/getMessages`)
             .then(response => {
                 setMessages(response.data);
             })
@@ -39,7 +42,7 @@ export default function Data_Button() {
     };
     const [likes, setLikes] = useState([]);
     const fetchLikes = () => {
-        axios.get('http://localhost:5050/getLikes')  // Call the new getLikes API endpoint
+        axios.get(`${uri}/getLikes`)  // Call the new getLikes API endpoint
             .then(response => {
                 console.log(response.data);  // Log the likes data
                 setLikes(response.data);
@@ -48,7 +51,7 @@ export default function Data_Button() {
     };
     const [media, setMedia] = useState([]);
     const fetchMedia = () => {
-        axios.get('http://localhost:5050/getMedia')
+        axios.get(`${uri}/getMedia`)
             .then(response => {
                 console.log(response.data);  // Log the fetched media data
                 setMedia(response.data);     // Store the media data in state
@@ -57,7 +60,7 @@ export default function Data_Button() {
     };
     const [following, setFollowing] = useState([]);
     const fetchFollowing = () => {
-        axios.get('http://localhost:5050/getFollowing')
+        axios.get(`${uri}/getFollowing`)
             .then(response => {
                 console.log(response.data);  // Log the fetched media data
                 setFollowing(response.data);     // Store the media data in state
@@ -66,7 +69,7 @@ export default function Data_Button() {
     };
     const [followers, setFollowers] = useState([]);
     const fetchFollowers = () => {
-        axios.get('http://localhost:5050/getFollowers')
+        axios.get(`${uri}/getFollowers`)
             .then(response => {
                 console.log(response.data);  // Log the fetched media data
                 setFollowers(response.data);     // Store the media data in state
@@ -75,7 +78,7 @@ export default function Data_Button() {
     };
     const [dislikes, setDislikes] = useState([]);
     const fetchDislikes = () => {
-        axios.get('http://localhost:5050/getDislikes')  // Call the new getLikes API endpoint
+        axios.get(`${uri}/getDislike`)  // Call the new getLikes API endpoint
             .then(response => {
                 console.log(response.data);  // Log the likes data
                 setDislikes(response.data);
@@ -84,7 +87,7 @@ export default function Data_Button() {
     };
     const [comments, setComments] = useState([]);
     const fetchComments = () => {
-        axios.get('http://localhost:5050/getComments')  // Assuming you have an endpoint to get comments
+        axios.get(`${uri}/getComment`)  // Assuming you have an endpoint to get comments
             .then(response => {
                 setComments(response.data);
             })
@@ -92,7 +95,7 @@ export default function Data_Button() {
     };
     const [blockedAccounts, setBlockedAccounts] = useState([]);
     const fetchBlockedAccounts = () => {
-        axios.get('http://localhost:5050/getBlocked')
+        axios.get(`${uri}/getBlocked`)
             .then(response => {
                 console.log(response.data);
                 setBlockedAccounts(response.data);  // Store the blocked accounts in state
