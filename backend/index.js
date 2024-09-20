@@ -235,7 +235,8 @@ app.get('/getComments', async (req, res) => {
 // Define the Blocked schema
 const blockedSchema = new mongoose.Schema({
   blocked_accounts: [{
-    type: mongoose.Schema.Types.ObjectId,  // Assuming blocked_accounts refers to ObjectId
+    type: mongoose.Schema.Types.ObjectId,  
+    ref: 'users'
   }],
 }, { collection: 'Blocked' });
 
@@ -244,7 +245,8 @@ const BlockedModel = mongoose.model('blocked', blockedSchema);
 // Route to get Blocked data
 app.get('/getBlocked', async (req, res) => {
   try {
-    const blockedAccounts = await BlockedModel.find();  // Fetch all blocked accounts
+    //const blockedAccounts = await BlockedModel.find().populate('blocked_accounts','username');  // Fetch all blocked accounts
+    const blockedAccounts = await BlockedModel.find();
     console.log(blockedAccounts);  // Log the data to the console
     res.json(blockedAccounts);  // Send the blocked accounts data in the response
   } catch (err) {
@@ -254,5 +256,37 @@ app.get('/getBlocked', async (req, res) => {
 });
 
 
+// Function to fetch all users and print the blocked usernames
+async function printAllBlockedUsernames() {
+  try {
+    // Find all users and populate the 'blocked' field with usernames
+    const users = await UserModel.find().populate({
+      path: 'blocked',  // This refers to the blocked field in the Users table
+      model: BlockedModel,  // This populates the blocked field with the Blocked document
+      populate: {           // Now, populate 'blocked_accounts' field inside Blocked table
+        path: 'blocked_accounts',  // blocked_accounts contains ObjectIds pointing to Users
+        model: UserModel,          // Populate these ObjectIds to get the actual user data
+        select: 'username'         // We only want the 'username' field
+      }
+    });
 
+    users.forEach(user => {
+      console.log(`Blocked usernames for ${user.username}:`);
+      
+      if (user.blocked && user.blocked.blocked_accounts.length > 0) {
+        user.blocked.blocked_accounts.forEach(blockedUser => {
+          console.log(blockedUser.username);  // Print each blocked user's username
+        });
+      } else {
+        console.log('No blocked users');
+      }
+
+    });
+  } catch (err) {
+    console.error('Error fetching users:', err);
+  }
+}
+
+// Example usage
+printAllBlockedUsernames();
 

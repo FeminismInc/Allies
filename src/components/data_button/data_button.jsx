@@ -109,6 +109,7 @@ export default function Data_Button() {
                     <table>
                         <thead>
                             <tr>
+                                <th>User ID</th>
                                 <th>Username</th>
                                 <th>Handle</th>
                                 <th>Joined</th>
@@ -128,6 +129,7 @@ export default function Data_Button() {
                         <tbody>
                             {users.map(user => (
                                 <tr key={user._id}>
+                                    <td>{user._id}</td>
                                     <td>{user.username}</td>
                                     <td>{user.handle}</td>
                                     <td>{user.joined}</td>
@@ -154,6 +156,7 @@ export default function Data_Button() {
                     <table>
                         <thead>
                             <tr>
+                                <th>Post ID</th>
                                 <th>Text</th>
                                 <th>Author</th>
                                 <th>DateTime</th>
@@ -169,6 +172,7 @@ export default function Data_Button() {
                         <tbody>
                             {posts.map(post => (
                                 <tr key={post._id}>
+                                    <td>{post._id}</td>
                                     <td>{post.text}</td>
                                     <td>{post.author}</td>
                                     <td>{post.datetime}</td>
@@ -190,6 +194,7 @@ export default function Data_Button() {
                     <table>
                         <thead>
                             <tr>
+                                <th>Conversation ID</th>
                                 <th>Users</th>
                                 <th>Messages</th>
                             </tr>
@@ -197,6 +202,7 @@ export default function Data_Button() {
                         <tbody>
                             {convos.map(convo => (
                                 <tr key={convo._id}>
+                                    <td>{convo._id}</td>
                                     <td>
                                         <ul>
                                             {convo.users.map(user => (
@@ -218,6 +224,7 @@ export default function Data_Button() {
                     <table>
                         <thead>
                             <tr>
+                                <th>Message ID</th>    
                                 <th>Sender</th>
                                 <th>Date</th>
                                 <th>Message Content</th>
@@ -226,6 +233,7 @@ export default function Data_Button() {
                         <tbody>
                             {messages.map(message => (
                                 <tr key={message._id}>
+                                    <td>{message._id}</td>
                                     <td>{message.sender}</td>
                                     <td>{message.datetime}</td>
                                     <td>{message.message_content}</td>
@@ -241,12 +249,14 @@ export default function Data_Button() {
                     <table>
                         <thead>
                             <tr>
+                            <th>Like ID</th>
                                 <th>Accounts That Liked </th>
                             </tr>
                         </thead>
                         <tbody>
                             {likes.map(like => (
                                 <tr key={like._id}>
+                                    <td>{like._id}</td>
                                     <td>
                                         {like.accounts_that_liked && like.accounts_that_liked.length > 0 ? (
                                             <ul>
@@ -270,6 +280,7 @@ export default function Data_Button() {
                     <table>
                         <thead>
                             <tr>
+                            <th>Media ID</th>
                                 <th>URL</th>
                                 <th>Tagged Accounts</th>
                             </tr>
@@ -277,6 +288,7 @@ export default function Data_Button() {
                         <tbody>
                             {media.map(med => (
                                 <tr key={med._id}>
+                                    <td>{med._id}</td>
                                     <td>{med.url}</td>
                                     <td>
                                         {med.tagged_accounts && med.tagged_accounts.length > 0 ? (
@@ -301,6 +313,7 @@ export default function Data_Button() {
                     <table>
                         <thead>
                             <tr>
+                            <th>Following ID</th>
                                 <th>Accounts Followed</th>
                                 
                             </tr>
@@ -308,6 +321,7 @@ export default function Data_Button() {
                         <tbody>
                             {following.map(follow => (
                                 <tr key={follow._id}>
+                                    <td>{follow._id}</td>
 
                                     <td>
                                         {follow.accounts_followed && follow.accounts_followed.length > 0 ? (
@@ -332,6 +346,7 @@ export default function Data_Button() {
                     <table>
                         <thead>
                             <tr>
+                            <th>Followers ID</th>
                                 <th>Followers</th>
                                 
                             </tr>
@@ -339,6 +354,7 @@ export default function Data_Button() {
                         <tbody>
                             {followers.map(follow => (
                                 <tr key={follow._id}>
+                                    <td>{follow._id}</td>
 
                                     <td>
                                         {follow.follower_accounts && follow.follower_accounts.length > 0 ? (
@@ -363,12 +379,14 @@ export default function Data_Button() {
                     <table>
                         <thead>
                             <tr>
+                            <th>Dislikes ID</th>
                                 <th>Accounts That Disliked (ObjectId)</th>
                             </tr>
                         </thead>
                         <tbody>
                             {dislikes.map(dislike => (
                                 <tr key={dislike._id}>
+                                    <td>{dislike._id}</td>
                                     <td>
                                         {dislike.accounts_that_disliked && dislike.accounts_that_disliked.length > 0 ? (
                                             <ul>
@@ -392,6 +410,7 @@ export default function Data_Button() {
                     <table>
                         <thead>
                             <tr>
+                            <th>Comment ID</th>
                                 <th>Text</th>
                                 <th>Author</th>
                                 <th>Likes</th>
@@ -402,6 +421,7 @@ export default function Data_Button() {
                         <tbody>
                             {comments.map(comment => (
                                 <tr key={comment._id}>
+                                    <td>{comment._id}</td>
                                     <td>{comment.text}</td>
                                     <td>{comment.author}</td>
                                     <td>{comment.likes}</td>
@@ -433,12 +453,14 @@ export default function Data_Button() {
                     <table>
                         <thead>
                             <tr>
-                                <th>Blocked Account ID</th>  
+                            <th>Blocked ID</th>
+                                <th>Blocked Accounts</th>  
                             </tr>
                         </thead>
                         <tbody>
                             {blockedAccounts.map(account => (
                                 <tr key={account._id}>
+                                    <td>{account._id}</td>
                                     <td>
                                         {account.blocked_accounts && account.blocked_accounts.length > 0 ? (
                                             <ul>
@@ -450,6 +472,19 @@ export default function Data_Button() {
                                             "No blocked accounts"
                                         )}
                                     </td>
+                                   {/*  <td>
+                                    {account.blocked_accounts && account.blocked_accounts.length > 0 ? (
+                                            <ul>
+                                                {account.blocked_accounts.map(blocked_user => (
+                                                    <li key={blocked_user._id}>{blocked_user.username}</li>  
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            "No blocked Users"
+                                        )}    
+                                    </td> */}
+                                    
+                                  
                                 </tr>
                             ))}
                         </tbody>
@@ -457,7 +492,6 @@ export default function Data_Button() {
                 )}
             </div>
             
-
 
         </div>
     );
