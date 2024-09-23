@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(cors());
 
 
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.MONGO_URI || "http://localhost:5050", {
   serverApi: serverAPI.v1 //  MongoDB Server API
 }).then(() => {
   console.log("Connected to MongoDB!!");
