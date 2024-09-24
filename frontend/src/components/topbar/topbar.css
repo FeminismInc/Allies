@@ -1,0 +1,18 @@
+.topbarContainer{
+    border-radius: 30px;
+    background-color: rgba(234, 221, 255, 1);
+    width: 100;
+    letter-spacing: 0.7px;
+    padding: 20px 70px 56px;
+    font: 500 16px/24px Roboto;
+    display: felx;
+    justify-content: center;
+    align-items: center;
+}
+.logo{
+
+    font-size: 45px;
+    color: rgb(248, 251, 255);
+    font-weight: bold;
+
+}

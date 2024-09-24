@@ -1,0 +1,50 @@
+/* data_button.css */
+/* Container for the buttons and tables */
+.container {
+    display: flex;
+    flex-direction: column; /* vertical stack */
+    align-items: center; /* Center alignment  */
+    gap: 10px; 
+    margin-top: 50px;
+}
+
+
+button {
+    background-color: rgba(234, 221, 255, 1);
+    color: rgb(255, 255, 255);
+    border: none;
+    padding: 10px 40px;
+    font-size: 25px;
+    cursor: pointer;
+    border-radius: 16px;
+    margin-bottom: 20px; 
+}
+
+button:hover {
+    background-color: rgb(144, 102, 162);
+}
+
+/* Style for the table container */
+.table-container {
+    width: 90%; 
+    margin-bottom: 40px; 
+}
+
+table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}

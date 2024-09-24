@@ -1,0 +1,26 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5050:5050"  # Assuming your backend runs on port 5000
+    volumes:
+      - logs:/app/logs
+      - ./backend:/app  # Mount your backend code for live development
+      - /app/node_modules  # Avoid conflicts between local and container's node_modules
+    environment:
+      MONGO_URI: mongodb+srv://kenhun2020:lhOAvQxVo7yJskRE@cluster0.ebktn.mongodb.net/Allies?retryWrites=true&w=majority&appName=Cluster0  # Connection string to the MongoDB service
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"  # Assuming your frontend runs on port 3000
+    volumes:
+      - ./frontend/src:/app/src  # Mount your frontend code for live development
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend  # Ensure backend starts before frontend
+
+volumes:
+  data:  # Persist MongoDB data
+  logs:  # Persist backend logs
