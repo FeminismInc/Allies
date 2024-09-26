@@ -11,7 +11,7 @@ const { Db } = require('mongodb');
 const MongoDBClient = require('mongodb').MongoClient;
 const serverAPI = require('mongodb').ServerApiVersion;
 
-const uri = "mongodb+srv://kenhun2020:lhOAvQxVo7yJskRE@cluster0.ebktn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = "";
 const app = express();
 //deleted uri
 // NTS: move uri login credentials to config.env file 
