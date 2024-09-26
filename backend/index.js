@@ -7,10 +7,11 @@ const cors = require('cors');
 const UserModel = require('./models/Users')
 const PostModel = require('./models/Posts');
 const ConversationModel = require('./models/Conversations');
+const { Db } = require('mongodb');
 const MongoDBClient = require('mongodb').MongoClient;
 const serverAPI = require('mongodb').ServerApiVersion;
 
-
+const uri = "mongodb+srv://kenhun2020:lhOAvQxVo7yJskRE@cluster0.ebktn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 const app = express();
 //deleted uri
 // NTS: move uri login credentials to config.env file 
@@ -28,7 +29,7 @@ app.use(express.json());
 app.use(cors());
 
 
-mongoose.connect(process.env.MONGO_URI || "http://localhost:5050", {
+mongoose.connect(uri, { //process.env.MONGO_URI
   serverApi: serverAPI.v1 //  MongoDB Server API
 }).then(() => {
   console.log("Connected to MongoDB!!");
@@ -253,6 +254,51 @@ app.get('/getBlocked', async (req, res) => {
     res.status(500).json({ message: 'Error fetching blocked accounts data' });
   }
 });
+
+// submit a new user? (WIP)
+app.post('/form', async (req, res)=>{
+  const{birthday, username, email, password, handle, pronouns}=req.body
+  const client = new MongoDBClient(uri)
+  const database = client.db("Allies")
+  const UserDetail = database.collection("UserDetail")
+
+  const doc ={
+    birthday:birthday,
+    username:username,
+    email:email,
+    password:password,
+    handle:handle,
+    pronouns:pronouns,
+    bio:"",
+    public_boolean:true,
+    joined: new Date(year, month, day), // needs testing
+    posts: [],
+    tagged_media: [],
+    conversations: []
+    // add object references to followers, following, and profile pic later
+  }
+
+  //need to add a try to catch repeat profiles
+  await UserDetail.insertOne(doc)
+      console.log(`A document was inserted with the _id: ${result.insertedId}`);
+      await client.close();
+  // try{
+  //   const check=await UserModel.findOne({handle:handle})
+  //   if(check){
+  //     res.json("exist")
+  //     await client.close();
+  //   }
+  //   else{
+  //     res.json("notexist")
+  //     await UserDetail.insertOne(data)
+  //     console.log(`A document was inserted with the _id: ${result.insertedId}`);
+  //     await client.close();
+  //   }
+  // }
+  // catch(e){
+  //   res.json("notexist")
+  // }
+})
 
 
 
