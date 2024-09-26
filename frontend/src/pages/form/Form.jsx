@@ -23,20 +23,14 @@ export default function ProfileForm() {
     };
 
     //when pressing submit button take all input data for processing
-    async function submit(e) {
+    const submit = async (e) => {
         console.log(username)
         e.preventDefault();
         try {
-            await axios.post(`${uri}/form`, { //send data to index.js to check
+            const response = await axios.post(`${uri}/form`, { //send data to index.js to check
                 username, email, password, handle, pronouns, birthdate
             })
-            .then(res=> {
-                if (res.data === "exist") {
-                    alert("User already exists")
-                } else if(res.data === "notexist") { //if new account created open to profile
-                    navigate('/profile');
-                }
-            })
+            navigate('/home');
         }
         catch(e) {
             console.log('test')
@@ -77,7 +71,7 @@ export default function ProfileForm() {
                     <input type="date" value={birthdate} onChange={(e) => { setBirthdate(e.target.value) }} id="birthdate" name="birthdate"/>
                 </div>
                 <p className='termsOfService'>By creating an account, you agree to the Terms of Use and Privacy Policy. </p>
-                <Button title = "Submit" onClick={submit} color="#bfa1f0"></Button>
+                <Button title = "Submit" onPress={submit} color="#bfa1f0"/>
             </form>
         </div>
       );

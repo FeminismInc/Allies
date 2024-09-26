@@ -11,7 +11,7 @@ const { Db } = require('mongodb');
 const MongoDBClient = require('mongodb').MongoClient;
 const serverAPI = require('mongodb').ServerApiVersion;
 
-const uri = "";
+const uri = "mongodb+srv://kenhun2020:lhOAvQxVo7yJskRE@cluster0.ebktn.mongodb.net/Allies?retryWrites=true&w=majority&appName=Cluster0";
 const app = express();
 //deleted uri
 // NTS: move uri login credentials to config.env file 
@@ -26,7 +26,11 @@ app.use(express.json());
 // }).then(() => console.log("Connected to MongoDB!!!!!"))
 //   .catch(err => console.log("Failed to connect to MongoDB", err));
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',  // Allow all origins
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true  // If you need to send cookies with requests
+}));
 
 
 mongoose.connect(uri, { //process.env.MONGO_URI
@@ -257,31 +261,32 @@ app.get('/getBlocked', async (req, res) => {
 
 // submit a new user? (WIP)
 app.post('/form', async (req, res)=>{
-  const{birthday, username, email, password, handle, pronouns}=req.body
-  const client = new MongoDBClient(uri)
-  const database = client.db("Allies")
-  const UserDetail = database.collection("UserDetail")
 
-  const doc ={
-    birthday:birthday,
-    username:username,
-    email:email,
-    password:password,
-    handle:handle,
-    pronouns:pronouns,
-    bio:"",
-    public_boolean:true,
-    joined: new Date(year, month, day), // needs testing
+  const{birthday, username, email, password, handle, pronouns}=req.body
+
+try {
+  const newUser = new UserModel({
+    birthday,
+    username,
+    email,
+    password,  // Remember to hash the password in production
+    handle,
+    pronouns,
+    bio: "",
+    public_boolean: true,
+    joined: new Date(), // Current date for joined field
     posts: [],
     tagged_media: [],
     conversations: []
-    // add object references to followers, following, and profile pic later
-  }
+  });
 
   //need to add a try to catch repeat profiles
-  await UserDetail.insertOne(doc)
-      console.log(`A document was inserted with the _id: ${result.insertedId}`);
-      await client.close();
+ await newUser.save();
+ res.status(200).json({ message: "User created successfully" });
+}catch (err) {
+  console.error("Error creating user:", err);
+  res.status(500).json({ message: "Error creating user" });
+}
   // try{
   //   const check=await UserModel.findOne({handle:handle})
   //   if(check){
@@ -298,7 +303,7 @@ app.post('/form', async (req, res)=>{
   // catch(e){
   //   res.json("notexist")
   // }
-})
+});
 
 
 
