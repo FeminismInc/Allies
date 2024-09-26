@@ -27,14 +27,40 @@ export default function ProfileForm() {
         console.log(username)
         e.preventDefault();
         try {
-            const response = await axios.post(`${uri}/form`, { //send data to index.js to check
-                username, email, password, handle, pronouns, birthdate
+            const following = await axios.post(`${uri}/newFollowing`, { //create new following object
+                username
             })
-            navigate('/home');
+            try {
+                const followers = await axios.post(`${uri}/newFollowers`, { //send data to index.js to check
+                    username
+                })
+                try {
+                    const blocked = await axios.post(`${uri}/newBlocked`, { //create new blocked
+                        username
+                    })
+                    try {
+                        const response = await axios.post(`${uri}/form`, { //send data to index.js to check
+                            username, email, password, handle, pronouns, birthdate, blocked, following, followers
+                        })
+                        //console.log(response)
+                        navigate('/home');
+                    }
+                    catch(e) {
+                        console.log('test1')
+                    }
+                    //console.log(response)
+                }
+                catch(e) {
+                    console.log('test2')
+                }
+            } catch(e) {
+                console.log('test3')
+            }
         }
         catch(e) {
-            console.log('test')
+            console.log('test4')
         }
+        
     }
 
     return (

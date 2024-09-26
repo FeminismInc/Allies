@@ -10,6 +10,7 @@ const ConversationModel = require('./models/Conversations');
 const { Db } = require('mongodb');
 const MongoDBClient = require('mongodb').MongoClient;
 const serverAPI = require('mongodb').ServerApiVersion;
+const ObjectId = require('mongodb').ObjectId;
 
 const uri = "mongodb+srv://kenhun2020:lhOAvQxVo7yJskRE@cluster0.ebktn.mongodb.net/Allies?retryWrites=true&w=majority&appName=Cluster0";
 const app = express();
@@ -151,7 +152,7 @@ const FollowingSchema = new mongoose.Schema({
   }]
 }, { collection: 'Following' });
 
-const FollowingModel = mongoose.model('following', FollowingSchema);
+const FollowingModel = mongoose.model('following', FollowingSchema, 'Following');
 
 app.get('/getFollowing', async (req, res) => {
   try {
@@ -171,7 +172,7 @@ const FollowersSchema = new mongoose.Schema({
   }]
 }, { collection: 'Followers' });
 
-const FollowersModel = mongoose.model('followers', FollowersSchema);
+const FollowersModel = mongoose.model('followers', FollowersSchema, 'Followers');
 
 app.get('/getFollowers', async (req, res) => {
   try {
@@ -240,12 +241,13 @@ app.get('/getComments', async (req, res) => {
 
 // Define the Blocked schema
 const blockedSchema = new mongoose.Schema({
+  username: String,
   blocked_accounts: [{
     type: mongoose.Schema.Types.ObjectId,  // Assuming blocked_accounts refers to ObjectId
   }],
 }, { collection: 'Blocked' });
 
-const BlockedModel = mongoose.model('blocked', blockedSchema);
+const BlockedModel = mongoose.model('blocked', blockedSchema, 'Blocked');
 
 // Route to get Blocked data
 app.get('/getBlocked', async (req, res) => {
@@ -262,11 +264,13 @@ app.get('/getBlocked', async (req, res) => {
 // submit a new user? (WIP)
 app.post('/form', async (req, res)=>{
 
-  const{birthday, username, email, password, handle, pronouns}=req.body
+  const{birthdate, username, email, password, handle, pronouns, blocked, following, followers}=req.body
+  //var blocked = BlockedModel.find({username: username})
+  //const blockedId = blocked._id
 
 try {
   const newUser = new UserModel({
-    birthday,
+    birthdate,
     username,
     email,
     password,  // Remember to hash the password in production
@@ -277,7 +281,12 @@ try {
     joined: new Date(), // Current date for joined field
     posts: [],
     tagged_media: [],
-    conversations: []
+    conversations: [],
+    // WIP portion temp data
+    blocked: blocked._id,
+    followers: followers._id,
+    following: following._id
+    // profile_picture:
   });
 
   //need to add a try to catch repeat profiles
@@ -287,22 +296,60 @@ try {
   console.error("Error creating user:", err);
   res.status(500).json({ message: "Error creating user" });
 }
-  // try{
-  //   const check=await UserModel.findOne({handle:handle})
-  //   if(check){
-  //     res.json("exist")
-  //     await client.close();
-  //   }
-  //   else{
-  //     res.json("notexist")
-  //     await UserDetail.insertOne(data)
-  //     console.log(`A document was inserted with the _id: ${result.insertedId}`);
-  //     await client.close();
-  //   }
-  // }
-  // catch(e){
-  //   res.json("notexist")
-  // }
+});
+
+app.post('/newBlocked', async (req, res)=>{
+  const{username}=req.body
+
+try {
+  const newBlocked = new BlockedModel({
+    username,
+    blocked_accounts: []
+    // might add a username
+  });
+
+ await newBlocked.save();
+ res.status(200).json({ message: "blocked created successfully" });
+}catch (err) {
+  console.error("Error creating blocked:", err);
+  res.status(500).json({ message: "Error creating blocked" });
+}
+});
+
+app.post('/newFollowing', async (req, res)=>{
+  const{username}=req.body
+
+try {
+  const newFollowing = new FollowingModel({
+    //username,
+    accounts_followed: []
+    // might add a username
+  });
+
+ await newFollowing.save();
+ res.status(200).json({ message: "following created successfully" });
+}catch (err) {
+  console.error("Error creating following:", err);
+  res.status(500).json({ message: "Error creating following" });
+}
+});
+
+app.post('/newFollowers', async (req, res)=>{
+  const{username}=req.body
+
+try {
+  const newFollowers = new FollowersModel({
+    //username,
+    follower_accounts: []
+    // might add a username
+  });
+
+ await newFollowers.save();
+ res.status(200).json({ message: "followers created successfully" });
+}catch (err) {
+  console.error("Error creating followers:", err);
+  res.status(500).json({ message: "Error creating followers" });
+}
 });
 
 
