@@ -12,7 +12,8 @@ const serverAPI = require('mongodb').ServerApiVersion;
 
 
 const app = express();
-//deleted uri
+const uri = ""
+
 // NTS: move uri login credentials to config.env file 
 
 app.use(express.json());
@@ -28,7 +29,7 @@ app.use(express.json());
 app.use(cors());
 
 
-mongoose.connect(process.env.MONGO_URI || "http://localhost:5050", {
+mongoose.connect(uri, {
   serverApi: serverAPI.v1 //  MongoDB Server API
 }).then(() => {
   console.log("Connected to MongoDB!!");
@@ -49,6 +50,28 @@ app.get('/getUsers', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Error fetching data' });
+  }
+});
+
+app.post('/findUserbyEmail', async (req, res) => {
+  const { username, handle} = req.body;
+  
+
+  try {
+    const user = await UserModel.findOne({username: username});
+
+    if (user) {
+      if (user.handle === handle) {
+        return res.json({ exists: true });
+      } else {
+        return res.json({ exists: false, message: "Handle does not match." });
+      }
+    } else {
+      return res.json({ exists: false, message: "User does not exist." });
+    }
+  } catch (err) {
+    console.error('Error checking email:', err);
+    res.status(500).json({ message: 'Error checking email' });
   }
 });
 
