@@ -1,4 +1,3 @@
-// Code  for mongoose config in backend
 
 // Code  for mongoose config in backend
 const express = require('express');
@@ -10,7 +9,7 @@ const ConversationModel = require('./models/Conversations');
 const MongoDBClient = require('mongodb').MongoClient;
 const serverAPI = require('mongodb').ServerApiVersion;
 
-
+const uri = "mongodb+srv://4calderonabigail:4calderonabigail@cluster0.ebktn.mongodb.net/Allies?retryWrites=true&w=majority&appName=Cluster0";
 const app = express();
 //deleted uri
 // NTS: move uri login credentials to config.env file 
@@ -28,7 +27,7 @@ app.use(express.json());
 app.use(cors());
 
 
-mongoose.connect(process.env.MONGO_URI || "http://localhost:5050", {
+mongoose.connect(uri, {
   serverApi: serverAPI.v1 //  MongoDB Server API
 }).then(() => {
   console.log("Connected to MongoDB!!");
