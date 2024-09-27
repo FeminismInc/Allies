@@ -6,28 +6,25 @@ const cors = require('cors');
 const UserModel = require('./models/Users')
 const PostModel = require('./models/Posts');
 const ConversationModel = require('./models/Conversations');
+const { Db } = require('mongodb');
 const MongoDBClient = require('mongodb').MongoClient;
 const serverAPI = require('mongodb').ServerApiVersion;
+const ObjectId = require('mongodb').ObjectId;
 
 const uri = "mongodb+srv://4calderonabigail:4calderonabigail@cluster0.ebktn.mongodb.net/Allies?retryWrites=true&w=majority&appName=Cluster0";
 const app = express();
-//deleted uri
+
 // NTS: move uri login credentials to config.env file 
 
 app.use(express.json());
 
+app.use(cors({
+  origin: 'http://localhost:3000',  // Allow all origins
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true  // If you need to send cookies with requests
+}));
 
-// // Connect to MongoDB
-// mongoose.connect(process.env.MONGO_URI, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// }).then(() => console.log("Connected to MongoDB!!!!!"))
-//   .catch(err => console.log("Failed to connect to MongoDB", err));
-
-app.use(cors());
-
-
-mongoose.connect(uri, {
+mongoose.connect(uri, { //process.env.MONGO_URI
   serverApi: serverAPI.v1 //  MongoDB Server API
 }).then(() => {
   console.log("Connected to MongoDB!!");
@@ -48,6 +45,28 @@ app.get('/getUsers', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Error fetching data' });
+  }
+});
+
+app.post('/findUserbyEmail', async (req, res) => {
+  const { username, handle} = req.body;
+  
+
+  try {
+    const user = await UserModel.findOne({username: username});
+
+    if (user) {
+      if (user.handle === handle) {
+        return res.json({ exists: true });
+      } else {
+        return res.json({ exists: false, message: "Handle does not match." });
+      }
+    } else {
+      return res.json({ exists: false, message: "User does not exist." });
+    }
+  } catch (err) {
+    console.error('Error checking email:', err);
+    res.status(500).json({ message: 'Error checking email' });
   }
 });
 
@@ -145,7 +164,7 @@ const FollowingSchema = new mongoose.Schema({
   }]
 }, { collection: 'Following' });
 
-const FollowingModel = mongoose.model('following', FollowingSchema);
+const FollowingModel = mongoose.model('following', FollowingSchema, 'Following');
 
 app.get('/getFollowing', async (req, res) => {
   try {
@@ -165,7 +184,7 @@ const FollowersSchema = new mongoose.Schema({
   }]
 }, { collection: 'Followers' });
 
-const FollowersModel = mongoose.model('followers', FollowersSchema);
+const FollowersModel = mongoose.model('followers', FollowersSchema, 'Followers');
 
 app.get('/getFollowers', async (req, res) => {
   try {
@@ -234,12 +253,13 @@ app.get('/getComments', async (req, res) => {
 
 // Define the Blocked schema
 const blockedSchema = new mongoose.Schema({
+  username: String,
   blocked_accounts: [{
     type: mongoose.Schema.Types.ObjectId,  // Assuming blocked_accounts refers to ObjectId
   }],
 }, { collection: 'Blocked' });
 
-const BlockedModel = mongoose.model('blocked', blockedSchema);
+const BlockedModel = mongoose.model('blocked', blockedSchema, 'Blocked');
 
 // Route to get Blocked data
 app.get('/getBlocked', async (req, res) => {
@@ -251,6 +271,97 @@ app.get('/getBlocked', async (req, res) => {
     console.error(err);
     res.status(500).json({ message: 'Error fetching blocked accounts data' });
   }
+});
+
+// submit a new user? (WIP)
+app.post('/form', async (req, res)=>{
+
+  const{birthdate, username, email, password, handle, pronouns, blocked, following, followers}=req.body
+  //var blocked = BlockedModel.find({username: username})
+  //const blockedId = blocked._id
+
+try {
+  const newUser = new UserModel({
+    birthdate,
+    username,
+    email,
+    password,  // Remember to hash the password in production
+    handle,
+    pronouns,
+    bio: "",
+    public_boolean: true,
+    joined: new Date(), // Current date for joined field
+    posts: [],
+    tagged_media: [],
+    conversations: [],
+    // WIP portion temp data
+    blocked: blocked._id,
+    followers: followers._id,
+    following: following._id
+    // profile_picture:
+  });
+
+  //need to add a try to catch repeat profiles
+ await newUser.save();
+ res.status(200).json({ message: "User created successfully" });
+}catch (err) {
+  console.error("Error creating user:", err);
+  res.status(500).json({ message: "Error creating user" });
+}
+});
+
+app.post('/newBlocked', async (req, res)=>{
+  const{username}=req.body
+
+try {
+  const newBlocked = new BlockedModel({
+    username,
+    blocked_accounts: []
+    // might add a username
+  });
+
+ await newBlocked.save();
+ res.status(200).json({ message: "blocked created successfully" });
+}catch (err) {
+  console.error("Error creating blocked:", err);
+  res.status(500).json({ message: "Error creating blocked" });
+}
+});
+
+app.post('/newFollowing', async (req, res)=>{
+  const{username}=req.body
+
+try {
+  const newFollowing = new FollowingModel({
+    //username,
+    accounts_followed: []
+    // might add a username
+  });
+
+ await newFollowing.save();
+ res.status(200).json({ message: "following created successfully" });
+}catch (err) {
+  console.error("Error creating following:", err);
+  res.status(500).json({ message: "Error creating following" });
+}
+});
+
+app.post('/newFollowers', async (req, res)=>{
+  const{username}=req.body
+
+try {
+  const newFollowers = new FollowersModel({
+    //username,
+    follower_accounts: []
+    // might add a username
+  });
+
+ await newFollowers.save();
+ res.status(200).json({ message: "followers created successfully" });
+}catch (err) {
+  console.error("Error creating followers:", err);
+  res.status(500).json({ message: "Error creating followers" });
+}
 });
 
 
