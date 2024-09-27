@@ -12,27 +12,18 @@ const MongoDBClient = require('mongodb').MongoClient;
 const serverAPI = require('mongodb').ServerApiVersion;
 const ObjectId = require('mongodb').ObjectId;
 
-const uri = "mongodb+srv://kenhun2020:lhOAvQxVo7yJskRE@cluster0.ebktn.mongodb.net/Allies?retryWrites=true&w=majority&appName=Cluster0";
+const uri = ""; //replace with database uri
 const app = express();
-//deleted uri
+
 // NTS: move uri login credentials to config.env file 
 
 app.use(express.json());
-
-
-// // Connect to MongoDB
-// mongoose.connect(process.env.MONGO_URI, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// }).then(() => console.log("Connected to MongoDB!!!!!"))
-//   .catch(err => console.log("Failed to connect to MongoDB", err));
 
 app.use(cors({
   origin: 'http://localhost:3000',  // Allow all origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true  // If you need to send cookies with requests
 }));
-
 
 mongoose.connect(uri, { //process.env.MONGO_URI
   serverApi: serverAPI.v1 //  MongoDB Server API
@@ -55,6 +46,28 @@ app.get('/getUsers', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Error fetching data' });
+  }
+});
+
+app.post('/findUserbyEmail', async (req, res) => {
+  const { username, handle} = req.body;
+  
+
+  try {
+    const user = await UserModel.findOne({username: username});
+
+    if (user) {
+      if (user.handle === handle) {
+        return res.json({ exists: true });
+      } else {
+        return res.json({ exists: false, message: "Handle does not match." });
+      }
+    } else {
+      return res.json({ exists: false, message: "User does not exist." });
+    }
+  } catch (err) {
+    console.error('Error checking email:', err);
+    res.status(500).json({ message: 'Error checking email' });
   }
 });
 
