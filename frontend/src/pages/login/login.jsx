@@ -25,13 +25,16 @@ export default function LoginSignUp() {
   const GoToHomePage = () => {
     navigate('/home');
   };
-
+  const GoToForm = () => {
+    navigate('/form');
+  };
   const GoToProfilePage = () => {
     navigate('./profile');
   };
 
   return (
     <div className = "loginPage">
+      <Button onPress = {GoToForm} title = "temp button to go to form Thanks Kenneth"/>
       <div className = "column left">
         <div className = "company">
         <h1 className = "appName">Allies</h1>
