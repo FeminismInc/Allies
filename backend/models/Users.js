@@ -4,8 +4,10 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
   
   birthday: Date,
+  email: String,
+  password: String,
   username: String,
-  joined: Date,
+  joined: { type: Date, default: new Date() },
   handle: String,
   bio: String,
   blocked: { 

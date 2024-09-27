@@ -25,7 +25,7 @@ export default function LoginSignUp() {
 
       const signUpButton = document.getElementById('signUpButton');
     if (signUpButton) {
-      signUpButton.addEventListener('click', () => navigate('/signup'));{/*Change this to the sign up route */}
+      signUpButton.addEventListener('click', () => navigate('/home'));{/*Change this to the sign up route */}
     }
 
   }, []);
@@ -37,6 +37,7 @@ export default function LoginSignUp() {
   const GoToHomePage = () => {
     navigate('/home');
   };
+
   const postEmail = () => {
     
     if (!username || !handle) {
@@ -48,12 +49,18 @@ export default function LoginSignUp() {
       .then(response => {
         console.log(response.data); 
         if (response.data.exists) {
-          navigate("/home");
+          navigate("/profile");
         } else {
           alert("Email not found. Please sign up.");
         }
       })
       .catch(err => console.log(err));  
+    
+  const GoToForm = () => {
+    navigate('/form');
+  };
+  const GoToProfilePage = () => {
+    navigate('/profile');
   };
 
   return (
