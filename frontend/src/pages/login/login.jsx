@@ -6,7 +6,6 @@ import personIcon from '../../assets/person_24dp_E8EAED_FILL0_wght400_GRAD0_opsz
 import passwordIcon from '../../assets/lock_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg';
 import {Button} from 'react-native';
 import { useNavigate } from 'react-router-dom';
-
 const clientID = "" //change to Client ID
 
 export default function LoginSignUp() {
@@ -25,6 +24,10 @@ export default function LoginSignUp() {
 
   const GoToHomePage = () => {
     navigate('/home');
+  };
+
+  const GoToProfilePage = () => {
+    navigate('./profile');
   };
 
   return (
@@ -52,6 +55,11 @@ export default function LoginSignUp() {
       />                                {/*Probably get rid of Button styling is shit*/}
         <hr className = "separator"/>
         <LoginButton GotoHomePage={GoToHomePage}/>
+        <Button
+            title="Go to Profile"
+            color="#f194ff"
+            onPress={GoToProfilePage}
+        />
       </div>
     </div>
   );
