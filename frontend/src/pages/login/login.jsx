@@ -100,4 +100,4 @@ export default function LoginSignUp() {
     </div>
   );
 }
-
+} {/* temporary bracket to make the code run */}

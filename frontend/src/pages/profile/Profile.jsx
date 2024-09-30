@@ -8,7 +8,7 @@ export default function Profile() {
     return (
       <div>
         <div class="row">
-          <div className="sidebar"><Sidebar /></div>
+          {/* <div className="sidebar"><Sidebar /></div> */}
           <div class="col">
             <div class="username-box">Lex_the_cat</div>
             <div><p> </p></div>

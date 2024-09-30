@@ -1,0 +1,66 @@
+*{
+    margin:0;
+    padding:0;
+    text-decoration: none;
+}
+.container{
+    display:flex;
+    flex-direction: row;
+}
+main{
+    width: 100%;
+    padding: 20px;
+}
+.sidebar{
+    background: #EADDFF;
+    color: #fff;
+    height: 100vh;
+    width: 200px;
+    transition: all 0.5s;
+}
+.top_section{           
+    display: flex;
+    align-items:center;
+    padding:20px 15px;
+}
+.searchbar{
+    border-radius: 4px;
+    padding:10px 2px;
+
+}
+.logo{
+    font-size: 30px;
+}
+.bars{
+    display: flex;
+    font-size: 25px;
+    margin-left: 50px;
+}
+.link{
+    display: flex;
+    /* align-items:center; */
+    color: #fff;
+    padding: 15px 10px;
+    gap: 20px;
+    transition: all 0.5s;
+    border-radius: 20px; 
+    
+}
+.link:hover{
+    background: #c7b7e2;
+    color: #ffffff;
+    transition: all 0.5s;
+    
+    
+}
+.active{
+    background:rgb(117, 86, 146);
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+}
+.icon,.link_text{               /* TODO: icons are not centered when sidebar is collapsed. And fix the hamburger
+                                so that it expands WITH the sidebar. Other stuff needs to be done too but i don't remember lol  */
+    font-size: 20px;
+}
+

@@ -1,4 +1,3 @@
-
 // Code  for mongoose config in backend
 const express = require('express');
 const mongoose = require('mongoose');
@@ -11,7 +10,7 @@ const MongoDBClient = require('mongodb').MongoClient;
 const serverAPI = require('mongodb').ServerApiVersion;
 const ObjectId = require('mongodb').ObjectId;
 
-const uri = "mongodb+srv://4calderonabigail:4calderonabigail@cluster0.ebktn.mongodb.net/Allies?retryWrites=true&w=majority&appName=Cluster0";
+const uri = ""; //replace with database uri
 const app = express();
 
 // NTS: move uri login credentials to config.env file 
