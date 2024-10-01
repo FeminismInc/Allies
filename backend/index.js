@@ -186,11 +186,19 @@ app.get('/getBlocked', async (req, res) => {
 // submit a new user? (WIP)
 app.post('/form', async (req, res)=>{
 
-  const{birthdate, username, email, password, handle, pronouns, blocked, following, followers}=req.body
+  const{birthdate, username, email, password, handle, pronouns}=req.body
   // var blockedtest = BlockedModel.find({username: username})
   // const blockedId = blockedtest._id
 
 try {
+  // console.log(blocked)
+  const following = await FollowingModel.findOne({username : username});
+  const followers = await FollowersModel.findOne({username : username});
+  const blocked = await BlockedModel.findOne({username : username});
+  console.log(following);
+  console.log(followers);
+  console.log(blocked);
+  
   const newUser = new UserModel({
     birthdate,
     username,
@@ -205,9 +213,9 @@ try {
     tagged_media: [],
     conversations: [],
     // WIP portion temp data
-    blocked: new ObjectId('66eb9121fe2b2e83e706b1d6'), //blocked._id
-    followers: (followers._id),
-    following: (following._id)
+    blocked: blocked._id, //blocked._id
+    followers: followers._id,
+    following: following._id
     // profile_picture:
   });
 
@@ -245,7 +253,7 @@ app.post('/newFollowing', async (req, res)=>{
 try {
   const newFollowing = new FollowingModel({
     //_id: new ObjectId(),
-    //username,
+    username,
     accounts_followed: []
     // might add a username
   });
@@ -264,7 +272,7 @@ app.post('/newFollowers', async (req, res)=>{
 try {
   const newFollowers = new FollowersModel({
     //_id: new ObjectId(),
-    //username,
+    username,
     follower_accounts: []
     // might add a username
   });
@@ -276,6 +284,9 @@ try {
   res.status(500).json({ message: "Error creating followers" });
 }
 });
+
+
+
 
 
 
