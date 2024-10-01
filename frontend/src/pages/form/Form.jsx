@@ -26,7 +26,7 @@ export default function ProfileForm() {
     const submit = async (e) => {
         console.log(username)
         e.preventDefault();
-        try {
+        try { //definately not the right way but it works
             const following = await axios.post(`${uri}/newFollowing`, { //create new following object
                 username
             })

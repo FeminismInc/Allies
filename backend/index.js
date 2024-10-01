@@ -4,9 +4,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+// all models
 const UserModel = require('./models/Users')
 const PostModel = require('./models/Posts');
 const ConversationModel = require('./models/Conversations');
+const MessageModel = require('./models/Messages');
+const LikeModel = require('./models/Likes');
+const MediaModel = require('./models/Media');
+const FollowingModel = require('./models/Following');
+const FollowersModel = require('./models/Followers');
+const DislikeModel = require('./models/Dislikes');
+const CommentModel = require('./models/Comments');
+const BlockedModel = require('./models/Blocked');
+
 const { Db } = require('mongodb');
 const MongoDBClient = require('mongodb').MongoClient;
 const serverAPI = require('mongodb').ServerApiVersion;
@@ -80,15 +90,6 @@ app.get('/getConvos', async (req, res) => {
   }
 });
 
-const messagesSchema = new mongoose.Schema({
-  sender: {
-    type: mongoose.Schema.Types.ObjectId,
-  },
-  datetime: Date,
-  message_content: String
-}, { collection: 'Messages' });
-const MessageModel = mongoose.model('messages', messagesSchema);
-
 app.get('/getMessages', async (req, res) => {
   try {
     const messages = await MessageModel.find();
@@ -100,18 +101,6 @@ app.get('/getMessages', async (req, res) => {
   }
 });
 
-
-
-const LikesSchema = new mongoose.Schema({
-  accounts_that_liked: [{
-    type: mongoose.Schema.Types.ObjectId, // Array of ObjectIds representing accounts
-  }],
-}, { collection: 'Likes' });  // Specify the collection name 'Likes'
-
-// Create the model from the schema
-const LikeModel = mongoose.model('likes', LikesSchema);
-
-
 app.get('/getLikes', async (req, res) => {
   try {
     const likes = await LikeModel.find();  // Fetch all the documents from the 'Likes' collection
@@ -122,17 +111,6 @@ app.get('/getLikes', async (req, res) => {
     res.status(500).json({ message: 'Error fetching data' });
   }
 });
-
-
-const mediaSchema = new mongoose.Schema({
-  url: String,
-  tagged_accounts: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'users'  // Assuming 'users' collection for tagged accounts
-  }]
-}, { collection: 'Media' });
-
-const MediaModel = mongoose.model('media', mediaSchema);
 
 app.get('/getMedia', async (req, res) => {
   try {
@@ -146,13 +124,6 @@ app.get('/getMedia', async (req, res) => {
   }
 });
 
-const FollowingSchema = new mongoose.Schema({
-  accounts_followed: [{
-    type: mongoose.Schema.Types.ObjectId,
-  }]
-}, { collection: 'Following' });
-
-const FollowingModel = mongoose.model('following', FollowingSchema, 'Following');
 
 app.get('/getFollowing', async (req, res) => {
   try {
@@ -166,14 +137,6 @@ app.get('/getFollowing', async (req, res) => {
   }
 });
 
-const FollowersSchema = new mongoose.Schema({
-  follower_accounts: [{
-    type: mongoose.Schema.Types.ObjectId,
-  }]
-}, { collection: 'Followers' });
-
-const FollowersModel = mongoose.model('followers', FollowersSchema, 'Followers');
-
 app.get('/getFollowers', async (req, res) => {
   try {
     // Fetch all media documents
@@ -186,16 +149,6 @@ app.get('/getFollowers', async (req, res) => {
   }
 });
 
-const DislikesSchema = new mongoose.Schema({
-  accounts_that_disliked: [{
-    type: mongoose.Schema.Types.ObjectId, // Array of ObjectIds representing accounts
-  }],
-}, { collection: 'Dislikes' });  // Specify the collection name 'Likes'
-
-// Create the model from the schema
-const DislikeModel = mongoose.model('dislikes', DislikesSchema);
-
-
 app.get('/getDislikes', async (req, res) => {
   try {
     const dislikes = await DislikeModel.find();  // Fetch all the documents from the 'Likes' collection
@@ -207,26 +160,6 @@ app.get('/getDislikes', async (req, res) => {
   }
 });
 
-
-
-const commentsSchema = new mongoose.Schema({
-  author: {
-    type: mongoose.Schema.Types.ObjectId,  // Reference to the author
-  },
-  likes: {
-    type: mongoose.Schema.Types.ObjectId,  // Reference to likes
-  },
-  dislikes: {
-    type: mongoose.Schema.Types.ObjectId,  // Reference to dislikes
-  },
-  replies: [{
-    type: mongoose.Schema.Types.ObjectId,  // Array of ObjectIds referencing replies
-  }],
-  text: String,  // The comment content
-}, { collection: 'Comments' });
-
-const CommentModel = mongoose.model('comments', commentsSchema);
-
 app.get('/getComments', async (req, res) => {
   try {
     const comments = await CommentModel.find();
@@ -237,17 +170,6 @@ app.get('/getComments', async (req, res) => {
     res.status(500).json({ message: 'Error fetching data' });
   }
 });
-
-
-// Define the Blocked schema
-const blockedSchema = new mongoose.Schema({
-  username: String,
-  blocked_accounts: [{
-    type: mongoose.Schema.Types.ObjectId,  // Assuming blocked_accounts refers to ObjectId
-  }],
-}, { collection: 'Blocked' });
-
-const BlockedModel = mongoose.model('blocked', blockedSchema, 'Blocked');
 
 // Route to get Blocked data
 app.get('/getBlocked', async (req, res) => {
@@ -265,8 +187,8 @@ app.get('/getBlocked', async (req, res) => {
 app.post('/form', async (req, res)=>{
 
   const{birthdate, username, email, password, handle, pronouns, blocked, following, followers}=req.body
-  //var blocked = BlockedModel.find({username: username})
-  //const blockedId = blocked._id
+  // var blockedtest = BlockedModel.find({username: username})
+  // const blockedId = blockedtest._id
 
 try {
   const newUser = new UserModel({
@@ -283,9 +205,9 @@ try {
     tagged_media: [],
     conversations: [],
     // WIP portion temp data
-    blocked: blocked._id,
-    followers: followers._id,
-    following: following._id
+    blocked: new ObjectId('66eb9121fe2b2e83e706b1d6'), //blocked._id
+    followers: (followers._id),
+    following: (following._id)
     // profile_picture:
   });
 
@@ -303,6 +225,7 @@ app.post('/newBlocked', async (req, res)=>{
 
 try {
   const newBlocked = new BlockedModel({
+    //_id: new ObjectId(),
     username,
     blocked_accounts: []
     // might add a username
@@ -321,6 +244,7 @@ app.post('/newFollowing', async (req, res)=>{
 
 try {
   const newFollowing = new FollowingModel({
+    //_id: new ObjectId(),
     //username,
     accounts_followed: []
     // might add a username
@@ -339,6 +263,7 @@ app.post('/newFollowers', async (req, res)=>{
 
 try {
   const newFollowers = new FollowersModel({
+    //_id: new ObjectId(),
     //username,
     follower_accounts: []
     // might add a username
