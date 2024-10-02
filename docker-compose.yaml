@@ -9,6 +9,7 @@ services:
       - /app/node_modules  # Avoid conflicts between local and container's node_modules
     environment:
       MONGO_URI: mongodb+srv://kenhun2020:lhOAvQxVo7yJskRE@cluster0.ebktn.mongodb.net/Allies?retryWrites=true&w=majority&appName=Cluster0  # Connection string to the MongoDB service
+      GOOGLE_API: 989398909621-2iju5rvgm8n9cbj22oc44e6hmnl7ht40.apps.googleusercontent.com
 
   frontend:
     build: ./frontend

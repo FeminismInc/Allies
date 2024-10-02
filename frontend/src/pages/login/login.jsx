@@ -8,9 +8,9 @@ import {Button} from 'react-native';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const clientID = "";
+const clientID = "989398909621-2iju5rvgm8n9cbj22oc44e6hmnl7ht40.apps.googleusercontent.com";
 
-const uri = 'http://localhost:5050';
+const uri = 'http://localhost:5050/api';
 
 export default function LoginSignUp() {
 
@@ -25,27 +25,27 @@ export default function LoginSignUp() {
 
       const signUpButton = document.getElementById('signUpButton');
     if (signUpButton) {
-      signUpButton.addEventListener('click', () => navigate('/home'));{/*Change this to the sign up route */}
+      signUpButton.addEventListener('click', () => navigate('/form'));{/*Change this to the sign up route */}
     }
 
-  }, []);
+  });
   
-  const [username, setUsername] = useState("");
-  const [handle, setHandle] = useState("");
+  const [email, setUsername] = useState(""); // fix later
+  const [password, setHandle] = useState("");
   const navigate = useNavigate();
 
   const GoToHomePage = () => {
-    navigate('/home');
+    navigate('/profile');
   };
 
-  const postEmail = () => {
+  const postEmail  = () => {
     
-    if (!username || !handle) {
-      alert("Please fill in both username and password.");
+    if (!email || !password) {
+      alert("Please fill in both email and password.");
       return; // Exit the function early
     }
 
-    axios.post(`${uri}/findUserbyEmail`, { username, handle })
+    axios.post(`${uri}/users/findUserbyEmail`, { email, password })
       .then(response => {
         console.log(response.data); 
         if (response.data.exists) {
@@ -55,13 +55,7 @@ export default function LoginSignUp() {
         }
       })
       .catch(err => console.log(err));  
-    
-  const GoToForm = () => {
-    navigate('/form');
-  };
-  const GoToProfilePage = () => {
-    navigate('/profile');
-  };
+    }
 
   return (
     <div className = "loginPage">
@@ -78,11 +72,11 @@ export default function LoginSignUp() {
         <h1>Log in</h1>
         <div className ="inputEmail"> {/*Make inputs into components */}
           <img src={personIcon}/>
-          <input type="email" placeholder ="email" value={username} onChange={(e) => setUsername(e.target.value)}/>
+          <input type="email" placeholder ="email" value={email} onChange={(e) => setUsername(e.target.value)}/>
         </div>
         <div className = "inputPassword">
           <img src={passwordIcon}/>
-          <input type="password" placeholder ="password" value={handle} onChange={(e) => setHandle(e.target.value)}/>
+          <input type="password" placeholder ="password" value={password} onChange={(e) => setHandle(e.target.value)}/>
         </div>
         <Button 
         title="Login"
@@ -100,4 +94,3 @@ export default function LoginSignUp() {
     </div>
   );
 }
-

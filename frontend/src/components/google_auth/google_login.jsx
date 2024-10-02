@@ -1,7 +1,7 @@
 import {GoogleLogin} from 'react-google-login';
 import './google_login.css';
 
-const clientID = "" 
+const clientID = "989398909621-2iju5rvgm8n9cbj22oc44e6hmnl7ht40.apps.googleusercontent.com" 
 
 function Login({ GotoHomePage }) {
 
