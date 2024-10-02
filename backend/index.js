@@ -20,7 +20,7 @@ const MongoDBClient = require('mongodb').MongoClient;
 const serverAPI = require('mongodb').ServerApiVersion;
 const ObjectId = require('mongodb').ObjectId;
 
-const uri = ""; //replace with database uri
+const uri = "mongodb+srv://4calderonabigail:4calderonabigail@cluster0.ebktn.mongodb.net/Allies?retryWrites=true&w=majority&appName=Cluster0"; //replace with database uri
 const app = express();
 
 // NTS: move uri login credentials to config.env file 
@@ -79,10 +79,20 @@ app.post('/findUserbyEmail', async (req, res) => {
   }
 });
 
-// the route to get data
+// modified route to accept an optional ID of the user whose posts we are getting 
 app.get('/getPosts', async (req, res) => {
+  console.log("test");
+  const { userId } = req.query;
   try {
-    const posts = await PostModel.find();
+    let posts;
+    if (userId) {
+      console.log(userId);
+      // filter Posts by userId
+      posts = await PostModel.find({author: userId}).populate('author', 'username');
+    }
+    else {
+      posts = await PostModel.find();
+    }
     res.json(posts);
   } catch (err) {
     console.error(err);

@@ -1,21 +1,33 @@
-import React, {useEffect} from "react";
+
+import axios from 'axios';
+import React, { useState, useEffect } from "react";
 import './sidebar.css'
 import './Sidebar'
 import Sidebar from "./Sidebar";
 import './profile.css'
-export default function Profile() {
+import ProfileTabs from './ProfileTabs';
 
-    return (
-      <div>
-        <div class="row">
-          {/* <div className="sidebar"><Sidebar /></div> */}
+//NTS: Changes to data in mongoDB: User Barbie is the author of 2 posts
+
+export default function Profile() {
+  
+  const userId = "66eb88bffe2b2e83e706b1cc"; //barbie's userId
+
+  return (
+    <div className="profile-container">
+      <div className="profile-header">
+        <h1>User Profile</h1>
+        <p>Profile filler</p>
+      </div>
+      <ProfileTabs userId={userId} /> {/* Renders the  Profile Tabs */}
+      {/* <div class="row">
           <div class="col">
             <div class="username-box">Lex_the_cat</div>
             <div><p> </p></div>
             <img src={ require('./IMG_4628.jpg') } width={350} height={350}/>
           </div>
-        </div>
-      </div>
-    );
+        </div> */}
+    </div>
+  );
 }
 
