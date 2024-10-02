@@ -35,16 +35,20 @@ export default function ProfileForm() {
                 username
             })
             try {
-                const followers = await axios.post(`${uri}/newFollowers`, { //send data to index.js to check
+                const response = await axios.post(`${uri}/newFollowers`, { //send data to index.js to check
                     username
                 })
                 try {
-                    const blocked = await axios.post(`${uri}/newBlocked`, { //create new blocked
+                    const response = await axios.post(`${uri}/newBlocked`, { //create new blocked
                         username
                     })
                     try {
+                        // fetchFollowing()
+                        // fetchBlocked()
+                        // fetchFollowers()
+                        
                         const response = await axios.post(`${uri}/form`, { //send data to index.js to check
-                            username, email, password, handle, pronouns, birthdate, blocked, following, followers
+                            username, email, password, handle, pronouns, birthdate
                         })
                         //console.log(response)
                         navigate('/profile');

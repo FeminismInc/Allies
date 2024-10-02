@@ -140,17 +140,17 @@ exports.removeFollowing = async (req, res, next) => {
 // Fetch posts by a specific username
 exports.getPostsByUsername = async (req, res, next) => {
     const { username } = req.params;
-  
+    
     try {
 
       const user = await UserModel.findOne({ username });
-      
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
+      
   
-      const posts = await PostModel.find({ author: user.username });
-  
+      const posts = await PostModel.find({ author: user._id });
+      
       res.status(200).json(posts);
     } catch (err) {
       next(err);

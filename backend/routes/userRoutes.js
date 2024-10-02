@@ -12,7 +12,6 @@ const {
     getBlockedByUsername, } = require('../controllers/userController');
 
 const router = express.Router();
-
 router.get('/getUsers', getUsers); // Route to get all users
 router.post('/findUserbyEmail', findUserByEmail); // Route to find a user by email
 router.post('/form', createUser); // Route to create a new user
