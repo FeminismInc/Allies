@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./sidebar.css"
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
@@ -24,6 +25,11 @@ export default function Sidebar({children}) {
             path: "/profile",
             name: "Profile",
             icon:<AccountCircleOutlinedIcon/>
+        },
+        {
+            path: "/post",
+            name: "Post",
+            icon:<AddBoxIcon/>
         },
         {
             path: "/form",

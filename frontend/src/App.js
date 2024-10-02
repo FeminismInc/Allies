@@ -5,6 +5,7 @@ import Home from "./pages/home/Home";
 import Form from "./pages/form/Form"
 import Profile from "./pages/profile/Profile"
 import Sidebar from './components/sidebar/Sidebar';
+import PostPage from './pages/post/post';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path='/form' element={<Form />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/post" element = {<PostPage/>} />
         </Routes>
       </Sidebar>
     </Router>
