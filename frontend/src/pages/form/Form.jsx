@@ -24,7 +24,7 @@ export default function ProfileForm() {
 
     //when pressing submit button take all input data for processing
     const submit = async (e) => {
-        console.log(username)
+        console.log(username);
         e.preventDefault();
         try {
             if (!email || !password ||  !username || !handle || !pronouns || !birthdate) {
@@ -44,25 +44,25 @@ export default function ProfileForm() {
                     })
                     try {
                         const response = await axios.post(`${uri}/users/form`, { //send data to index.js to check
-                            username, email, password, handle, pronouns, birthdate, blocked, following, followers
+                            username, email, password, handle, pronouns, birthdate
                         })
                         //console.log(response)
                         navigate('/profile');
                     }
                     catch(e) {
-                        console.log('test1')
+                        console.log('test1');
                     }
                     //console.log(response)
                 }
                 catch(e) {
-                    console.log('test2')
+                    console.log('test2');
                 }
             } catch(e) {
-                console.log('test3')
+                console.log('test3');
             }
         }
         catch(e) {
-            console.log('test4')
+            console.log('test4');
         }
         
     }
