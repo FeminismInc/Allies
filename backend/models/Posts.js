@@ -3,26 +3,28 @@ const mongoose = require('mongoose');
 
 const PostSchema = new mongoose.Schema({
   text: String,
-  author: String,
+  author: {
+    type: mongoose.SchemaTypes.ObjectId
+  },
   comments: [{
     type: mongoose.SchemaTypes.ObjectId
   }],
   datetime: Date,
-  dislikes: [{
+  dislikes: {
     type: mongoose.SchemaTypes.ObjectId
-  }],
+  },
   media: [{
     type: mongoose.SchemaTypes.ObjectId
   }],
-  likes: [{
+  likes: {
     type: mongoose.SchemaTypes.ObjectId
-  }],
+  },
   hashtags: [{
     type: String
   }],
-  repost: [{
+  repost: {
     type: mongoose.SchemaTypes.ObjectId
-  }]
+  }
 },{ collection: 'Posts' });
 
 const PostModel = mongoose.model('posts', PostSchema);
