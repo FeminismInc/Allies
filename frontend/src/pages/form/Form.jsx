@@ -31,19 +31,19 @@ export default function ProfileForm() {
                 alert("Please fill out all sections.");
                 return; // Exit the function early
               }
-            const following = await axios.post(`${uri}/newFollowing`, { //create new following object
+            const following = await axios.post(`${uri}/users/newFollowing`, { //create new following object
                 username
             })
             try {
-                const followers = await axios.post(`${uri}/newFollowers`, { //send data to index.js to check
+                const followers = await axios.post(`${uri}/users/newFollowers`, { //send data to index.js to check
                     username
                 })
                 try {
-                    const blocked = await axios.post(`${uri}/newBlocked`, { //create new blocked
+                    const blocked = await axios.post(`${uri}/users/newBlocked`, { //create new blocked
                         username
                     })
                     try {
-                        const response = await axios.post(`${uri}/form`, { //send data to index.js to check
+                        const response = await axios.post(`${uri}/users/form`, { //send data to index.js to check
                             username, email, password, handle, pronouns, birthdate, blocked, following, followers
                         })
                         //console.log(response)

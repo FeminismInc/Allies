@@ -11,8 +11,8 @@ exports.createPost = async (req, res) => {
         const newPost = new PostModel({
             text,
             author,
-            media,
-            hashtags,
+            media: [],
+            hashtags: [],
             datetime: new Date(),
             comments: [],
             likes: [],
