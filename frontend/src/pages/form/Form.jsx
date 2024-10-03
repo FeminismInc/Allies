@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 export default function ProfileForm() {
 
-    const uri = "http://localhost:5050";
+    const uri = "http://localhost:5050/api";
 
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
@@ -27,6 +27,10 @@ export default function ProfileForm() {
         console.log(username)
         e.preventDefault();
         try {
+            if (!email || !password ||  !username || !handle || !pronouns || !birthdate) {
+                alert("Please fill out all sections.");
+                return; // Exit the function early
+              }
             const following = await axios.post(`${uri}/newFollowing`, { //create new following object
                 username
             })
@@ -43,7 +47,7 @@ export default function ProfileForm() {
                             username, email, password, handle, pronouns, birthdate, blocked, following, followers
                         })
                         //console.log(response)
-                        navigate('/home');
+                        navigate('/profile');
                     }
                     catch(e) {
                         console.log('test1')
