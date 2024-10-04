@@ -34,6 +34,57 @@ exports.findUserByEmail = async (req, res, next) => {
   }
 };
 
+exports.newFollowing = async(req, res, next) => {
+  const { username } = req.body;
+
+  try {
+    const newFollowing = new FollowingModel({
+      username,
+      accounts_followed: []
+    })
+
+    await newFollowing.save();
+    res.status(201).json({ message: "Following created successfully" });
+
+  } catch (err) {
+    next(err);  
+  }
+}
+
+exports.newFollowers = async(req, res, next) => {
+  const { username } = req.body;
+
+  try {
+    const newFollowers = new BlockedModel({
+      username,
+      follower_accounts: []
+    })
+
+    await newFollowers.save();
+    res.status(201).json({ message: "Followers created successfully" });
+
+  } catch (err) {
+    next(err);  
+  }
+}
+
+exports.newBlocked = async(req, res, next) => {
+  const { username } = req.body;
+
+  try {
+    const newBlocked = new BlockedModel({
+      username,
+      blocked_accounts: []
+    })
+
+    await newBlocked.save();
+    res.status(201).json({ message: "Blocked created successfully" });
+
+  } catch (err) {
+    next(err);  
+  }
+}
+
 // Create a new user
 exports.createUser = async (req, res, next) => {
   const { birthdate, username, email, password, handle, pronouns } = req.body;
@@ -97,7 +148,7 @@ exports.addFollower = async (req, res, next) => {
     const { username, followerId } = req.body; 
   
     try {
-      
+    
       await FollowersModel.findOneAndUpdate(
         { username: username },
         { $addToSet: { follower_accounts: followerId } } 
@@ -140,17 +191,17 @@ exports.removeFollowing = async (req, res, next) => {
 // Fetch posts by a specific username
 exports.getPostsByUsername = async (req, res, next) => {
     const { username } = req.params;
-    
+  
     try {
 
       const user = await UserModel.findOne({ username });
+      
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-      
   
-      const posts = await PostModel.find({ author: user._id });
-      
+      const posts = await PostModel.find({ author: user.username });    //might need to change to user._id
+  
       res.status(200).json(posts);
     } catch (err) {
       next(err);

@@ -11,14 +11,14 @@ import ProfileTabs from './ProfileTabs';
 
 export default function Profile() {
   
-  
-  const username = "BarbieRoberts59"; //barbie's username
+  const username = "BarbieRoberts59"; //change this to username from sessionStorage 
+
 
   return (
     <div className="profile-container">
       <div className="profile-header">
-        <h1>User Profile</h1>
-        <p>Profile filler</p>
+        <h1>{username}'s Profile</h1>
+        <p>bio</p>
       </div>
       <ProfileTabs username={username} /> {/* Renders the  Profile Tabs for Barbie's profile */}
       {/* <div class="row">

@@ -24,49 +24,45 @@ export default function ProfileForm() {
 
     //when pressing submit button take all input data for processing
     const submit = async (e) => {
-        console.log(username)
+        console.log(username);
         e.preventDefault();
         try {
             if (!email || !password ||  !username || !handle || !pronouns || !birthdate) {
                 alert("Please fill out all sections.");
                 return; // Exit the function early
               }
-            const following = await axios.post(`${uri}/newFollowing`, { //create new following object
+            const following = await axios.post(`${uri}/users/newFollowing`, { //create new following object
                 username
             })
             try {
-                const response = await axios.post(`${uri}/newFollowers`, { //send data to index.js to check
+                const followers = await axios.post(`${uri}/users/newFollowers`, { //send data to index.js to check
                     username
                 })
                 try {
-                    const response = await axios.post(`${uri}/newBlocked`, { //create new blocked
+                    const blocked = await axios.post(`${uri}/users/newBlocked`, { //create new blocked
                         username
                     })
                     try {
-                        // fetchFollowing()
-                        // fetchBlocked()
-                        // fetchFollowers()
-                        
-                        const response = await axios.post(`${uri}/form`, { //send data to index.js to check
+                        const response = await axios.post(`${uri}/users/form`, { //send data to index.js to check
                             username, email, password, handle, pronouns, birthdate
                         })
                         //console.log(response)
                         navigate('/profile');
                     }
                     catch(e) {
-                        console.log('test1')
+                        console.log('test1');
                     }
                     //console.log(response)
                 }
                 catch(e) {
-                    console.log('test2')
+                    console.log('test2');
                 }
             } catch(e) {
-                console.log('test3')
+                console.log('test3');
             }
         }
         catch(e) {
-            console.log('test4')
+            console.log('test4');
         }
         
     }

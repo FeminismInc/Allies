@@ -5,25 +5,22 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 
 export default function ProfileTabs({username}) {
 
-    const uri = 'http://localhost:5050'
-
+    const uri = 'http://localhost:5050/api'
     const [activeTab, setActiveTab] = useState('posts');
     const [posts, setPosts] = useState([]);
 
+
+    //where should this go??????
     const fetchPostsByUsername = async (username) => {
-        if (!username) {
-          console.error('No userId provided!');
-          return;
-        }
         try {
           console.log(username);
-          const response = await axios.get(`${uri}/api/users/getPosts/${username}`, {
+          const response = await axios.get(`${uri}/users/getPosts/${username}`, {
           });
           setPosts(response.data);
         } catch (error) {
           console.error('Error fetching posts:', error);
         }
-      };
+      }
     
       // Fetch posts when the "Posts" tab is active
     useEffect(() => {
@@ -33,7 +30,7 @@ export default function ProfileTabs({username}) {
       }, [activeTab,username]); 
 
 
-    // Dummy data for posts, media, and followers
+    // Dummy data for media, and followers
     const media = ["Image 1", "Video 1", "Image 2"];
     const followers = ["Follower 1", "Follower 2", "Follower 3"];
 
