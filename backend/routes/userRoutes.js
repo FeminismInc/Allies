@@ -9,7 +9,6 @@ const {
     addFollower,
     removeFollowing,
     getPostsByUsername,
-
     getBlockedByUsername,
     newBlocked,
     newFollowers,
@@ -27,7 +26,6 @@ router.get('/following/:username', getFollowing); // Fetch following of a user
 router.post('/addFollower', addFollower); // Add follower (follow a user)
 router.post('/removeFollowing', removeFollowing); // Unfollow a user  
 router.get('/getPosts/:username', getPostsByUsername);  // Fetch posts by username
-
 router.get('/getBlocked/:username', getBlockedByUsername);  // Fetch blocked accounts by username     
 
 // this section's methods may merge with other methods

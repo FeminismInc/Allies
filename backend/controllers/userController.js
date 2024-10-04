@@ -149,7 +149,7 @@ exports.addFollower = async (req, res, next) => {
     const { username, followerId } = req.body; 
   
     try {
-      
+    
       await FollowersModel.findOneAndUpdate(
         { username: username },
         { $addToSet: { follower_accounts: followerId } } 

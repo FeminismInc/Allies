@@ -33,13 +33,11 @@ export default function PostPage(){
         
     }
 
-
     return (
         <div className="postContainer">
             <h1>What's on your mind? </h1>
             <input type="text" value={text} onChange={(e) => { setText(e.target.value) }} name="postText" id="postText"></input>
             <Button title = "Submit" onPress={submit} color="#bfa1f0" id="submitButton"/> 
-
         </div>
     )
 }
