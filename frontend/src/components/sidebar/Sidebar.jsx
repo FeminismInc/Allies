@@ -9,7 +9,7 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { NavLink } from 'react-router-dom';
 import {FaBars} from "react-icons/fa";
 import SearchBar from "../search_bar/searchBar";
-
+import AddBoxIcon from '@mui/icons-material/AddBox';
 //will connect to pages: Home, Profile, Messages, Notifications, Logout
 
 export default function Sidebar({children}) {
@@ -43,7 +43,7 @@ export default function Sidebar({children}) {
             icon:<NotificationsOutlinedIcon/>
         },
         {
-            path: "/logout",
+            path: "/",
             name: "Logout",
             icon:<LogoutOutlinedIcon/>
         }
@@ -62,7 +62,6 @@ export default function Sidebar({children}) {
                <div className="searchbar">
                     <SearchBar/>
                </div>
-               
                 {   
                     menuItem.map((item, index)=>(
                         <NavLink to={item.path} key={index} className="link" activeclassName="active">

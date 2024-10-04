@@ -15,6 +15,7 @@ const {
     newFollowing
  } = require('../controllers/userController');
 
+
 const router = express.Router();
 
 router.get('/getUsers', getUsers); // Route to get all users
@@ -33,3 +34,4 @@ router.post('/newFollowing', newFollowing); // Route to create a new following o
 router.post('/newBlocked', newBlocked); // Route to create a new blocked object
 
 module.exports = router;
+

@@ -34,6 +34,7 @@ exports.findUserByEmail = async (req, res, next) => {
   }
 };
 
+
 exports.newFollowing = async(req, res, next) => {
   const { username } = req.body;
 
@@ -200,7 +201,9 @@ exports.getPostsByUsername = async (req, res, next) => {
         return res.status(404).json({ message: 'User not found' });
       }
   
-      const posts = await PostModel.find({ author: user.username });
+
+      const posts = await PostModel.find({ author: user.username });    //might need to change to user._id
+
   
       res.status(200).json(posts);
     } catch (err) {
@@ -265,4 +268,6 @@ exports.addBlocked = async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
     }
+
 };
+
