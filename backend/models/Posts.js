@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const PostSchema = new mongoose.Schema({
   text: String,
   author: {
-    type: mongoose.SchemaTypes.ObjectId
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "users"
   },
   comments: [{
     type: mongoose.SchemaTypes.ObjectId

@@ -94,3 +94,4 @@ export default function LoginSignUp() {
     </div>
   );
 }
+

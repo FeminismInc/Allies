@@ -34,6 +34,58 @@ exports.findUserByEmail = async (req, res, next) => {
   }
 };
 
+
+exports.newFollowing = async(req, res, next) => {
+  const { username } = req.body;
+
+  try {
+    const newFollowing = new FollowingModel({
+      username,
+      accounts_followed: []
+    })
+
+    await newFollowing.save();
+    res.status(201).json({ message: "Following created successfully" });
+
+  } catch (err) {
+    next(err);  
+  }
+}
+
+exports.newFollowers = async(req, res, next) => {
+  const { username } = req.body;
+
+  try {
+    const newFollowers = new BlockedModel({
+      username,
+      follower_accounts: []
+    })
+
+    await newFollowers.save();
+    res.status(201).json({ message: "Followers created successfully" });
+
+  } catch (err) {
+    next(err);  
+  }
+}
+
+exports.newBlocked = async(req, res, next) => {
+  const { username } = req.body;
+
+  try {
+    const newBlocked = new BlockedModel({
+      username,
+      blocked_accounts: []
+    })
+
+    await newBlocked.save();
+    res.status(201).json({ message: "Blocked created successfully" });
+
+  } catch (err) {
+    next(err);  
+  }
+}
+
 // Create a new user
 exports.createUser = async (req, res, next) => {
   const { birthdate, username, email, password, handle, pronouns } = req.body;
@@ -149,7 +201,9 @@ exports.getPostsByUsername = async (req, res, next) => {
         return res.status(404).json({ message: 'User not found' });
       }
   
-      const posts = await PostModel.find({ author: user.username });
+
+      const posts = await PostModel.find({ author: user.username });    //might need to change to user._id
+
   
       res.status(200).json(posts);
     } catch (err) {
@@ -214,4 +268,6 @@ exports.addBlocked = async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
     }
+
 };
+
