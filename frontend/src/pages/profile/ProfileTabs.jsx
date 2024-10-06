@@ -10,7 +10,6 @@ export default function ProfileTabs({username}) {
     const [posts, setPosts] = useState([]);
 
 
-    //where should this go??????
     const fetchPostsByUsername = async (username) => {
         try {
           console.log(username);

@@ -1,7 +1,6 @@
 const express = require('express');
 
 const { 
-    getUsers, 
     findUserByEmail, 
     createUser,
     getFollowers,
@@ -12,13 +11,14 @@ const {
     getBlockedByUsername,
     newBlocked,
     newFollowers,
-    newFollowing
+    newFollowing,
+    findUser
  } = require('../controllers/userController');
 
 
 const router = express.Router();
 
-router.get('/getUsers', getUsers); // Route to get all users
+router.get('/findUser', findUser); // Route to get all users
 router.post('/findUserbyEmail', findUserByEmail); // Route to find a user by email
 router.post('/form', createUser); // Route to create a new user
 router.get('/followers/:username', getFollowers); // Fetch followers of a user
