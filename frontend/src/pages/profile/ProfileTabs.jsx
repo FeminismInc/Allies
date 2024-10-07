@@ -50,7 +50,8 @@ export default function ProfileTabs({username}) {
                                   <span className="username">{username}</span>  
                                   <span className="handle">@{post.author}</span>
                                   <span className="post-date">
-                                    {new Date(post.datetime).toLocaleDateString()}
+                                    {new Date(post.datetime).toLocaleString()}
+                                    
                                   </span>
                                 </div>
                               </div>

@@ -11,7 +11,7 @@ import ProfileTabs from './ProfileTabs';
 
 export default function Profile() {
   
-  const username = "BarbieRoberts59"; //change this to username from sessionStorage 
+  const username = "matthew500"; //change this to username from sessionStorage 
 
 
   return (

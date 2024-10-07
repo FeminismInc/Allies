@@ -194,14 +194,14 @@ exports.getPostsByUsername = async (req, res, next) => {
   
     try {
 
-      const user = await UserModel.findOne({ username });
-      
+      const user = await UserModel.findOne({ username });  
+      console.log(user);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
   
-      const posts = await PostModel.find({ author: user.username });    //might need to change to user._id
-  
+      const posts = await PostModel.find({ author: user.username }).sort({ datetime: -1 });   //might need to change to user._id
+      console.log(posts)
       res.status(200).json(posts);
     } catch (err) {
       next(err);
