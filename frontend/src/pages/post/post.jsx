@@ -19,7 +19,7 @@ export default function PostPage(){
             // can add future if statement for media/hashtag/text stuff
             console.log("trying");
             const post = await axios.post(`${uri}/posts/createPost`, { //create new following object
-                text
+                text,
             })
 
             navigate('/profile')

@@ -31,7 +31,9 @@ export default function ProfileForm() {
                 alert("Please fill out all sections.");
                 return; // Exit the function early
               }
+
             const following = await axios.post(`${uri}/users/newFollowing`, { //create new following object
+
                 username
             })
             try {

@@ -4,37 +4,52 @@ const FollowersModel = require('../models/Followers');
 const PostModel = require('../models/Posts');
 const BlockedModel = require('../models/Blocked');
 // Get all users
-exports.getUsers = async (req, res, next) => {
+exports.findUser = async (req, res, next) => {
   try {
-    const users = await UserModel.find().populate('blocked', 'username');
-    res.status(200).json(users);
+    const username = req.session.userId;
+
+    if (!username) {
+      return res.status(401).json({ message: 'User is not logged in' });
+    }
+
+    const user = await UserModel.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(user); // Return the found user
   } catch (err) {
-    next(err);  
+    next(err);
   }
 };
 
 // Find a user by email and password
 exports.findUserByEmail = async (req, res, next) => {
   const { email, password } = req.body;
-
+  
   try {
     const user = await UserModel.findOne({ email });
-
     if (!user) {
-      return res.status(404).json({ message: 'User does not exist' });
+      return res.status(404).json({ message: 'User does not exist' }); //email is not connected to any user
     }
 
     if (user.password !== password) {
-      return res.status(400).json({ message: 'Handle does not match' });
+      return res.status(400).json({ message: 'Handle does not match' }); //password doesnt match email
     }
 
-    res.status(200).json({ exists: true });
+    req.session.userId = user.username; // saving username
+    req.session.email = user.email; // saving email
+
+    res.status(200).json({ exists: true }); //return true if login was successful
+    // about to change res.status to return anything, another way to get info rather than sessions
   } catch (err) {
     next(err);
   }
 };
 
-exports.newFollowing = async(req, res, next) => {
+
+exports.newFollowing = async(req, res, next) => { 
   const { username } = req.body;
 
   try {
@@ -265,4 +280,6 @@ exports.addBlocked = async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
     }
+
 };
+

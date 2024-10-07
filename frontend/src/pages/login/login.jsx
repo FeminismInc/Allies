@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import  {gapi} from 'gapi-script';
-import LoginButton from "../../components/google_auth/google_login";
+// import LoginButton from "../../components/google_auth/google_login"; import later
 import "./login.css";
 import personIcon from '../../assets/person_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg';
 import passwordIcon from '../../assets/lock_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg';
@@ -25,12 +25,12 @@ export default function LoginSignUp() {
 
       const signUpButton = document.getElementById('signUpButton');
     if (signUpButton) {
-      signUpButton.addEventListener('click', () => navigate('/form'));{/*Change this to the sign up route */}
+      signUpButton.addEventListener('click', () => navigate('/form'));
     }
 
   });
   
-  const [email, setUsername] = useState(""); // fix later
+  const [email, setUsername] = useState("");
   const [password, setHandle] = useState("");
   const navigate = useNavigate();
 
@@ -42,7 +42,7 @@ export default function LoginSignUp() {
     
     if (!email || !password) {
       alert("Please fill in both email and password.");
-      return; // Exit the function early
+      return;
     }
 
     axios.post(`${uri}/users/findUserbyEmail`, { email, password })
@@ -82,11 +82,11 @@ export default function LoginSignUp() {
         title="Login"
         color= "#f194ff"
         onPress={postEmail}
-      />                                {/*Probably get rid of Button styling is shit*/}
+      />                               
         <h2><span>OR</span></h2>
-        <LoginButton GotoHomePage={GoToHomePage}/>
-        <LoginButton GotoHomePage={GoToHomePage}/>  {/*facebook*/}
-        <LoginButton GotoHomePage={GoToHomePage}/>  {/*github*/}
+        {/* <LoginButton GotoHomePage={GoToHomePage}/>
+        <LoginButton GotoHomePage={GoToHomePage}/> 
+        <LoginButton GotoHomePage={GoToHomePage}/> */}
         <hr className = "separator"/>
           <h3>Don't have an Account? <span id="signUpButton">Sign up!</span></h3>
       </div>
