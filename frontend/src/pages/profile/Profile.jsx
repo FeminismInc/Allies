@@ -6,7 +6,7 @@ import './Sidebar'
 import Sidebar from "./Sidebar";
 import './profile.css'
 import ProfileTabs from './ProfileTabs';
-
+import ProfileHeader from './ProfileHeader'
 //NTS: Changes to data in mongoDB: User Barbie is the author of 2 posts
 
 export default function Profile() {
@@ -16,10 +16,7 @@ export default function Profile() {
 
   return (
     <div className="profile-container">
-      <div className="profile-header">
-        <h1>{username}'s Profile</h1>
-        <p>bio</p>
-      </div>
+      <ProfileHeader />
       <ProfileTabs username={username} /> {/* Renders the  Profile Tabs for Barbie's profile */}
       {/* <div class="row">
           <div class="col">
