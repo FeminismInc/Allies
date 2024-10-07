@@ -1,8 +1,5 @@
-
-import axios from 'axios';
-import React, { useState, useEffect } from "react";
-import './sidebar.css'
-import './Sidebar'
+import React, {useEffect} from "react";
+import Sidebar from '../../components/sidebar/Sidebar';
 import './profile.css'
 import ProfileTabs from './ProfileTabs';
 
@@ -26,21 +23,21 @@ export default function Profile() {
       });
   }, []); 
 
-  return (
-    <div className="profile-container">
-      <div className="profile-header">
-        <h1>{username}'s Profile</h1>
-        <p>bio</p>
-      </div>
-      <ProfileTabs username={username} /> {/* Renders the  Profile Tabs for Barbie's profile */}
-      {/* <div class="row">
+    return (
+      <div className="profileMainContent">
+        <div className="sidebarContainer">
+                <Sidebar/>
+        </div>
+        <div className = "homeContainer">
+          <div class="row">
           <div class="col">
             <div class="username-box">Lex_the_cat</div>
             <div><p> </p></div>
             <img src={ require('./IMG_4628.jpg') } width={350} height={350}/>
           </div>
-        </div> */}
-    </div>
-  );
+        </div>
+        </div>
+      </div>
+    );
 }
 
