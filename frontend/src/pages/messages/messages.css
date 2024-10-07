@@ -1,0 +1,34 @@
+.conversationsList {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 325px;
+    padding: 20px;
+    position: fixed;  /* Ensures the sidebar stays in place while scrolling */
+    top: 0;           /* Positions the sidebar at the top of the page */
+    left: 250px;     
+    background: #ffffff;   
+    border-radius: 20px; 
+  }
+  
+  .header {
+    display: flex;           /* Use Flexbox to align items horizontally */
+    align-items: center;      /* Align items vertically centered */
+  }
+  
+  .header h1 {
+    color: #606060;
+    font-size: 15px;
+    margin-right: auto;       /* Push the icon to the right */
+  }
+  
+.messages-container {
+    display: flex;
+    left: 750px;
+}
+.chatbox-empty-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}

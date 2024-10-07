@@ -283,3 +283,20 @@ exports.addBlocked = async (req, res) => {
 
 };
 
+//gets the array of conversationIds of user
+exports.getConversationsByUsername = async (req, res, next) => {
+  
+  const { username } = req.params;
+  //console.log(username);
+    try {
+      const conversation = await UserModel.findOne({ username }).select('conversations');  
+      //console.log(conversationIds);
+      if (!conversation) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+    // Return the list of conversation IDs
+    res.status(200).json({ conversationIds: conversation.conversations });
+  } catch (err) {
+    next(err);
+  }
+};

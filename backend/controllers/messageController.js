@@ -9,7 +9,7 @@ exports.getConversation = async (req, res) => {
         if (!conversation) {
             return res.status(404).json({ message: 'Conversation not found' });
         }
-
+        //edit this so that it sends a json that also includes the objectIds of the users involved in the conversation 
         res.status(200).json(conversation);
     } catch (err) {
         console.error(err);

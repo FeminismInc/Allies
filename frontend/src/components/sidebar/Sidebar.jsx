@@ -31,7 +31,7 @@ export default function Sidebar({children}) {
             icon:<AddBoxIcon/>
         },
         {
-            path: "/form",
+            path: "/messages",
             name: "Messages",
             icon:<ChatBubbleOutlineOutlinedIcon/>
         },

@@ -6,6 +6,7 @@ import Form from "./pages/form/Form"
 import Profile from "./pages/profile/Profile"
 import Sidebar from './components/sidebar/Sidebar';
 import PostPage from './pages/post/post';
+import MessagesPage from './pages/messages/Messages';
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginSignUp />} />
           <Route path="/home" element={<Home />} />
-          <Route path='/form' element={<Form />} />
+          <Route path='/messages' element={<MessagesPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/post" element = {<PostPage/>} />
         </Routes>
