@@ -1,14 +1,19 @@
+.conversationMainContent{
+  display: flex;
+  flex-direction: row;
+  width: calc(100% - 300px);
+  margin-left: 250px;
+}
 .conversationsList {
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 325px;
+    width: 270px;
     padding: 20px;
-    position: fixed;  /* Ensures the sidebar stays in place while scrolling */
-    top: 0;           /* Positions the sidebar at the top of the page */
+    position: fixed;  
     left: 250px;     
     background: #ffffff;   
-    border-radius: 20px; 
+    border-radius: 40px; 
   }
   
   .header {
@@ -18,17 +23,53 @@
   
   .header h1 {
     color: #606060;
-    font-size: 15px;
+    font-size: 18px;
     margin-right: auto;       /* Push the icon to the right */
   }
   
 .messages-container {
-    display: flex;
-    left: 750px;
-}
-.chatbox-empty-message {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-top: 300px;
+    margin-left: 310px;
 
+}
+
+/* Container for the input field and button */
+.message-input-container {
+  position: fixed;
+  bottom: 0; /* Stick to the bottom */
+  width: calc(100% - 580px);
+  display: flex;
+  align-items: center; /* Vertically center the input and button */
+  padding: 10px;
+  background-color: #f0f0f0; /* Background color for the input area */
+  
+}
+
+/* Input field styling */
+.message-input {
+  flex: 1; /* Take up the available width */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  outline: none;
+  font-size: 16px;
+}
+
+/* Send button styling */
+.send-button {
+  margin-left: 10px;
+  margin-bottom: 8px;
+  padding: 10px 20px;
+  background-color: #6d567c; /* Green background */
+  color: white; /* White text */
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  bottom: 3%;
+}
+
+.send-button:hover {
+  background-color: #524475; /* Darker green on hover */
 }

@@ -1,20 +1,45 @@
 
+.profileMainContent{
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 300px);
+  margin-left: 250px;
+
+
+}
+.profile-container{
+  display: flex;
+  flex-direction: column;
+}
+
 /* TODO: fix all of this lol  */
-  .profile-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;  /* Center the tabs horizontally */
-    /*padding: 40px; */
-    width: 900px;
-  }
-  
+.sidebar-container {
+  width: 300px;
+
+}
   /* Styling for the profile header (align it to the right) */
   .profile-header {
+    padding: 50px;
     align-self: flex-end;  /* Push the profile header to the right */
     text-align: right;     /* Right-align the text inside the header */
-    margin-bottom: 20px;   /* Add space between the header and the tabs */
+    margin-bottom: 20px;
+
+
+
+   /* Right-align the text inside the header */
+  /* Add space between the header and the tabs */
   }
+
+  .profile-tabs{
+    display: flex;
+    flex-direction: column;
+
+
+
+  }
+
+  
+
   
 
 /* .username-box {
@@ -26,16 +51,6 @@
     height: 35px;
     margin-right: auto;
     margin-top: 5vh;
-}
+}*/
 
-.profileMainContent{
-  display: flex;
-  flex-direction: row;
-  min-height: 100vh;
-}
 
-.homeContainer{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}

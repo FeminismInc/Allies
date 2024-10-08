@@ -284,10 +284,9 @@ exports.addBlocked = async (req, res) => {
 };
 
 //gets the array of conversationIds of user
+// dunno if this is sustainable, there's probably a better way to get all conversationIds from UserDetail
 exports.getConversationsByUsername = async (req, res, next) => {
-  
   const { username } = req.params;
-  //console.log(username);
     try {
       const conversation = await UserModel.findOne({ username }).select('conversations');  
       //console.log(conversationIds);
