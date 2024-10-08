@@ -87,11 +87,12 @@ export default function MessagesPage() {
                         className="message-input"
                         placeholder="Type your message..."
                     />
-                    <Button
+                    <button
                         className="send-button"
-                        onPress={send}>
+                        //onPress={send}
+                        >
                         Send
-                    </Button>
+                    </button>
                 </div>
             </div>
 
