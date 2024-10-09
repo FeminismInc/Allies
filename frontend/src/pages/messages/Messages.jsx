@@ -35,15 +35,10 @@ export default function MessagesPage() {
     //     e.preventDefault();
     //     try {
 
-    //         
-    //        
-    //         
-    //         
     //     }
     //     catch(e) {
     //         console.log('Something went wrong sending a message')
     //     }
-
     // }
 
     return (
@@ -89,7 +84,7 @@ export default function MessagesPage() {
                     />
                     <button
                         className="send-button"
-                        //onPress={send}
+                        //onClick={send}
                         >
                         Send
                     </button>
