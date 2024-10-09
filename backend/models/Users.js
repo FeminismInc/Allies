@@ -28,6 +28,7 @@ const UserSchema = new mongoose.Schema({
  }],
   conversations: [{ 
     type: mongoose.Schema.Types.ObjectId, 
+    ref: 'convos',
  }],
   public_boolean: Boolean,
   profile_picture: { 

@@ -1,4 +1,5 @@
 const ConversationModel = require('../models/Conversations');
+const UserModel = require('../models/Users');
 
 // Get a conversation by ID
 exports.getConversation = async (req, res) => {
@@ -19,10 +20,34 @@ exports.getConversation = async (req, res) => {
 
 // Create a new conversation
 exports.newConversation = async (req, res) => {
-    const { users } = req.body; 
-
+    const { currentUserId, otherUsername } = req.body; 
+    console.log("new conversation has been called");
     try {
-        const newConversation = await ConversationModel.create({ users });
+        // check if other user even exists!
+        const otherUser = await UserModel.findOne({username:otherUsername});
+        console.log("checking if otherUser exists...");
+        if (!otherUser) {
+            return res.status(404).json({ message: 'User not found' });
+          }
+
+        // check if a conversation between the exact same users already exists
+        const existingConversation = await ConversationModel.findOne({
+            users: { $all: [currentUserId, otherUser._id] },  // makes sure all users in the conversation don't already have an existing convo
+            $expr: { $eq: [{ $size: "$users" }, 2] }  
+        });
+        if (existingConversation) {
+            return res.status(200).json({
+                message: 'Conversation already exists'
+            });
+        }
+        
+        const newConversation = await ConversationModel.create({ users: [currentUserId, otherUser._id]});
+
+        // Adds the newly created convo id to each UserDetail obj of the participant users
+        await UserModel.updateMany(
+            { _id: { $in: [currentUserId, otherUser._id] } },  
+            { $addToSet: { conversations: newConversation._id } }  
+          );
         res.status(201).json(newConversation);
     } catch (err) {
         console.error(err);

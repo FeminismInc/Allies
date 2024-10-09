@@ -3,6 +3,7 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import './profile.css'
 import ProfileTabs from './ProfileTabs';
 import axios from "axios";
+import ProfileHeader from './ProfileHeader'
 
 //NTS: Changes to data in mongoDB: User Barbie is the author of 2 posts
 
@@ -32,10 +33,7 @@ export default function Profile() {
           <Sidebar />
         </div>
         <div className="profile-container">
-        <div className="profile-header">
-          <h1>Profile</h1>
-          <p>bio</p>
-        </div>
+          <ProfileHeader />
         <div className="profile-tabs">
         <ProfileTabs username={username} /> {/* Renders the  Profile Tabs for Barbie's profile */}
         </div>
