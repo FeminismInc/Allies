@@ -14,7 +14,6 @@ const {
     newFollowing,
     findUser,
     getConversationsByUsername,
-    test
  } = require('../controllers/userController');
 
 
@@ -35,7 +34,6 @@ router.post('/newFollowers', newFollowers); // Route to create a new followers o
 router.post('/newFollowing', newFollowing); // Route to create a new following object
 router.post('/newBlocked', newBlocked); // Route to create a new blocked object
 router.get('/getConversations/:username',getConversationsByUsername );
-router.get('/test', test)
 
 module.exports = router;
 

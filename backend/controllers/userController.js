@@ -300,15 +300,3 @@ exports.getConversationsByUsername = async (req, res, next) => {
     next(err);
   }
 };
-
-exports.test = async (req, res) => {
-
-  try {
-      console.log("garp dap up impact frame")
-      const socket = io.connect();
-      console.log('RAHHHHHH')
-  } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'no dap up' });
-  }
-};

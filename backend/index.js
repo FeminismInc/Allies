@@ -21,7 +21,7 @@ const uri = "mongodb+srv://kenhun2020:lhOAvQxVo7yJskRE@cluster0.ebktn.mongodb.ne
 const app = express();
 
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, { cors: {origin: "http://localhost:3000"}});
 
 app.use(express.json());
 
@@ -32,13 +32,15 @@ app.use(cors({
 
 connectDB();
 
-console.log("HELP");
 io.on('connection', (socket) => {
-  console.log('a user connected');
-});
+  console.log('user connected');  socket.on('disconnect', function () {
+    console.log('user disconnected');
+  });
+})
 
-server.listen(3000, () => {
-  console.log('server running at http://localhost:3000');
+const PORT = 5050;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 app.use(session({
@@ -65,11 +67,6 @@ app.use(errorHandler);
 
 app.get('/protected', isAuthenticated, (req, res) => {
   res.status(200).json({ message: 'You are authorized to access this route!' });
-});
-
-const PORT = 5050;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
 });
 
 

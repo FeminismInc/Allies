@@ -7,7 +7,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import Sidebar from '../../components/sidebar/Sidebar';
 import { Button } from 'react-native';
 import SendIcon from '@mui/icons-material/Send';
-
+import io from "../../../node_modules/socket.io/client-dist/socket.io.js";
 export default function MessagesPage() {
     //TODO: make a component called 'conversations' that display the profile pic, name, and snippet of most recent message
     // it will be used in both the messages widget in the home page and in the messages page (here)
@@ -18,6 +18,7 @@ export default function MessagesPage() {
     //const socket = io();
 
     useEffect(() => {
+        const socket = io.connect("http://localhost:5050");
         axios.get(`${uri}/users/getConversations/${username}`, {})
             .then(response => {
                 setConversationIds(response.data.conversationIds);
@@ -26,7 +27,6 @@ export default function MessagesPage() {
                 console.error('Error fetching conversationIds:', error);
 
             });
-                axios.get(`${uri}/users/test`, {});
     }, []);
 
     const [message, setMessage] = useState('')
@@ -44,11 +44,6 @@ export default function MessagesPage() {
     // }
     return (
         <div className='conversationMainContent'>
-            <script src="../node_modules/socket.io/client-dist/socket.io.js"></script>
-            <script>
-            const socket = io.connect();
-            console.log(socket);
-            </script>
             <div className="sidebarContainer">
                 <Sidebar />
             </div>
