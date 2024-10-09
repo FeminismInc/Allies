@@ -15,6 +15,7 @@ export default function MessagesPage() {
     const [conversationIds, setConversationIds] = useState([]);
     //const [username, setUsername] = useState('');
     const username = "BarbieRoberts59";
+    //const socket = io();
 
     useEffect(() => {
         axios.get(`${uri}/users/getConversations/${username}`, {})
@@ -25,6 +26,7 @@ export default function MessagesPage() {
                 console.error('Error fetching conversationIds:', error);
 
             });
+                axios.get(`${uri}/users/test`, {});
     }, []);
 
     const [message, setMessage] = useState('')
@@ -40,9 +42,13 @@ export default function MessagesPage() {
     //         console.log('Something went wrong sending a message')
     //     }
     // }
-
     return (
         <div className='conversationMainContent'>
+            <script src="../node_modules/socket.io/client-dist/socket.io.js"></script>
+            <script>
+            const socket = io.connect();
+            console.log(socket);
+            </script>
             <div className="sidebarContainer">
                 <Sidebar />
             </div>

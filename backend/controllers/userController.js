@@ -3,6 +3,7 @@ const FollowingModel = require('../models/Following');
 const FollowersModel = require('../models/Followers');
 const PostModel = require('../models/Posts');
 const BlockedModel = require('../models/Blocked');
+const io = require('../node_modules/socket.io/client-dist/socket.io.js');
 // Get all users
 exports.findUser = async (req, res, next) => {
   try {
@@ -297,5 +298,17 @@ exports.getConversationsByUsername = async (req, res, next) => {
     res.status(200).json({ conversationIds: conversation.conversations });
   } catch (err) {
     next(err);
+  }
+};
+
+exports.test = async (req, res) => {
+
+  try {
+      console.log("garp dap up impact frame")
+      const socket = io.connect();
+      console.log('RAHHHHHH')
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'no dap up' });
   }
 };

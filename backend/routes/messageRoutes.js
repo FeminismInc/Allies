@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getConversation, newConversation, deleteConversation } = require('../controllers/messageController'); // Adjust the path as necessary
+const { getConversation, newConversation, deleteConversation} = require('../controllers/messageController'); // Adjust the path as necessary
 
 // Route to get a conversation by ID
 router.get('/conversation/:conversationId', getConversation);

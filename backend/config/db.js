@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const uri = "mongodb+srv://kenhun2020:lhOAvQxVo7yJskRE@cluster0.ebktn.mongodb.net/Allies?retryWrites=true&w=majority&appName=Cluster0";
 
 const connectDB = async () => {
