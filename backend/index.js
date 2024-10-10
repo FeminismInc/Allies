@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const connectSocket = require('./config/socket.js')
 const MongoStore = require('connect-mongo');
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
@@ -10,13 +11,17 @@ const commentRoutes = require('./routes/commentRoutes');
 const errorHandler = require('./middlewares/errorHandler');
 const { isAuthenticated } = require('./middlewares/authHandler');
 const session = require('express-session');
+const { createServer } = require('node:http');
+const { join } = require('node:path');
+const { Server } = require('socket.io');
 
 
 const uri = "mongodb+srv://kenhun2020:lhOAvQxVo7yJskRE@cluster0.ebktn.mongodb.net/Allies?retryWrites=true&w=majority&appName=Cluster0";
 
-
-
 const app = express();
+
+const server = createServer(app);
+const io = new Server(server, { cors: {origin: "http://localhost:3000"}});
 
 app.use(express.json());
 
@@ -26,6 +31,17 @@ app.use(cors({
 }));
 
 connectDB();
+
+io.on('connection', (socket) => {
+  console.log('user connected');  socket.on('disconnect', function () {
+    console.log('user disconnected');
+  });
+})
+
+const PORT = 5050;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 app.use(session({
   secret: 'SuperSecretKeyWeUseShhh',
@@ -51,11 +67,6 @@ app.use(errorHandler);
 
 app.get('/protected', isAuthenticated, (req, res) => {
   res.status(200).json({ message: 'You are authorized to access this route!' });
-});
-
-const PORT = 5050;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
 });
 
 

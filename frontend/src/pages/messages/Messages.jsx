@@ -7,7 +7,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import Sidebar from '../../components/sidebar/Sidebar';
 import { Button } from 'react-native';
 import SendIcon from '@mui/icons-material/Send';
-
+import io from "../../../node_modules/socket.io/client-dist/socket.io.js";
 export default function MessagesPage() {
     
     const uri = 'http://localhost:5050/api';
@@ -49,6 +49,7 @@ export default function MessagesPage() {
       };
 
     useEffect(() => {
+        const socket = io.connect("http://localhost:5050");
         axios.get(`${uri}/users/getConversations/${currentUsername}`, {})
             .then(response => {
                 setConversationIds(response.data);
