@@ -3,7 +3,9 @@ const FollowingModel = require('../models/Following');
 const FollowersModel = require('../models/Followers');
 const PostModel = require('../models/Posts');
 const BlockedModel = require('../models/Blocked');
+const ConversationModel = require('../models/Conversations');
 const io = require('../node_modules/socket.io/client-dist/socket.io.js');
+
 // Get all users
 exports.findUser = async (req, res, next) => {
   try {
@@ -180,7 +182,8 @@ exports.addFollower = async (req, res, next) => {
       next(err);
     }
 };
-  
+
+
 // Remove following (unfollow a user)
 exports.removeFollowing = async (req, res, next) => {
     const { username, followingId } = req.body; 
@@ -286,17 +289,41 @@ exports.addBlocked = async (req, res) => {
 
 //gets the array of conversationIds of user
 // dunno if this is sustainable, there's probably a better way to get all conversationIds from UserDetail
+// NEW: outputs a json of array of usernames
 exports.getConversationsByUsername = async (req, res, next) => {
   const { username } = req.params;
     try {
-      const conversation = await UserModel.findOne({ username }).select('conversations');  
-      //console.log(conversationIds);
-      if (!conversation) {
-        return res.status(404).json({ message: 'User not found' });
+      //const conversation = await ConversationModel.find({users: userId })
+       const conversation = await UserModel.findOne({ username }).populate({
+         path: 'conversations',
+         populate: {
+           path: 'users',  // populate users in each conversation
+           select: 'username', 
+         }
+       })
+       .select('conversations'); // Only select the conversations field
+       //console.log(conversation.conversations);
+    if (!conversation) {
+        return res.status(404).json({ message: 'Conversations not found' });
       }
-    // Return the list of conversation IDs
-    res.status(200).json({ conversationIds: conversation.conversations });
+    // return the list of participating usernames and messageIds
+    res.status(200).json(conversation.conversations );
   } catch (err) {
+    next(err);
+  }
+};
+
+// gets user info by userId
+// might scrap
+exports.getUserInfo = async(req,res, next) => {
+  const {userId} = req.params;
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json(user);
+  }catch (err) {
     next(err);
   }
 };

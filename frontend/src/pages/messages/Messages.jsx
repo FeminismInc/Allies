@@ -9,19 +9,51 @@ import { Button } from 'react-native';
 import SendIcon from '@mui/icons-material/Send';
 import io from "../../../node_modules/socket.io/client-dist/socket.io.js";
 export default function MessagesPage() {
-    //TODO: make a component called 'conversations' that display the profile pic, name, and snippet of most recent message
-    // it will be used in both the messages widget in the home page and in the messages page (here)
+    
     const uri = 'http://localhost:5050/api';
     const [conversationIds, setConversationIds] = useState([]);
-    //const [username, setUsername] = useState('');
-    const username = "BarbieRoberts59";
-    //const socket = io();
+    const [showModal, setShowModal] = useState(false);
+    const [error, setError] = useState('');
+    const [otherUsername, setOtherUsername] = useState('');
+
+    const currentUsername = "BarbieRoberts59";
+    const currentUserId = '66eb88bffe2b2e83e706b1cc'; //for testing purposes
+
+    const handleOpenModal = () => {
+        setShowModal(true);
+      };
+    
+      const handleCloseModal = () => {
+        setShowModal(false);
+        setOtherUsername('');
+        setError('');
+      };
+
+      const handleCreateConversation = async () => {
+        try {
+          const response = await axios.post(`${uri}/messages/conversation`, {
+            currentUserId, // logged-in users Id
+            otherUsername // the entered username
+          });
+    
+          if (response.status === 201) {
+            alert('Conversation created successfully');
+            handleCloseModal();
+          } else if (response.status === 404) {
+            setError('User not found');
+          }
+        } catch (error) {
+          console.error('Error creating conversation-frontend', error);
+          setError('Something went wrong, please try again.');
+        }
+      };
 
     useEffect(() => {
         const socket = io.connect("http://localhost:5050");
-        axios.get(`${uri}/users/getConversations/${username}`, {})
+        axios.get(`${uri}/users/getConversations/${currentUsername}`, {})
+
             .then(response => {
-                setConversationIds(response.data.conversationIds);
+                setConversationIds(response.data);
             })
             .catch(error => {
                 console.error('Error fetching conversationIds:', error);
@@ -29,19 +61,20 @@ export default function MessagesPage() {
             });
     }, []);
 
-    const [message, setMessage] = useState('')
+    
+
+
+    const [message, setMessage] = useState('');
+  
 
     //TODO: we need an API for sending messages. Once that's created we can fill this in
-    // const send = async (e) => {
-    //     console.log("entered submit");
-    //     e.preventDefault();
-    //     try {
+     const send = (e) => {
+        e.preventDefault();
+        console.log(message);
+        setMessage('');
+        
+     };
 
-    //     }
-    //     catch(e) {
-    //         console.log('Something went wrong sending a message')
-    //     }
-    // }
     return (
         <div className='conversationMainContent'>
             <div className="sidebarContainer">
@@ -51,19 +84,47 @@ export default function MessagesPage() {
             <div className='conversationsList'>
                 <div className="header">
                     <h1>Recent Messages</h1>
-                    <IconButton aria-label="create-conversation">
+                    
+                    <IconButton aria-label="create-conversation" onClick={handleOpenModal}>
                         <AddCircleOutlineIcon />
                     </IconButton>
+                    {/* modal where the current user will enter the username of the user they want to start a conversation with.
+                        Maybe turn into component later  */}
+                    {showModal && (
+                        <div className="modal-overlay">
+                            <div className="modal">
+                                <h2>Start a Conversation</h2>
+                                <input
+                                    type="text"
+                                    placeholder="Enter username"
+                                    value={otherUsername}
+                                    onChange={(e) => setOtherUsername(e.target.value)}
+                                />
+                                {error && <p className="error">{error}</p>}
+                                <button onClick={handleCreateConversation}>Start Conversation</button>
+                                <button onClick={handleCloseModal}>Cancel</button>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 {/* clickable previews of conversations (display profile picture and username of the user that's in correspondence) */}
                 <div className='conversations'>
                     {conversationIds.length > 0 ? (
-                        conversationIds.map((id) => (
-                            <div key={id} className="convo">
+                        conversationIds.map((conversation) => (
+                            <div key={conversation._id} className="convo" onClick={() => {
+                              }}
+                            >
                                 <IconButton aria-label="profile-picture">
                                     <AccountCircleOutlinedIcon />
                                 </IconButton>
-                                <span className="username">{"ConversationId: "}{id}</span>  {/* will need to replace this whole section with conversation component that uses a request to get the conversation by conversationId and populates */}
+                                {/* Filter out the current user from the conversation's user list */}
+                                {conversation.users
+                                    .filter(user => user.username !== currentUsername)  // Exclude current user
+                                    .map((user, index) => (
+                                        <div key={index} className="user-info">
+                                            <span className="username">{user.username}</span>
+                                        </div>
+                                    ))}
                             </div>
                         ))) : (<p>No posts found.</p>)}
                 </div>
@@ -85,7 +146,7 @@ export default function MessagesPage() {
                     />
                     <button
                         className="send-button"
-                        //onClick={send}
+                        onClick={send}
                         >
                         Send
                     </button>
