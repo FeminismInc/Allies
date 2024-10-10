@@ -16,8 +16,9 @@ export default function MessagesPage() {
     const [error, setError] = useState('');
     const [otherUsername, setOtherUsername] = useState('');
 
-    const currentUsername = "BarbieRoberts59";
-    const currentUserId = '66eb88bffe2b2e83e706b1cc'; //for testing purposes
+    // for testing purposes 
+    const currentUsername = "matthew500";
+    const currentUserId = '66fe3c39f0478c848d7bc7d5'; 
 
     const handleOpenModal = () => {
         setShowModal(true);
@@ -73,18 +74,13 @@ export default function MessagesPage() {
         setMessage('');
         
      };
-
-
     return (
         <div className='conversationMainContent'>
-            <div className="sidebarContainer">
                 <Sidebar />
-            </div>
             {/* left side of the messages page (list of recent messages, add new message, search bar?) */}
             <div className='conversationsList'>
                 <div className="header">
                     <h1>Recent Messages</h1>
-                    
                     <IconButton aria-label="create-conversation" onClick={handleOpenModal}>
                         <AddCircleOutlineIcon />
                     </IconButton>
@@ -135,6 +131,7 @@ export default function MessagesPage() {
                 <div className='messagelog-container'>
                     <h1>{"Messages here"}</h1>
                 </div>
+
                 {/* Unsure if i did this part right */}
                 <div className="message-input-container">
                     <input

@@ -1,8 +1,11 @@
 .conversationMainContent{
   display: flex;
   flex-direction: row;
-  width: calc(100% - 300px);
-  margin-left: 250px;
+  height: 100%;
+  width: calc(100% - 280px); 
+  margin-left: 280px;
+
+
 }
 .conversationsList {
     display: flex;
@@ -37,16 +40,23 @@
 
   
 .messages-container {
-    margin-top: 300px;
-    margin-left: 310px;
+  width: calc(100% - 280px);
+  display: flex;
+  flex-direction: column;
+  margin-left: 270px;
 
 }
+.messagelog-container {
+  align-self: center;
+}
+
+
 
 /* Container for the input field and button */
 .message-input-container {
-  position: fixed;
+  flex: 1;
+  margin-top: 700px;
   bottom: 0; /* Stick to the bottom */
-  width: calc(100% - 580px);
   display: flex;
   align-items: center; /* Vertically center the input and button */
   padding: 10px;
@@ -56,7 +66,7 @@
 
 /* Input field styling */
 .message-input {
-  flex: 1; /* Take up the available width */
+  flex: 1; 
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 20px;
