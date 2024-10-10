@@ -4,6 +4,8 @@ const FollowersModel = require('../models/Followers');
 const PostModel = require('../models/Posts');
 const BlockedModel = require('../models/Blocked');
 const ConversationModel = require('../models/Conversations');
+const io = require('../node_modules/socket.io/client-dist/socket.io.js');
+
 // Get all users
 exports.findUser = async (req, res, next) => {
   try {
