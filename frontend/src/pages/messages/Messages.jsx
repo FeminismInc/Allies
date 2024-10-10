@@ -130,6 +130,39 @@ export default function MessagesPage() {
             <div className='messages-container'>
                 <div className='messagelog-container'>
                     <h1>{"Messages here"}</h1>
+                    {/* testing purposes */}
+                    <div className="message">
+                        <div className="message-header">
+                        {/* <AccountCircleOutlinedIcon className="profile-picture" /> */}
+                            <div className="message-info">
+                                <span className="username">{"username"}</span>
+                                {/* <span className="handle">@{post.author}</span>
+                                <span className="post-date">
+                                    {new Date(post.datetime).toLocaleString()}
+
+                                </span> */}
+                            </div>
+                        </div>
+                        <div className="message-content">
+                            <p>{'How do you feel about overthrowing a small government asdfjpoqj adskfpok c [psdfl[[pl ckn qooc[ l[pla[p lsd dsf'}</p>
+                        </div>
+                    </div>
+                    <div className="message">
+                        <div className="message-header">
+                        {/* <AccountCircleOutlinedIcon className="profile-picture" /> */}
+                            <div className="message-info">
+                                <span className="username">{"username2"}</span>
+                                {/* <span className="handle">@{post.author}</span>
+                                <span className="post-date">
+                                    {new Date(post.datetime).toLocaleString()}
+
+                                </span> */}
+                            </div>
+                        </div>
+                        <div className="message-content">
+                            <p>{'maybe you shouldnt'}</p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Unsure if i did this part right */}
