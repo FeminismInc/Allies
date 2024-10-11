@@ -163,8 +163,8 @@ export default function MessagesPage() {
                             <p>{'maybe you shouldnt'}</p>
                         </div>
                     </div>
+                    
                 </div>
-
                 {/* Unsure if i did this part right */}
                 <div className="message-input-container">
                     <input

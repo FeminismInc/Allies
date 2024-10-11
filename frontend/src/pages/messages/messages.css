@@ -37,10 +37,10 @@
     margin-right: 60px;
    
   }
-
   
 .messages-container {
   width: calc(100% - 280px);
+  height: 100vh;
   display: flex;
   flex-direction: column;
   margin-left: 270px;
@@ -48,6 +48,9 @@
 .messagelog-container {
   align-self: start;
   margin-left: 3%;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .message {
   display: flex;
@@ -79,7 +82,7 @@
 /* Container for the input field and button */
 .message-input-container {
   flex: 1;
-  margin-top: 700px;
+  margin-top: auto;
   bottom: 0; /* Stick to the bottom */
   display: flex;
   align-items: center; /* Vertically center the input and button */
@@ -118,7 +121,7 @@
 }
 
 .modal-overlay {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
