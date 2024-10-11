@@ -8,16 +8,17 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { NavLink } from 'react-router-dom';
 import {FaBars} from "react-icons/fa";
 import SearchBar from "../search_bar/searchBar";
-import AddBoxIcon from '@mui/icons-material/AddBox';
+
+
 //will connect to pages: Home, Profile, Messages, Notifications, Logout
 
-export default function Sidebar({children}) {
-    const[isOpen ,setIsOpen] = useState(false);
+export default function Sidebar() {
+    const[isOpen ,setIsOpen] = useState(true);
     const toggle = () => setIsOpen (!isOpen);
     const menuItem =[
         {
             path: "/home",
-            name: "home",
+            name: "Home",
             icon:<HomeOutlinedIcon/>
         },
         {
@@ -31,7 +32,7 @@ export default function Sidebar({children}) {
             icon:<AddBoxIcon/>
         },
         {
-            path: "/form",
+            path: "/messages",
             name: "Messages",
             icon:<ChatBubbleOutlineOutlinedIcon/>
         },
@@ -49,12 +50,11 @@ export default function Sidebar({children}) {
 
     ]
     return (
-        <div className="container">
-           <div style={{width: isOpen ? "200px" : "50px"}} className="sidebar">
+           <div style={{width: isOpen ? "240px" : "100px"}} className="sidebar">
            
                <div className="top_section">
                    <h1 style={{display: isOpen ? "block" : "none"}} className="logo">Allies</h1>
-                   <div style={{marginLeft: isOpen ? "50px" : "0px"}} className="bars">
+                   <div style={{marginLeft: isOpen ? "75px" : "5px"}} className="bars">
                        <FaBars onClick={toggle}/>
                    </div>
                </div>
@@ -64,25 +64,12 @@ export default function Sidebar({children}) {
                 {   
                     menuItem.map((item, index)=>(
                         <NavLink to={item.path} key={index} className="link" activeclassName="active">
-                            <div className="icon">{item.icon}</div>
+                            <div style={{marginLeft: isOpen ? "0px" : "15px"}} className="icon" >{item.icon}</div>
                             <div style={{display: isOpen ? "block" : "none"}} className="link_text">{item.name}</div>
                         </NavLink>
                         
                     ))
                 }
-            </div>
-           <main>{children}</main>
-           
-        </div>
+            </div>           
     );
-
-  /*  return (
-        <div>
-        <HomeOutlinedIcon className="home_icon"/>
-        <AccountCircleOutlinedIcon className="person_icon"/>
-        <ChatBubbleOutlineOutlinedIcon className="chat_icon"/>
-        <NotificationsOutlinedIcon className="notif_icon"/>
-        <LogoutOutlinedIcon className="logout_icon"/>
-        </div> 
-    ) */
 };

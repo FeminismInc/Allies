@@ -1,33 +1,43 @@
-
-import axios from 'axios';
-import React, { useState, useEffect } from "react";
-import './sidebar.css'
-import './Sidebar'
-import Sidebar from "./Sidebar";
+import React, {useEffect,useState} from "react";
+import Sidebar from '../../components/sidebar/Sidebar';
 import './profile.css'
 import ProfileTabs from './ProfileTabs';
+import axios from "axios";
+import ProfileHeader from './ProfileHeader'
 
 //NTS: Changes to data in mongoDB: User Barbie is the author of 2 posts
 
 export default function Profile() {
   
   const username = "matthew500"; //change this to username from sessionStorage 
+  //const [username, setUsername] = useState('');
+  const uri = 'http://localhost:5050/api';
 
+
+  // useEffect(() => {
+
+  //   axios.get(`${uri}/users/findUser`, { withCredentials: true }) 
+  //     .then(response => {
+  //       setUsername(response.data.username); 
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching user:', error);
+        
+  //     });
+  // }, []); 
 
   return (
-    <div className="profile-container">
-      <div className="profile-header">
-        <h1>{username}'s Profile</h1>
-        <p>bio</p>
+    <div className="profileMainContent">
+      
+        <div className="sidebarContainer">
+          <Sidebar />
+        </div>
+        <div className="profile-container">
+          <ProfileHeader />
+        <div className="profile-tabs">
+        <ProfileTabs username={username} /> {/* Renders the  Profile Tabs for Barbie's profile */}
+        </div>
       </div>
-      <ProfileTabs username={username} /> {/* Renders the  Profile Tabs for Barbie's profile */}
-      {/* <div class="row">
-          <div class="col">
-            <div class="username-box">Lex_the_cat</div>
-            <div><p> </p></div>
-            <img src={ require('./IMG_4628.jpg') } width={350} height={350}/>
-          </div>
-        </div> */}
     </div>
   );
 }
