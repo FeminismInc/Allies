@@ -89,7 +89,7 @@ export default function MessagesPage() {
                     {showModal && (
                         <div className="modal-overlay">
                             <div className="modal">
-                                <h2>Start a Conversation</h2>
+                                <h1>Start a Conversation</h1>
                                 <input
                                     type="text"
                                     placeholder="Enter username"
@@ -129,7 +129,6 @@ export default function MessagesPage() {
             {/* right side of messages page: displays the messages of the clicked conversation and input text bar thingy*/}
             <div className='messages-container'>
                 <div className='messagelog-container'>
-                    <h1>{"Messages here"}</h1>
                     {/* testing purposes */}
                     <div className="message">
                         <div className="message-header">

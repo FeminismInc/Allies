@@ -1,12 +1,11 @@
 .conversationMainContent{
   display: flex;
   flex-direction: row;
-  height: 100%;
+  height: 100vh;
   width: calc(100% - 280px); 
   margin-left: 280px;
-
-
 }
+
 .conversationsList {
     display: flex;
     flex-direction: column;
@@ -17,10 +16,22 @@
     left: 250px;     
     background: #ffffff;   
     border-radius: 40px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease;
   }
+
+  .convo:hover {
+    background-color: #d6bfe1; 
+  }
+
   .convo {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #f8eefd;
+
   }
   .header {
     display: flex;           /* flexbox to align items horizontally */
@@ -31,26 +42,31 @@
   span.username {
     font-size: smaller;
   }
+
   .header h1 {
     color: #606060;
     font-size: 18px;
     margin-right: 60px;
-   
   }
   
 .messages-container {
-  width: calc(100% - 280px);
-  height: 100vh;
+  width: 100%;
+  /* width: calc(100% - 280px); */
+  justify-content: space-between;
   display: flex;
   flex-direction: column;
   margin-left: 270px;
+
 }
 .messagelog-container {
-  align-self: start;
-  margin-left: 3%;
+  margin-top: 5%;
+  display: flex;
+  flex-direction: column;
+  margin-left: 2%;
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
+
 }
 .message {
   display: flex;
@@ -59,8 +75,8 @@
   border: 1px solid #e6ecf0;
   border-radius: 32px;
   padding: 15px;
-  width: 100%;
-  max-width: 880px;
+  width: 80%;
+  max-width: 700px;
   margin: 10px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -81,24 +97,26 @@
 
 /* Container for the input field and button */
 .message-input-container {
-  flex: 1;
+  flex-direction: row;
   margin-top: auto;
   bottom: 0; /* Stick to the bottom */
+  position: sticky;
   display: flex;
   align-items: center; /* Vertically center the input and button */
-  padding: 10px;
-  background-color: #f0f0f0; /* Background color for the input area */
-  
+  margin-right: 20%;
+  margin-left: 2%;
 }
 
 /* Input field styling */
 .message-input {
-  flex: 1; 
   padding: 10px;
+  flex: 1;
   border: 1px solid #ccc;
   border-radius: 20px;
   outline: none;
   font-size: 16px;
+  background-color: #f7f7f7;
+  z-index: 100;
 }
 
 /* Send button styling */
@@ -121,7 +139,7 @@
 }
 
 .modal-overlay {
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -138,6 +156,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px; 
+
 }
 .modal button {
   padding: 10px 15px;
