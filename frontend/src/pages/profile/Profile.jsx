@@ -9,22 +9,21 @@ import ProfileHeader from './ProfileHeader'
 
 export default function Profile() {
   
-  const username = "matthew500"; //change this to username from sessionStorage 
-  //const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('');
   const uri = 'http://localhost:5050/api';
 
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   axios.get(`${uri}/users/findUser`, { withCredentials: true }) 
-  //     .then(response => {
-  //       setUsername(response.data.username); 
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching user:', error);
+    axios.get(`${uri}/users/findUser`, { withCredentials: true }) 
+      .then(response => {
+        setUsername(response.data.username); 
+      })
+      .catch(error => {
+        console.error('Error fetching user:', error);
         
-  //     });
-  // }, []); 
+      });
+  }, []); 
 
   return (
     <div className="profileMainContent">

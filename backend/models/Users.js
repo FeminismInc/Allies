@@ -10,16 +10,10 @@ const UserSchema = new mongoose.Schema({
   joined: { type: Date, default: new Date() },
   handle: String,
   bio: String,
-  blocked: { 
-    type: mongoose.Schema.Types.ObjectId,
- },
   pronouns: String,
-  followers: { 
-    type: mongoose.Schema.Types.ObjectId,
- },
-  following: { 
-    type: mongoose.Schema.Types.ObjectId,
-},
+  blocked: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Change to ObjectId array
+  followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Followers' }],
+  following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Following' }],
   posts: [{ 
     type: mongoose.Schema.Types.ObjectId,
  }],

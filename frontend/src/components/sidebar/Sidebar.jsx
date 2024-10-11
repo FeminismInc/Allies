@@ -8,6 +8,7 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { NavLink } from 'react-router-dom';
 import {FaBars} from "react-icons/fa";
 import SearchBar from "../search_bar/searchBar";
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
 //will connect to pages: Home, Profile, Messages, Notifications, Logout

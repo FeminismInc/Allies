@@ -2,138 +2,139 @@ import axios from 'axios';
 import React, { useState, useEffect } from "react";
 import IconButton from '@mui/material/IconButton';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import "./messages.css"
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import Sidebar from '../../components/sidebar/Sidebar';
-import { Button } from 'react-native';
-import SendIcon from '@mui/icons-material/Send';
-//import io from "../../../node_modules/socket.io/client-dist/socket.io.js";
+import { io } from "socket.io-client"; // Import socket.io
 import { v4 as uuidv4 } from 'uuid';
+import "./messages.css";
 
 export default function MessagesPage() {
-    
     const uri = 'http://localhost:5050/api';
-    //const socket = io.connect("http://localhost:5050");
+    const socket = io("http://localhost:5050"); // Initialize socket connection
+
     const [conversationIds, setConversationIds] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState('');
     const [otherUsername, setOtherUsername] = useState('');
     const [message, setMessage] = useState('');
     const [messageList, setMessageList] = useState([]);
-    const [time, setTime] = useState(new Date());
+    const [currentConversation, setCurrentConversation] = useState(null);
     const [currentUserID, setCurrentUserID] = useState("");
+
+    // Function to send a message
     const send = async (e) => {
         e.preventDefault();
-        var c = document.getElementById("message-input").value;
-        //socket.emit('messageOut', {contents:c, id:Date.now().toString()});
-        console.log("trying");
-            const post = await axios.post(`${uri}/messages/newMessage`, { //create message object
-                sender: currentUserID,
-                destination: prompt("please enter destination user"),
-                id: Date.now().toString(),
-                datetime: Date.now(),
-                message_content: c
-        })
-        setMessage(''); 
-     };
+        if (!currentConversation) return;
+        const messageContent = document.getElementById("message-input").value;
+        console.log(currentConversation);
+        const messageObj = {
+            sender: currentUserID,
+            destination: currentConversation.users.filter(user => user !== currentUserID)[0], 
+            id: currentConversation._id,
+            message_content: messageContent,
+            datetime: Date.now()
+        };
 
-     const receive = () => {
-        if (currentUserID == "") return;
-        axios.get(`${uri}/messages/getMessages/${currentUserID}`, {})
-        .then(response => {
-            var msgs = [];
-            response.data.forEach(element => {
-                var found = false;
-                for(var i = 0; i < messageList.length; i++){
-                    if(messageList[i].id == element.id){
-                        found = true;
-                    }
-                }
-                if(!found){
-                    msgs = [element,...msgs];
-                }
-            });
-            setMessageList([...messageList, ...msgs]);
-        })
-        .catch(error => {
-            console.error('Error fetching messages:', error);
-
-        });
-    }
-    const handleOpenModal = () => {
-        setShowModal(true);
-      };
+        try {
+            // Create and save the message to the database
+            const newMessage = await axios.post(`${uri}/messages/newMessage`, messageObj);
+            console.log(newMessage.data);
+            // Emit message to the server
+            socket.emit("messageOut", { ...messageObj, _id: newMessage.data._id });
     
-      const handleCloseModal = () => {
+            await axios.post(`${uri}/messages/addMessageConversation`, {
+                conversationId: currentConversation._id,
+                messageId: newMessage.data._id
+            });
+    
+            // Clear input
+            setMessage('');
+        } catch (error) {
+            console.error("Error sending message:", error);
+        }
+    };
+
+    // Listen for incoming messages
+    useEffect(() => {
+        socket.on('messageIn', (newMessage) => {
+            console.log("Message received:", newMessage);
+            // If the new message belongs to the current conversation, update the message list
+            if (newMessage.id === currentConversation?._id) {
+                setMessageList(prevMessages => [newMessage, ...prevMessages]);
+            }
+        });
+
+        return () => {
+            socket.off('messageIn'); // Cleanup on component unmount
+        };
+    }, [currentConversation]);
+
+    useEffect(() => {
+        axios.get(`${uri}/users/getCurrentUserID`)
+            .then(response => {
+                console.log(response.data);
+                setCurrentUserID(response.data.username);
+                return axios.get(`${uri}/users/getConversations/${response.data.username}`);
+            })
+            .then(response => {
+                const conversations = Array.isArray(response.data) ? response.data : [response.data];
+                setConversationIds(conversations);
+            })
+            .catch(error => {
+                console.error('Error fetching conversations:', error);
+            });
+    }, []);
+
+    useEffect(() => {
+        console.log('Updated Conversation IDs:', conversationIds);
+    }, [conversationIds]);
+
+    const handleOpenModal = () => setShowModal(true);
+    
+    const handleCloseModal = () => {
         setShowModal(false);
         setOtherUsername('');
         setError('');
-      };
+    };
 
-      const handleCreateConversation = async () => {
+    const handleCreateConversation = async () => {
         try {
-          const response = await axios.post(`${uri}/messages/conversation`, {
-            currentUserID, // logged-in users Id
-            otherUsername // the entered username
-          });
-    
-          if (response.status === 201) {
-            alert('Conversation created successfully');
-            handleCloseModal();
-          } else if (response.status === 404) {
-            setError('User not found');
-          }
-        } catch (error) {
-          console.error('Error creating conversation-frontend', error);
-          setError('Something went wrong, please try again.');
-        }
-      };
+            const response = await axios.post(`${uri}/messages/conversation`, {
+                currentUserID,
+                otherUsername
+            });
 
-    useEffect(() => {
-        /*axios.get(`${uri}/users/getConversations/${currentUsername}`, {})
-
-            .then(response => {
-                setConversationIds(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching conversationIds:', error);
-
-            });*/
-        var interval;
-        axios.get(`${uri}/users/getCurrentUserID`, {}).then(response => {
-            setCurrentUserID(response.data.currentUserID)
-             interval = setInterval(() => {console.log("trying to get messages"); receive(); setTime(new Date()); }, 10000);
-        })
-        receive();
-        
-        return () => clearInterval(interval);
-    }, [messageList, receive]);
-  
-    //TODO: we need an API for sending messages. Once that's created we can fill this in
-     
-
-    /*socket.on('messageIn', (message) => {
-        var messageContents = message.contents;
-        var found = false;
-        for(var i = 0; i < messageList.length; i++){
-            if(messageList[i].id == message.id){
-                found = true;
+            if (response.status === 201) {
+                alert('Conversation created successfully');
+                setConversationIds(prevConversations => [...prevConversations, response.data]);
+                handleCloseModal();
+            } else if (response.status === 404) {
+                setError('User not found');
             }
+        } catch (error) {
+            console.error('Error creating conversation:', error);
+            setError('Something went wrong, please try again.');
         }
-        if(!found){
-            setMessageList([...messageList, message]);
-        }
-    });*/
+    };
 
-    //socket.emit("messageOut", {contents:"whuh"});
-
+    const receiveMessages = async () => {
+            console.log(currentConversation)
+            try {
+                const response = await axios.get(`${uri}/messages/getMessages/${currentConversation.users[1]}`);
+                console.log("hello",response.data)
+                setMessageList(response.data);
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
+    };
 
     return (
         <div className='conversationMainContent'>
             <div className="sidebarContainer">
                 <Sidebar />
             </div>
-            {/* left side of the messages page (list of recent messages, add new message, search bar?) */}
+
+            {/* Left side: Conversation List */}
             <div className='conversationsList'>
                 <div className="header">
                     <h1>Recent Messages</h1>
@@ -141,8 +142,8 @@ export default function MessagesPage() {
                     <IconButton aria-label="create-conversation" onClick={handleOpenModal}>
                         <AddCircleOutlineIcon />
                     </IconButton>
-                    {/* modal where the current user will enter the username of the user they want to start a conversation with.
-                        Maybe turn into component later  */}
+
+                    {/* Modal to start a new conversation */}
                     {showModal && (
                         <div className="modal-overlay">
                             <div className="modal">
@@ -160,30 +161,36 @@ export default function MessagesPage() {
                         </div>
                     )}
                 </div>
-                {/* clickable previews of conversations (display profile picture and username of the user that's in correspondence) */}
+
+                {/* Conversation previews */}
                 <div className='conversations'>
                     {conversationIds.length > 0 ? (
                         conversationIds.map((conversation) => (
-                            <div key={conversation._id} className="convo" onClick={() => {
-                              }}
+                            <div
+                                key={conversation._id}
+                                className="convo"
+                                onClick={() => {
+                                    setCurrentConversation(conversation);
+                                    receiveMessages();
+                                }}
                             >
                                 <IconButton aria-label="profile-picture">
                                     <AccountCircleOutlinedIcon />
                                 </IconButton>
-                                {/* Filter out the current user from the conversation's user list */}
                                 {conversation.users
-                                    .filter(user => user.username !== currentUserID)  // Exclude current user
+                                    .filter(user => user !== currentUserID)
                                     .map((user, index) => (
                                         <div key={index} className="user-info">
-                                            <span className="username">{user.username}</span>
+                                            <span className="username">{user}</span>
                                         </div>
                                     ))}
                             </div>
-                        ))) : (<p>CURRENT USERNAME: {currentUserID}</p>)}
+                        ))
+                    ) : (<p>CURRENT USERNAME: {currentUserID}</p>)}
                 </div>
             </div>
 
-            {/* right side of messages page: displays the messages of the clicked conversation and input text bar thingy*/}
+            {/* Right side: Message display */}
             <div className='messages-container'>
                 <div className='messagelog-container'>
                     <ul className='messages'>
@@ -192,33 +199,31 @@ export default function MessagesPage() {
                                 key={uuidv4()}
                                 className="message-container"
                             >
-                                <span className="message" class={(message.destination.localeCompare(currentUserID) == 0) ? "yours" : "mine"}>{message.message_content}</span>
+                                <span className={(message.sender === currentUserID) ? "yours" : "mine"}>
+                                    {message.message_content}
+                                </span>
                                 <br/>
                             </div>
-                            ))
-                        }
+                        ))}
                     </ul>
                 </div>
                 <div className="message-input-container">
                     <input
                         type="text"
                         value={message}
-                        onChange={(e) => { setMessage(e.target.value) }}
+                        onChange={(e) => setMessage(e.target.value)}
                         className="message-input"
                         placeholder="Type your message..."
-                        id = "message-input"
+                        id="message-input"
                     />
                     <button
                         className="send-button"
                         onClick={send}
-                        >
+                    >
                         Send
                     </button>
                 </div>
             </div>
-
         </div>
-
-    )
-
+    );
 }

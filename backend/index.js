@@ -33,15 +33,20 @@ app.use(cors({
 connectDB();
 
 io.on('connection', (socket) => {
-  socket.emit('messageIn', {contents: 'how', id: 'x'})
-  socket.emit('messageIn', {contents: 'where', id: 'y'})
-});
+  console.log('A user connected:', socket.id);
 
-io.on('connection', (socket) => {
-  socket.on('messageOut', (msg) => {
-    console.log(msg);
+  // Listen for messages from the client
+  socket.on('messageOut', async (message) => {
+      console.log('Message sent:', message);
+      
+      // Emit message to all connected clients
+      io.emit('messageIn', { ...message }); // Use the incoming message directly
   });
-})
+
+  socket.on('disconnect', () => {
+      console.log('User disconnected:', socket.id);
+  });
+});
 
 const PORT = 5050;
 server.listen(PORT, () => {
