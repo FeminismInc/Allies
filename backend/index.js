@@ -33,8 +33,13 @@ app.use(cors({
 connectDB();
 
 io.on('connection', (socket) => {
-  console.log('user connected');  socket.on('disconnect', function () {
-    console.log('user disconnected');
+  socket.emit('messageIn', {contents: 'how', id: 'x'})
+  socket.emit('messageIn', {contents: 'where', id: 'y'})
+});
+
+io.on('connection', (socket) => {
+  socket.on('messageOut', (msg) => {
+    console.log(msg);
   });
 })
 

@@ -8,15 +8,21 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import { Button } from 'react-native';
 import SendIcon from '@mui/icons-material/Send';
 import io from "../../../node_modules/socket.io/client-dist/socket.io.js";
+import { v4 as uuidv4 } from 'uuid';
+
 export default function MessagesPage() {
     
     const uri = 'http://localhost:5050/api';
+    const socket = io.connect("http://localhost:5050");
     const [conversationIds, setConversationIds] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState('');
     const [otherUsername, setOtherUsername] = useState('');
+    const [message, setMessage] = useState('');
+    const [messageList, setMessageList] = useState([]);
+    
 
-    const currentUsername = "BarbieRoberts59";
+    const currentUsername = "user2";
     const currentUserId = '66eb88bffe2b2e83e706b1cc'; //for testing purposes
 
     const handleOpenModal = () => {
@@ -49,8 +55,7 @@ export default function MessagesPage() {
       };
 
     useEffect(() => {
-        const socket = io.connect("http://localhost:5050");
-        axios.get(`${uri}/users/getConversations/${currentUsername}`, {})
+        /*axios.get(`${uri}/users/getConversations/${currentUsername}`, {})
 
             .then(response => {
                 setConversationIds(response.data);
@@ -58,22 +63,60 @@ export default function MessagesPage() {
             .catch(error => {
                 console.error('Error fetching conversationIds:', error);
 
+            });*/
+        console.log("trying to get messages")
+        axios.get(`${uri}/messages/getMessages/${currentUsername}`, {})
+
+            .then(response => {
+                response.data.forEach(element => {
+                    var found = false;
+                    for(var i = 0; i < messageList.length; i++){
+                        if(messageList[i].id == element.id){
+                            found = true;
+                        }
+                    }
+                    if(!found){
+                        setMessageList([...messageList, element]);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching messages:', error);
+
             });
-    }, []);
-
-    
-
-
-    const [message, setMessage] = useState('');
+    }, [messageList]);
   
-
     //TODO: we need an API for sending messages. Once that's created we can fill this in
-     const send = (e) => {
+     const send = async (e) => {
         e.preventDefault();
-        console.log(message);
-        setMessage('');
-        
+        var c = document.getElementById("message-input").value;
+        //socket.emit('messageOut', {contents:c, id:Date.now().toString()});
+        console.log("trying");
+            const post = await axios.post(`${uri}/messages/newMessage`, { //create message object
+                sender: "user1",
+                destination: "user2",
+                id: Date.now().toString(),
+                datetime: Date.now(),
+                message_content: c
+        })
+        setMessage(''); 
      };
+
+    /*socket.on('messageIn', (message) => {
+        var messageContents = message.contents;
+        var found = false;
+        for(var i = 0; i < messageList.length; i++){
+            if(messageList[i].id == message.id){
+                found = true;
+            }
+        }
+        if(!found){
+            setMessageList([...messageList, message]);
+        }
+    });*/
+
+    //socket.emit("messageOut", {contents:"whuh"});
+
 
     return (
         <div className='conversationMainContent'>
@@ -126,16 +169,25 @@ export default function MessagesPage() {
                                         </div>
                                     ))}
                             </div>
-                        ))) : (<p>No posts found.</p>)}
+                        ))) : (<p>No conversations found.</p>)}
                 </div>
             </div>
 
             {/* right side of messages page: displays the messages of the clicked conversation and input text bar thingy*/}
             <div className='messages-container'>
                 <div className='messagelog-container'>
-                    <h1>{"Messages here"}</h1>
+                    <ul className='messages'>
+                        {messageList.map((message) => (
+                            <div
+                                key={uuidv4()}
+                                className="message-container"
+                            >
+                                <span className="message">{message.message_content}</span>
+                            </div>
+                            ))
+                        }
+                    </ul>
                 </div>
-                {/* Unsure if i did this part right */}
                 <div className="message-input-container">
                     <input
                         type="text"
@@ -143,6 +195,7 @@ export default function MessagesPage() {
                         onChange={(e) => { setMessage(e.target.value) }}
                         className="message-input"
                         placeholder="Type your message..."
+                        id = "message-input"
                     />
                     <button
                         className="send-button"

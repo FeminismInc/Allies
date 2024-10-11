@@ -1,6 +1,7 @@
 const ConversationModel = require('../models/Conversations');
 const UserModel = require('../models/Users');
-
+const MessageModel = require('../models/Messages');
+ 
 // Get a conversation by ID
 exports.getConversation = async (req, res) => {
     const { conversationId } = req.params;
@@ -69,5 +70,36 @@ exports.deleteConversation = async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error deleting conversation' });
+    }
+};
+
+exports.createMessage = async (req, res) => {
+    console.log(req.body);
+    try {
+        const newMessage = new MessageModel({
+            sender: req.body.sender,
+            destination: req.body.destination,
+            id: req.body.id,
+            datetime: Date.now(),
+            message_content: req.body.message_content
+        });
+
+        const savedMessage = await newMessage.save();
+        console.log(savedMessage);
+        res.status(201).json(savedMessage);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error creating message' });
+    }
+};
+
+exports.getMessagesByDest = async (req, res, next) => {
+    const { username } = req.params;
+    console.log(username);
+    try {  
+      const messages = await MessageModel.find({ destination: username }).sort({ datetime: -1 });   //might need to change to user._id
+      res.status(200).json(messages);
+    } catch (err) {
+      next(err);
     }
 };
