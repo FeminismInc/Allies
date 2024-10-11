@@ -7,24 +7,59 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import Sidebar from '../../components/sidebar/Sidebar';
 import { Button } from 'react-native';
 import SendIcon from '@mui/icons-material/Send';
-import io from "../../../node_modules/socket.io/client-dist/socket.io.js";
+//import io from "../../../node_modules/socket.io/client-dist/socket.io.js";
 import { v4 as uuidv4 } from 'uuid';
 
 export default function MessagesPage() {
     
     const uri = 'http://localhost:5050/api';
-    const socket = io.connect("http://localhost:5050");
+    //const socket = io.connect("http://localhost:5050");
     const [conversationIds, setConversationIds] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState('');
     const [otherUsername, setOtherUsername] = useState('');
     const [message, setMessage] = useState('');
     const [messageList, setMessageList] = useState([]);
-    
+    const [time, setTime] = useState(new Date());
+    const [currentUserID, setCurrentUserID] = useState("");
+    const send = async (e) => {
+        e.preventDefault();
+        var c = document.getElementById("message-input").value;
+        //socket.emit('messageOut', {contents:c, id:Date.now().toString()});
+        console.log("trying");
+            const post = await axios.post(`${uri}/messages/newMessage`, { //create message object
+                sender: currentUserID,
+                destination: prompt("please enter destination user"),
+                id: Date.now().toString(),
+                datetime: Date.now(),
+                message_content: c
+        })
+        setMessage(''); 
+     };
 
-    const currentUsername = "user2";
-    const currentUserId = '66eb88bffe2b2e83e706b1cc'; //for testing purposes
+     const receive = () => {
+        if (currentUserID == "") return;
+        axios.get(`${uri}/messages/getMessages/${currentUserID}`, {})
+        .then(response => {
+            var msgs = [];
+            response.data.forEach(element => {
+                var found = false;
+                for(var i = 0; i < messageList.length; i++){
+                    if(messageList[i].id == element.id){
+                        found = true;
+                    }
+                }
+                if(!found){
+                    msgs = [element,...msgs];
+                }
+            });
+            setMessageList([...messageList, ...msgs]);
+        })
+        .catch(error => {
+            console.error('Error fetching messages:', error);
 
+        });
+    }
     const handleOpenModal = () => {
         setShowModal(true);
       };
@@ -38,7 +73,7 @@ export default function MessagesPage() {
       const handleCreateConversation = async () => {
         try {
           const response = await axios.post(`${uri}/messages/conversation`, {
-            currentUserId, // logged-in users Id
+            currentUserID, // logged-in users Id
             otherUsername // the entered username
           });
     
@@ -64,43 +99,18 @@ export default function MessagesPage() {
                 console.error('Error fetching conversationIds:', error);
 
             });*/
-        console.log("trying to get messages")
-        axios.get(`${uri}/messages/getMessages/${currentUsername}`, {})
-
-            .then(response => {
-                response.data.forEach(element => {
-                    var found = false;
-                    for(var i = 0; i < messageList.length; i++){
-                        if(messageList[i].id == element.id){
-                            found = true;
-                        }
-                    }
-                    if(!found){
-                        setMessageList([...messageList, element]);
-                    }
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching messages:', error);
-
-            });
-    }, [messageList]);
+        var interval;
+        axios.get(`${uri}/users/getCurrentUserID`, {}).then(response => {
+            setCurrentUserID(response.data.currentUserID)
+             interval = setInterval(() => {console.log("trying to get messages"); receive(); setTime(new Date()); }, 10000);
+        })
+        receive();
+        
+        return () => clearInterval(interval);
+    }, [messageList, receive]);
   
     //TODO: we need an API for sending messages. Once that's created we can fill this in
-     const send = async (e) => {
-        e.preventDefault();
-        var c = document.getElementById("message-input").value;
-        //socket.emit('messageOut', {contents:c, id:Date.now().toString()});
-        console.log("trying");
-            const post = await axios.post(`${uri}/messages/newMessage`, { //create message object
-                sender: "user1",
-                destination: "user2",
-                id: Date.now().toString(),
-                datetime: Date.now(),
-                message_content: c
-        })
-        setMessage(''); 
-     };
+     
 
     /*socket.on('messageIn', (message) => {
         var messageContents = message.contents;
@@ -162,14 +172,14 @@ export default function MessagesPage() {
                                 </IconButton>
                                 {/* Filter out the current user from the conversation's user list */}
                                 {conversation.users
-                                    .filter(user => user.username !== currentUsername)  // Exclude current user
+                                    .filter(user => user.username !== currentUserID)  // Exclude current user
                                     .map((user, index) => (
                                         <div key={index} className="user-info">
                                             <span className="username">{user.username}</span>
                                         </div>
                                     ))}
                             </div>
-                        ))) : (<p>No conversations found.</p>)}
+                        ))) : (<p>CURRENT USERNAME: {currentUserID}</p>)}
                 </div>
             </div>
 
@@ -182,7 +192,8 @@ export default function MessagesPage() {
                                 key={uuidv4()}
                                 className="message-container"
                             >
-                                <span className="message">{message.message_content}</span>
+                                <span className="message" class={(message.destination.localeCompare(currentUserID) == 0) ? "yours" : "mine"}>{message.message_content}</span>
+                                <br/>
                             </div>
                             ))
                         }

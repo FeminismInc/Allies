@@ -325,3 +325,12 @@ exports.getUserInfo = async(req,res, next) => {
     next(err);
   }
 };
+
+exports.getCurrentUserID = async(req, res, next) => {
+  try {
+    res.status(200).json({currentUserID : req.session.userId});
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting current user ID' });
+  }
+}

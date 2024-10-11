@@ -39,7 +39,7 @@
 .messages-container {
     margin-top: 300px;
     margin-left: 310px;
-
+    width : 100%;
 }
 
 /* Container for the input field and button */
@@ -62,6 +62,14 @@
   border-radius: 20px;
   outline: none;
   font-size: 16px;
+}
+
+.mine {
+  float: right;
+}
+
+.yours {
+  float: left;
 }
 
 /* Send button styling */

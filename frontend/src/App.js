@@ -16,6 +16,7 @@ function App() {
               <Route path='/messages' element={<MessagesPage />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/post" element = {<PostPage/>} />
+              <Route path="/form" element = {<Form/>} />
             </Routes>
     </Router>
   )

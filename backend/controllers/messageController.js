@@ -95,9 +95,8 @@ exports.createMessage = async (req, res) => {
 
 exports.getMessagesByDest = async (req, res, next) => {
     const { username } = req.params;
-    console.log(username);
     try {  
-      const messages = await MessageModel.find({ destination: username }).sort({ datetime: -1 });   //might need to change to user._id
+      const messages = await MessageModel.find({$or : [{ destination: username }, {sender : username}]}).sort({ datetime: -1 });   //might need to change to user._id
       res.status(200).json(messages);
     } catch (err) {
       next(err);
