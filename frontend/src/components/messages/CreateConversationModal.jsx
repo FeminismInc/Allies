@@ -9,7 +9,6 @@ export default function CreateConversationModal({
   handleCreateConversation,
 }) {
   if (!showModal) return null;
-
   return (
     <div className="modal-overlay">
       <div className="modal">

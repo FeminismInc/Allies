@@ -7,6 +7,9 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import { io } from "socket.io-client"; // Import socket.io
 import { v4 as uuidv4 } from 'uuid';
 import "./messages.css";
+import ConversationTabs from '../../components/messages/ConversationTabs';
+import CreateConversationModal from '../../components/messages/CreateConversationModal';
+import SendIcon from '@mui/icons-material/Send';
 
 export default function MessagesPage() {
     const uri = 'http://localhost:5050/api';
@@ -29,7 +32,7 @@ export default function MessagesPage() {
         console.log(currentConversation);
         const messageObj = {
             sender: currentUserID,
-            destination: currentConversation.users.filter(user => user !== currentUserID)[0], 
+            destination: currentConversation.users.filter(user => user !== currentUserID)[0],
             id: currentConversation._id,
             message_content: messageContent,
             datetime: Date.now()
@@ -41,12 +44,12 @@ export default function MessagesPage() {
             console.log(newMessage.data);
             // Emit message to the server
             socket.emit("messageOut", { ...messageObj, _id: newMessage.data._id });
-    
+
             await axios.post(`${uri}/messages/addMessageConversation`, {
                 conversationId: currentConversation._id,
                 messageId: newMessage.data._id
             });
-    
+
             // Clear input
             setMessage('');
         } catch (error) {
@@ -60,7 +63,7 @@ export default function MessagesPage() {
             console.log("Message received:", newMessage);
             // If the new message belongs to the current conversation, update the message list
             if (newMessage.id === currentConversation?._id) {
-                setMessageList(prevMessages => [newMessage, ...prevMessages]);
+                setMessageList(prevMessages => [ ...prevMessages,newMessage]);
             }
         });
 
@@ -90,7 +93,7 @@ export default function MessagesPage() {
     }, [conversationIds]);
 
     const handleOpenModal = () => setShowModal(true);
-    
+
     const handleCloseModal = () => {
         setShowModal(false);
         setOtherUsername('');
@@ -118,20 +121,20 @@ export default function MessagesPage() {
     };
 
     const receiveMessages = async () => {
-            console.log(currentConversation)
-            try {
-                const response = await axios.get(`${uri}/messages/getMessages/${currentConversation.users[1]}`);
-                console.log("hello",response.data)
-                setMessageList(response.data);
-            } catch (error) {
-                console.error('Error fetching messages:', error);
-            }
+        console.log(currentConversation)
+        try {
+            const response = await axios.get(`${uri}/messages/getMessages/${currentConversation.users[1]}`);
+            console.log("hello", response.data)
+            setMessageList(response.data);
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
     };
 
     return (
+        <body id="messages">
         <div className='conversationMainContent'>
-                <Sidebar />
-            </div>
+            <Sidebar />
 
             {/* Left side: Conversation List */}
             <div className='conversationsList'>
@@ -140,24 +143,15 @@ export default function MessagesPage() {
                     <IconButton aria-label="create-conversation" onClick={handleOpenModal}>
                         <AddCircleOutlineIcon />
                     </IconButton>
-
                     {/* Modal to start a new conversation */}
-                    {showModal && (
-                        <div className="modal-overlay">
-                            <div className="modal">
-                                <h1>Start a Conversation</h1>
-                                <input
-                                    type="text"
-                                    placeholder="Enter username"
-                                    value={otherUsername}
-                                    onChange={(e) => setOtherUsername(e.target.value)}
-                                />
-                                {error && <p className="error">{error}</p>}
-                                <button onClick={handleCreateConversation}>Start Conversation</button>
-                                <button onClick={handleCloseModal}>Cancel</button>
-                            </div>
-                        </div>
-                    )}
+                    <CreateConversationModal
+                        showModal={showModal}
+                        closeModal={handleCloseModal}
+                        otherUsername={otherUsername}
+                        setOtherUsername={setOtherUsername}
+                        error={error}
+                        handleCreateConversation={handleCreateConversation}
+                    />
                 </div>
 
                 {/* Conversation previews */}
@@ -166,45 +160,43 @@ export default function MessagesPage() {
                         conversationIds.map((conversation) => (
                             <div
                                 key={conversation._id}
-                                className="convo"
                                 onClick={() => {
                                     setCurrentConversation(conversation);
                                     receiveMessages();
                                 }}
                             >
-                                <IconButton aria-label="profile-picture">
-                                    <AccountCircleOutlinedIcon />
-                                </IconButton>
-                                {conversation.users
-                                    .filter(user => user !== currentUserID)
-                                    .map((user, index) => (
-                                        <div key={index} className="user-info">
-                                            <span className="username">{user}</span>
-                                        </div>
-                                    ))}
+                                <ConversationTabs
+                                    conversation={conversation}
+                                    currentUserID={currentUserID}
+                                    isSelected={currentConversation?._id === conversation._id} // Pass the selected state down
+                                />
                             </div>
                         ))
-                    ) : (<p>CURRENT USERNAME: {currentUserID}</p>)}
+                    ) : (<p>No recent messages</p>)}
                 </div>
             </div>
 
             {/* Right side: Message display */}
             <div className='messages-container'>
-                <div className='messagelog-container'>
-                    <ul className='messages'>
-                        {messageList.map((message) => (
+            <div className='messagelog-container'>
+            {messageList.map((message) => (
+
+
+                        <div className='message'>
                             <div
                                 key={uuidv4()}
-                                className="message-container"
+                                className={(message.sender === currentUserID) ? "yours" : "mine"}
                             >
-                                <span className={(message.sender === currentUserID) ? "yours" : "mine"}>
+                                <span className="message-content">
                                     {message.message_content}
                                 </span>
                                 <br/>
                             </div>
-                        ))}
-                    </ul>
+                        </div>
+                           ))}
                 </div>
+              
+
                 <div className="message-input-container">
                     <input
                         type="text"
@@ -214,14 +206,16 @@ export default function MessagesPage() {
                         placeholder="Type your message..."
                         id="message-input"
                     />
-                    <button
-                        className="send-button"
+                    <IconButton
+                        aria-label="send-button"
+                        size='large'
                         onClick={send}
                     >
-                        Send
-                    </button>
+                        <SendIcon fontSize="inherit"/>
+                    </IconButton>
                 </div>
             </div>
         </div>
+        </body>
     );
 }

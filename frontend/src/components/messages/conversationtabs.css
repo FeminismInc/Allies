@@ -1,0 +1,38 @@
+
+.conversation{
+    display: flex;
+
+}
+  .convo:hover {
+    background-color: #785bce66; 
+  }
+  .convo.selected{
+    box-shadow: 2px 7px 5px rgba(52, 33, 65, 0.471);
+    background: #b4a9d9;   
+  }
+
+  .convo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px;
+    background: #dbd5ee;
+    /* margin-bottom: 6px; */
+  }
+  .header {
+    display: flex;           /* flexbox to align items horizontally */
+    align-items: center;      /* align items vertically*/
+    padding: 10px;
+    margin-top:3%;
+  }
+  
+  span.username {
+    font-size: smaller;
+  }
+
+  .header h1 {
+    color: #606060;
+    font-size: 18px;
+    margin-right: 60px;
+  }
