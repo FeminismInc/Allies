@@ -3,39 +3,25 @@
     padding:0;
     text-decoration: none;
 }
-.container{
-    display:flex;
-    flex-direction: row;
-}
-/* TODO: fix main so that the centering of everything in main is relative to the state of the sidebar (like when it's expanded and when it's minimized) */
-main{
-    margin-left: 200px; /* Same as sidebar width when not expanded */
-    width: calc(100% - 200px); /* Adjust main width to account for sidebar */
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    transition: margin-left 0.5s, width 0.5s; /* Transition for when sidebar expands */
-}
 .sidebar{
     background: #EADDFF;
     color: #fff;
-    height: 100vh;
+    height: 100%;
     width: 200px;
     position: fixed;  /* Ensures the sidebar stays in place while scrolling */
     top: 0;           /* Positions the sidebar at the top of the page */
     left: 0;          /* Positions the sidebar on the left of the page */
     transition: all 0.5s;
+    border-radius: 40px;
 }
 .top_section{           
     display: flex;
     align-items:center;
-    padding:20px 15px;
+    padding:20px 30px;
 }
 .searchbar{
     border-radius: 4px;
-    padding:10px 2px;
+    padding:10px 20px;
 
 }
 .logo{
@@ -48,13 +34,11 @@ main{
 }
 .link{
     display: flex;
-    /* align-items:center; */
     color: #fff;
-    padding: 15px 10px;
+    padding: 20px 20px;
     gap: 20px;
     transition: all 0.5s;
-    border-radius: 20px; 
-    
+    border-radius: 20px;    
 }
 .link:hover{
     background: #c7b7e2;
@@ -66,8 +50,7 @@ main{
 .active{
     background:rgb(117, 86, 146);
     color: #ffffff;
-    
-    
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .icon,.link_text{               /* TODO: icons are not centered when sidebar is collapsed. And fix the hamburger
                                 so that it expands WITH the sidebar. Other stuff needs to be done too but i don't remember lol  */

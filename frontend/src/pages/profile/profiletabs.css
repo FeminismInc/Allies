@@ -3,11 +3,12 @@
 .tabs {
     display: flex;
     position: sticky;
-    width: 900px;
+    width: 100%;
     justify-content: center;  /* Center the tabs horizontally */
     align-items: center;      /* Align the tabs vertically */
-    margin-top: 215px;         /* Add some spacing from the top of the page */
-    gap: 200px;                /* Evenly space out the tabs */
+    margin-top: 215px;
+      /* Add some spacing from the top of the page */
+    gap: 140px;                /* Evenly space out the tabs */
     top: 0;                   /* Stick to the top of the viewport */
     z-index: 2000;            /* Make sure it stays on top of other elements */
    /* Add a bottom border to separate tabs from content?????? */
@@ -63,7 +64,7 @@
 .tab-content {
     text-align: center;
     margin-top: 20px;  /* Add some space between the tabs and the content */
-    min-height: 100vh; /* Ensure the content takes up at least the full height */
+    /* Ensure the content takes up at least the full height */
   }
   
 

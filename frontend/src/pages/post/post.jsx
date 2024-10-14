@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import React, {useEffect} from "react";
 import axios from "axios"
 import { useState } from 'react';
+import Sidebar from '../../components/sidebar/Sidebar';
 
 export default function PostPage(){
     
@@ -19,7 +20,7 @@ export default function PostPage(){
             // can add future if statement for media/hashtag/text stuff
             console.log("trying");
             const post = await axios.post(`${uri}/posts/createPost`, { //create new following object
-                text
+                text,
             })
 
             navigate('/profile')
@@ -34,10 +35,15 @@ export default function PostPage(){
     }
 
     return (
-        <div className="postContainer">
-            <h1>What's on your mind? </h1>
-            <input type="text" value={text} onChange={(e) => { setText(e.target.value) }} name="postText" id="postText"></input>
-            <Button title = "Submit" onPress={submit} color="#bfa1f0" id="submitButton"/> 
+        <div className="postMainContent">
+            <div className="sidebarContainer">
+                <Sidebar/>
+            </div>
+            <div className="postContainer">
+                <h1>What's on your mind? </h1>
+                <input type="text" value={text} onChange={(e) => { setText(e.target.value) }} name="postText" id="postText"></input>
+                <Button title = "Submit" onPress={submit} color="#bfa1f0" id="submitButton"/> 
+            </div>
         </div>
     )
 }

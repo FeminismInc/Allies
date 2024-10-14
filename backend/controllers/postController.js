@@ -5,19 +5,18 @@ const CommentModel = require('../models/Comments');
 
 // Create a new post
 exports.createPost = async (req, res) => {
-    const { text, author, media, hashtags } = req.body;
-
+    const { text, media, hashtags } = req.body;
     try {
         const newPost = new PostModel({
             text,
-            author,
-            media: [],
-            hashtags: [],
+            author: req.session.userId, //username
+            media: media || [],
+            hashtags: hashtags || [],
             datetime: new Date(),
             comments: [],
-            likes: [],
-            dislikes: [],
-            repost: []
+            likes: null,
+            dislikes: null,
+            repost: null
         });
 
         const savedPost = await newPost.save();

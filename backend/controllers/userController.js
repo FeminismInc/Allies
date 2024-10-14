@@ -3,40 +3,57 @@ const FollowingModel = require('../models/Following');
 const FollowersModel = require('../models/Followers');
 const PostModel = require('../models/Posts');
 const BlockedModel = require('../models/Blocked');
+const ConversationModel = require('../models/Conversations');
+const io = require('../node_modules/socket.io/client-dist/socket.io.js');
+
 // Get all users
-exports.getUsers = async (req, res, next) => {
+exports.findUser = async (req, res, next) => {
   try {
-    const users = await UserModel.find().populate('blocked', 'username');
-    res.status(200).json(users);
+    const username = req.session.userId;
+
+    if (!username) {
+      return res.status(401).json({ message: 'User is not logged in' });
+    }
+
+    const user = await UserModel.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(user); // Return the found user
   } catch (err) {
-    next(err);  
+    next(err);
   }
 };
 
 // Find a user by email and password
 exports.findUserByEmail = async (req, res, next) => {
   const { email, password } = req.body;
-
+  
   try {
     const user = await UserModel.findOne({ email });
-
     if (!user) {
-      return res.status(404).json({ message: 'User does not exist' });
+      return res.status(404).json({ message: 'User does not exist' }); //email is not connected to any user
     }
 
     if (user.password !== password) {
-      return res.status(400).json({ message: 'Handle does not match' });
+      return res.status(400).json({ message: 'Handle does not match' }); //password doesnt match email
     }
 
-    res.status(200).json({ exists: true });
+    req.session.userId = user.username; // saving username
+    req.session.email = user.email; // saving email
+
+    res.status(200).json({ exists: true }); //return true if login was successful
+    // about to change res.status to return anything, another way to get info rather than sessions
   } catch (err) {
     next(err);
   }
 };
 
 
-exports.newFollowing = async(req, res, next) => {
-  const { username } = req.body;
+exports.newFollowing = async(req, res, next) => { 
+  const { username } = req.params;
 
   try {
     const newFollowing = new FollowingModel({
@@ -108,9 +125,9 @@ exports.createUser = async (req, res, next) => {
       posts: [],
       tagged_media: [],
       conversations: [],
-      blocked: blocked._id,
-      followers: followers._id,
-      following: following._id
+      blocked: blocked ? blocked._id : [], // Use an empty array if blocked is null
+      followers: followers ? followers._id : [], // Use an empty array if followers is null
+      following: following ? following._id : [] 
     });
 
     await newUser.save();
@@ -122,26 +139,28 @@ exports.createUser = async (req, res, next) => {
 
 // Get followers of a user
 exports.getFollowers = async (req, res, next) => {
-    const { username } = req.params; 
-  
-    try {
-      const followers = await FollowersModel.findById(username).populate('follower_accounts', 'username');
+  const { username } = req.params; 
+
+  try {
+      const followers = await FollowersModel.findOne({ username }) // Wrap username in an object
+          .populate('follower_accounts', 'username'); // Assuming follower_accounts is an array of ObjectIds
       res.status(200).json(followers);
-    } catch (err) {
+  } catch (err) {
       next(err);
-    }
+  }
 };
-  
+
 // Get following of a user
 exports.getFollowing = async (req, res, next) => {
-    const { username } = req.params; 
-  
-    try {
-      const following = await FollowingModel.findById(username).populate('accounts_followed', 'username');
+  const { username } = req.params; 
+
+  try {
+      const following = await FollowingModel.findOne({ username }) // Wrap username in an object
+          .populate('accounts_followed', 'username'); // Assuming accounts_followed is an array of ObjectIds
       res.status(200).json(following);
-    } catch (err) {
+  } catch (err) {
       next(err);
-    }
+  }
 };
   
 // Add a follower
@@ -165,7 +184,8 @@ exports.addFollower = async (req, res, next) => {
       next(err);
     }
 };
-  
+
+
 // Remove following (unfollow a user)
 exports.removeFollowing = async (req, res, next) => {
     const { username, followingId } = req.body; 
@@ -195,16 +215,12 @@ exports.getPostsByUsername = async (req, res, next) => {
   
     try {
 
-      const user = await UserModel.findOne({ username });
-      
+      const user = await UserModel.findOne({ username });  
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
   
-
-      const posts = await PostModel.find({ author: user.username });    //might need to change to user._id
-
-  
+      const posts = await PostModel.find({ author: user.username }).sort({ datetime: -1 });   //might need to change to user._id
       res.status(200).json(posts);
     } catch (err) {
       next(err);
@@ -217,10 +233,13 @@ exports.getBlockedByUsername = async (req, res, next) => {
   
     try {
 
-      const blockedData = await BlockedModel.findOne({ username });
+      let blockedData = await BlockedModel.findOne({ username });
   
       if (!blockedData) {
-        return res.status(404).json({ message: 'No blocked accounts found for this user' });
+          blockedData = new BlockedModel({
+            username,
+            blocked_accounts: []
+        });
       }
   
       res.status(200).json(blockedData.blocked_accounts);
@@ -271,3 +290,61 @@ exports.addBlocked = async (req, res) => {
 
 };
 
+//gets the array of conversationIds of user
+// dunno if this is sustainable, there's probably a better way to get all conversationIds from UserDetail
+// NEW: outputs a json of array of usernames
+exports.getConversationsByUsername = async (req, res, next) => {
+  const { username } = req.params;
+  try {
+    // Find the user by username and populate their conversations
+    const user = await UserModel.findOne({ username })
+      .populate({
+        path: 'conversations', // Populate the conversations field
+        populate: {
+          path: 'messages',  // Populate messages within each conversation
+          select: 'sender message_content datetime', // Select only necessary fields
+        },
+      })
+      .select('conversations'); // Only select the conversations field
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the user has conversations
+    if (!user.conversations || user.conversations.length === 0) {
+      return res.status(404).json({ message: 'No conversations found for this user' });
+    }
+
+    // Return the populated conversations with messages
+    res.status(200).json(user.conversations);
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+// gets user info by userId
+// might scrap
+exports.getUserInfo = async(req,res, next) => {
+  const {userId} = req.params;
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json(user);
+  }catch (err) {
+    next(err);
+  }
+};
+
+exports.getCurrentUserID = async(req, res, next) => {
+  try {
+    const User = await UserModel.findOne({username: req.session.userId});
+    res.status(200).json(User);
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting current user ID' });
+  }
+}
