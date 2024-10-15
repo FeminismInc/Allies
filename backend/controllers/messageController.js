@@ -120,7 +120,7 @@ exports.getMessagesByDest = async (req, res, next) => {
     try {
         const messages = await MessageModel
             .find({ $or: [{ destination: username }, { sender: username }] })
-            .sort({ datetime: -1 });
+            .sort({ datetime: 1 });
         res.status(200).json(messages);
     } catch (err) {
         next(err);
