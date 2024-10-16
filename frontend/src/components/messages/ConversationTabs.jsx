@@ -10,9 +10,7 @@ export default function ConversationTabs({
     isSelected
 })
 
-
  {
-
     return (
         <div className={`convo ${isSelected ? 'selected' : ''}`}>
                 <IconButton aria-label="profile-picture">

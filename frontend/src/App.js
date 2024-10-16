@@ -6,6 +6,7 @@ import Form from "./pages/form/Form"
 import Profile from "./pages/profile/Profile"
 import PostPage from './pages/post/post';
 import MessagesPage from './pages/messages/Messages';
+import Search from './pages/search/Search';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/post" element = {<PostPage/>} />
               <Route path="/form" element = {<Form/>} />
+              <Route path="/search" element = {<Search/>} />
             </Routes>
     </Router>
   )

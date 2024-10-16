@@ -1,0 +1,64 @@
+.result-container{
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    height: 100px;
+    border-radius: 10px;
+    box-shadow: 0 5px 6px rgba(0, 0, 0, 0.1);
+    width: 85%;
+    align-items: center;
+    justify-content: space-between; 
+    padding-right: 20px; 
+    margin-bottom: 10px;
+}
+.user-info{
+    margin-left: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+.username{
+    display: flex;
+    flex-direction: column;
+    padding-left: 5px;
+    margin-bottom: 5px;
+
+}
+.name {
+    font-size: 25px; 
+    color: rgb(60, 60, 60); 
+
+  }
+  
+  .handle {
+    font-size: 12px; 
+    color: gray;
+  }
+  .profile-pic{
+    color: rgb(84, 84, 84);
+
+  }
+
+  .follow-button  {
+    margin-top: 2%;
+
+  }
+  .follow-button button {
+    color: #ffffff;
+    background-color: rgba(97, 76, 135, 0.853);
+
+  }
+
+.follow-button button:hover {
+    background-color: rgba(110, 77, 132, 0.821);
+    
+}
+
+.follow-button button:active {
+    background-color: #453661; 
+    
+}
+
+
+  
