@@ -4,7 +4,8 @@
     text-decoration: none;
 }
 .sidebar{
-    background: #EADDFF;
+    /* background: #EADDFF; */
+    background: #5a3e8795;
     color: #fff;
     height: 100%;
     width: 200px;

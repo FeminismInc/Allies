@@ -2,14 +2,12 @@ import axios from 'axios';
 import React, { useState, useEffect } from "react";
 import IconButton from '@mui/material/IconButton';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { io } from "socket.io-client"; // Import socket.io
-import { v4 as uuidv4 } from 'uuid';
 import "./messages.css";
 import ConversationTabs from '../../components/messages/ConversationTabs';
 import CreateConversationModal from '../../components/messages/CreateConversationModal';
-import SendIcon from '@mui/icons-material/Send';
+import MessageLog from '../../components/messages/Messagelog';
 
 export default function MessagesPage() {
     const uri = 'http://localhost:5050/api';
@@ -63,7 +61,7 @@ export default function MessagesPage() {
             console.log("Message received:", newMessage);
             // If the new message belongs to the current conversation, update the message list
             if (newMessage.id === currentConversation?._id) {
-                setMessageList(prevMessages => [ ...prevMessages,newMessage]);
+                setMessageList(prevMessages => [...prevMessages, newMessage]);
             }
         });
 
@@ -133,16 +131,15 @@ export default function MessagesPage() {
 
     return (
         <body id="messages">
-        <div className='conversationMainContent'>
-            <Sidebar />
-
-            {/* Left side: Conversation List */}
-            <div className='conversationsList'>
-                <div className="header">
-                    <span className='heading' >Recent Messages</span>
-                    <IconButton aria-label="create-conversation" onClick={handleOpenModal} >
-                        <AddCircleOutlineIcon />
-                    </IconButton>
+            <div className='conversationMainContent'>
+                <Sidebar />
+                {/* Left side: Conversation List */}
+                <div className='conversationsList'>
+                    <div className="header">
+                        <span className='heading' >Recent Messages</span>
+                        <IconButton aria-label="create-conversation" onClick={handleOpenModal} >
+                            <AddCircleOutlineIcon />
+                        </IconButton>
                     </div>
                     {/* Modal to start a new conversation */}
                     <CreateConversationModal
@@ -153,70 +150,38 @@ export default function MessagesPage() {
                         error={error}
                         handleCreateConversation={handleCreateConversation}
                     />
-                
-
-                {/* Conversation previews */}
-                <div className='conversations'>
-                    {conversationIds.length > 0 ? (
-                        conversationIds.map((conversation) => (
-                            <div
-                                key={conversation._id}
-                                onClick={() => {
-                                    setCurrentConversation(conversation);
-                                    receiveMessages();
-                                }}
-                            >
-                                <ConversationTabs
-                                    conversation={conversation}
-                                    currentUserID={currentUserID}
-                                    isSelected={currentConversation?._id === conversation._id} // Pass the selected state down
-                                />
-                            </div>
-                        ))
-                    ) : (<p>No recent messages</p>)}
+                    {/* Conversation previews */}
+                    <div className='conversations'>
+                        {conversationIds.length > 0 ? (
+                            conversationIds.map((conversation) => (
+                                <div
+                                    key={conversation._id}
+                                    onClick={() => {
+                                        setCurrentConversation(conversation);
+                                        receiveMessages();
+                                    }}
+                                >
+                                    <ConversationTabs
+                                        conversation={conversation}
+                                        currentUserID={currentUserID}
+                                        isSelected={currentConversation?._id === conversation._id} 
+                                    />
+                                </div>
+                            ))
+                        ) : (<p>No recent messages</p>)}
+                    </div>
                 </div>
-            </div>
-
-            {/* Right side: Message display */}
-            <div className='messages-container'>
-            <div className='messagelog-container'>
-            {messageList.map((message) => (
-
-
-                        <div className='message'>
-                            <div
-                                key={uuidv4()}
-                                className={(message.sender === currentUserID) ? "yours" : "mine"}
-                            >
-                                <span className="message-content">
-                                    {message.message_content}
-                                </span>
-                                <br/>
-                            </div>
-                        </div>
-                           ))}
-                </div>
-              
-
-                <div className="message-input-container">
-                    <input
-                        type="text"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        className="message-input"
-                        placeholder="Type your message..."
-                        id="message-input"
+                {currentConversation && (
+                    <MessageLog
+                        currentUserID={currentUserID}
+                        currentConversation={currentConversation}
+                        messageList={messageList}
+                        message={message}
+                        setMessage={setMessage}
+                        send={send}
                     />
-                    <IconButton
-                        aria-label="send-button"
-                        size='large'
-                        onClick={send}
-                    >
-                        <SendIcon fontSize="inherit"/>
-                    </IconButton>
-                </div>
+                )}
             </div>
-        </div>
         </body>
     );
 }
