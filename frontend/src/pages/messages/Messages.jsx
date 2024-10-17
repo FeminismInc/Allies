@@ -139,10 +139,11 @@ export default function MessagesPage() {
             {/* Left side: Conversation List */}
             <div className='conversationsList'>
                 <div className="header">
-                    <h1>Recent Messages</h1>
-                    <IconButton aria-label="create-conversation" onClick={handleOpenModal}>
+                    <span className='heading' >Recent Messages</span>
+                    <IconButton aria-label="create-conversation" onClick={handleOpenModal} >
                         <AddCircleOutlineIcon />
                     </IconButton>
+                    </div>
                     {/* Modal to start a new conversation */}
                     <CreateConversationModal
                         showModal={showModal}
@@ -152,7 +153,7 @@ export default function MessagesPage() {
                         error={error}
                         handleCreateConversation={handleCreateConversation}
                     />
-                </div>
+                
 
                 {/* Conversation previews */}
                 <div className='conversations'>

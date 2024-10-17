@@ -1,14 +1,17 @@
 
-.conversation{
+.conversations{
     display: flex;
-
+    flex-direction: column;
+    padding: 7px;
 }
+
   .convo:hover {
-    background-color: #785bce66; 
+    background-color: #7869a366; 
   }
+
   .convo.selected{
-    box-shadow: 2px 7px 5px rgba(52, 33, 65, 0.471);
-    background: #b4a9d9;   
+    box-shadow: 1px 4px 4px rgba(52, 33, 65, 0.471);
+    background: #5d329e4a;   
   }
 
   .convo {
@@ -16,23 +19,23 @@
     flex-direction: row;
     align-items: center;
     border-radius: 10px;
-    padding: 10px;
-    background: #dbd5ee;
-    /* margin-bottom: 6px; */
+    margin-bottom: 6px; 
+    box-shadow: 0px 0px 0px rgba(52, 33, 65, 0.471);
+
   }
   .header {
     display: flex;           /* flexbox to align items horizontally */
     align-items: center;      /* align items vertically*/
-    padding: 10px;
+    padding: 15px;
     margin-top:3%;
   }
   
   span.username {
-    font-size: smaller;
+    font-size: 20px;
   }
 
   .header h1 {
     color: #606060;
     font-size: 18px;
-    margin-right: 60px;
+    margin-right: 50px;
   }

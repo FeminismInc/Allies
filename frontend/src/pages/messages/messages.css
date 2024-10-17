@@ -5,22 +5,26 @@
   width: calc(100% - 280px); 
   margin-left: 280px;
 
-
 }
 
 .conversationsList {
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 280px;
-    
-
+    /* width: 280px; */
+    width: 340px;
     position: fixed;  
     left: 250px;     
-    background-color: #ffffff;  
+    background-color: #eaddff65; 
     border-radius: 15px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+  }
+  .heading{
+    font-size: 25px; 
+    color: rgb(120, 107, 152); 
+    padding-right: 30px;
+    
   }
   
 .messages-container {
@@ -30,7 +34,7 @@
   display: flex;
   flex-direction: column;
   margin-left: 278px;
-
+  padding-left: 50px;
   flex: 1;
 
 }
@@ -38,8 +42,6 @@
   margin-top: 5%;
   display: flex;
   flex-direction: column;
-  /* margin-left: 5%;
-  margin-right: 5%; */
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
@@ -72,7 +74,7 @@
   
 }
 
-/* Container for the input field and button */
+
 .message-input-container {
   margin-right: 15%;
   flex-direction: row;
