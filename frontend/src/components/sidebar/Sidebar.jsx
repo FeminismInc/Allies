@@ -7,7 +7,7 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { NavLink } from 'react-router-dom';
 import {FaBars} from "react-icons/fa";
-import SearchBar from "../search_bar/searchBar";
+import SearchIcon from '@mui/icons-material/Search';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
@@ -37,6 +37,11 @@ export default function Sidebar() {
             name: "Messages",
             icon:<ChatBubbleOutlineOutlinedIcon/>
         },
+        {
+            path: "/search",
+            name: "Search",
+            icon: <SearchIcon />
+        },
 
        {
             path: "/notifications",
@@ -59,9 +64,9 @@ export default function Sidebar() {
                        <FaBars onClick={toggle}/>
                    </div>
                </div>
-               <div className="searchbar">
+               {/* <div className="searchbar">
                     <SearchBar/>
-               </div>
+               </div> */}
                 {   
                     menuItem.map((item, index)=>(
                         <NavLink to={item.path} key={index} className="link" activeclassName="active">
