@@ -32,10 +32,10 @@ export default function Profile() {
           <Sidebar />
         </div>
         <div className="profile-container">
-          <ProfileHeader />
-        <div className="profile-tabs">
-        <ProfileTabs username={username} /> {/* Renders the  Profile Tabs for Barbie's profile */}
-        </div>
+            <ProfileHeader username={username}/>
+          <div className="profile-tabs">
+            <ProfileTabs username={username} /> {/* Renders the  Profile Tabs for Barbie's profile */}
+          </div>
       </div>
     </div>
   );

@@ -1,12 +1,10 @@
 
 .profileMainContent{
   display: flex;
-  flex-direction: column;
-  width: calc(100% - 300px);
+  flex-direction: row;
   margin-left: 250px;
-
-
 }
+
 .profile-container{
   display: flex;
   flex-direction: column;
