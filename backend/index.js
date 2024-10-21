@@ -21,7 +21,7 @@ const uri = "mongodb+srv://kenhun2020:lhOAvQxVo7yJskRE@cluster0.ebktn.mongodb.ne
 const app = express();
 
 const server = createServer(app);
-const io = new Server(server, { cors: {origin: "http://localhost:3000"}});
+const io = new Server(server, { cors: {origin: "http://localhost:3000"}}); // 'http://54.176.5.254:3000'
 
 app.use(express.json());
 

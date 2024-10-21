@@ -10,7 +10,7 @@ import axios from 'axios';
 
 const clientID = "989398909621-2iju5rvgm8n9cbj22oc44e6hmnl7ht40.apps.googleusercontent.com";
 
-const uri = 'http://localhost:5050/api';
+const uri = 'http://localhost:5050/api'; //http://54.176.5.254:5050/api
 
 export default function LoginSignUp() {
 

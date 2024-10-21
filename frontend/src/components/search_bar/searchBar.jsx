@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { InputBase, Paper, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
+import axios from 'axios';
 
 const SearchContainer = styled(Paper)`
   display: flex;
@@ -18,6 +19,21 @@ const SearchInput = styled(InputBase)`
 `;
 
 const SearchBar = () => {
+
+
+  const uri = "http://localhost:5050/api";
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = async (e) => {
+    if (e.key === 'Enter') {
+      axios.post(`${uri}/users/addFollower`, { username: searchQuery })
+      .then(response => {
+        console.log(response.data); 
+      })
+    }
+  };
+
   return (
     <SearchContainer>
       <IconButton>
@@ -26,6 +42,9 @@ const SearchBar = () => {
       <SearchInput
         placeholder="Search..."
         inputProps={{ 'aria-label': 'search' }}
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        onKeyDown={handleSearch}
       />
     </SearchContainer>
   );

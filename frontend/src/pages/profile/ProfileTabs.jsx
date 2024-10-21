@@ -5,7 +5,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 
 export default function ProfileTabs({ username }) {
 
-  const uri = 'http://localhost:5050/api'
+  const uri = 'http://localhost:5050/api' // http://54.176.5.254:5050/api
   const [activeTab, setActiveTab] = useState('posts');
   const [posts, setPosts] = useState([]);
 

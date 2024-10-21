@@ -3,13 +3,14 @@ const FollowingModel = require('../models/Following');
 const FollowersModel = require('../models/Followers');
 const PostModel = require('../models/Posts');
 const BlockedModel = require('../models/Blocked');
+const mongoose = require('mongoose');
 const ConversationModel = require('../models/Conversations');
 const io = require('../node_modules/socket.io/client-dist/socket.io.js');
 
 // Get all users
 exports.findUser = async (req, res, next) => {
   try {
-    const username = req.session.userId;
+    const username = req.session.username;
 
     if (!username) {
       return res.status(401).json({ message: 'User is not logged in' });
@@ -41,7 +42,8 @@ exports.findUserByEmail = async (req, res, next) => {
       return res.status(400).json({ message: 'Handle does not match' }); //password doesnt match email
     }
 
-    req.session.userId = user.username; // saving username
+    req.session.user_id = user._id;
+    req.session.username = user.username; // saving username
     req.session.email = user.email; // saving email
 
     res.status(200).json({ exists: true }); //return true if login was successful
@@ -108,11 +110,17 @@ exports.createUser = async (req, res, next) => {
   const { birthdate, username, email, password, handle, pronouns } = req.body;
 
   try {
-    const following = await FollowingModel.findOne({username : username});
-    const followers = await FollowersModel.findOne({username : username});
-    const blocked = await BlockedModel.findOne({username : username});
+    const newFollowing = new FollowingModel({ username });
+    const newFollowers = new FollowersModel({ username });
+    const newBlocked = new BlockedModel({ username });
+
+    // Save the new models to get their IDs
+    await newFollowing.save();
+    await newFollowers.save();
+    await newBlocked.save();
 
     const newUser = new UserModel({
+      _id: new mongoose.Types.ObjectId(),
       birthdate,
       username,
       email,
@@ -125,9 +133,9 @@ exports.createUser = async (req, res, next) => {
       posts: [],
       tagged_media: [],
       conversations: [],
-      blocked: blocked ? blocked._id : [], // Use an empty array if blocked is null
-      followers: followers ? followers._id : [], // Use an empty array if followers is null
-      following: following ? following._id : [] 
+      blocked: newBlocked._id,
+      followers: newFollowers._id,
+      following: newFollowing._id,
     });
 
     await newUser.save();
@@ -165,21 +173,33 @@ exports.getFollowing = async (req, res, next) => {
   
 // Add a follower
 exports.addFollower = async (req, res, next) => {
-    const { username, followerId } = req.body; 
+    const { username } = req.body; 
   
     try {
-    
-      await FollowersModel.findOneAndUpdate(
+      console.log("Username from request body:", username);
+
+      const userToFollow = await UserModel.findOne({ username: username });
+      console.log("User to follow:", userToFollow);
+
+      if (!userToFollow) {
+          return res.status(404).json({ message: "User not found" });
+      }
+
+      const updateFollowers = await FollowersModel.findOneAndUpdate(
+        { username: req.session.username },
+        { $addToSet: { follower_accounts: userToFollow._id } },
+        { new: true } // To return the updated document
+      );
+      console.log(updateFollowers); // Check if it's returning the expected updated document
+      
+      const updateFollowing = await FollowingModel.findOneAndUpdate(
         { username: username },
-        { $addToSet: { follower_accounts: followerId } } 
+        { $addToSet: { accounts_followed: req.session.user_id } },
+        { new: true }
       );
+      console.log(updateFollowing);
   
-      await FollowingModel.findOneAndUpdate(
-        { _id: followerId },
-        { $addToSet: { accounts_followed: username } } 
-      );
-  
-      res.status(200).json({ message: "Successfully followed" });
+      res.status(200).json({ message: "Successfully followed", message: req.session.username });
     } catch (err) {
       next(err);
     }

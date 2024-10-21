@@ -10,7 +10,7 @@ import "./messages.css";
 
 export default function MessagesPage() {
     const uri = 'http://localhost:5050/api';
-    const socket = io("http://localhost:5050"); // Initialize socket connection
+    const socket = io("http://localhost:5050"); // Initialize socket connection http://54.176.5.254:5050/api
 
     const [conversationIds, setConversationIds] = useState([]);
     const [showModal, setShowModal] = useState(false);

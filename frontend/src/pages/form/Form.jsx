@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 export default function ProfileForm() {
 
-    const uri = "http://localhost:5050/api";
+    const uri = "http://localhost:5050/api"; //http://54.176.5.254:5050/api
 
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
@@ -31,20 +31,9 @@ export default function ProfileForm() {
                 alert("Please fill out all sections.");
                 return; // Exit the function early
               }
-            const following = await axios.get(`${uri}/users/following/${username}`, { //create new following object
-                username
-            })
-            try {
-                const followers = await axios.get(`${uri}/users/followers/${username}`, { //send data to index.js to check
-                    username
-                })
-                try {
-                    const blocked = await axios.get(`${uri}/users/getBlocked/${username}`, { //create new blocked
-                        username
-                    })
                     try {
                         const response = await axios.post(`${uri}/users/form`, { //send data to index.js to check
-                            username, email, password, handle, pronouns, birthdate, blocked, following, followers
+                            username, email, password, handle, pronouns, birthdate,
                         })
                         //console.log(response)
                         navigate('/profile');
@@ -57,14 +46,17 @@ export default function ProfileForm() {
                 catch(e) {
                     console.log('test2')
                 }
-            } catch(e) {
-                console.log('test3')
-            }
-        }
-        catch(e) {
-            console.log('test4')
-        }
-        
+                
+                axios.post(`${uri}/users/findUserbyEmail`, { email, password })
+                .then(response => {
+                  console.log(response.data); 
+                  if (response.data.exists) {
+                    navigate("/profile");
+                  } else {
+                    alert("Email not found. Please sign up.");
+                  }
+                })
+                .catch(err => console.log(err)); 
     }
 
     return (
