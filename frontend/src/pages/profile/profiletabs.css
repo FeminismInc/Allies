@@ -10,7 +10,6 @@
       /* Add some spacing from the top of the page */
     gap: 140px;                /* Evenly space out the tabs */
     top: 0;                   /* Stick to the top of the viewport */
-    z-index: 2000;            /* Make sure it stays on top of other elements */
    /* Add a bottom border to separate tabs from content?????? */
   }
   
