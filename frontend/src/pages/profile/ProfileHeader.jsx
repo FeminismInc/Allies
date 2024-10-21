@@ -37,15 +37,20 @@ const ProfileHeader = ({ username }) => {
 
     const fetchFollowers = async (username) => {
         try {
-            console.log(username);
             const response = await axios.get(`${uri}/users/followers/${username}`);
-            setFollowersList(response.data.follower_accounts);
-            console.log(response);
-          } catch (error) {
+            
+            // The response should include the follower accounts populated with usernames
+            const followersList = response.data.follower_accounts;
+            const usernames = followersList.map(follower => follower.username); // This will have populated user documents
+            // Set the followers list in your component state
+            setFollowersList(usernames);
+        } catch (error) {
             console.error('Error fetching followers:', error);
         }
-        setShowFollowers(!showFollowers)
-    }
+    
+        // Toggle the visibility of the followers list
+        setShowFollowers(!showFollowers);
+    };
 
     const fetchMyFollowers = async () => {
         fetchFollowers(username);
@@ -55,7 +60,8 @@ const ProfileHeader = ({ username }) => {
         try {
             console.log(username);
             axios.get(`${uri}/users/following/${username}`).then(response => {
-                setFollowingList(response.data.accounts_followed);
+                const usernames = response.data.accounts_followed.map(following => following.username);
+                setFollowingList(usernames);
                 console.log(response);
             });
           } catch (error) {
@@ -73,13 +79,13 @@ const ProfileHeader = ({ username }) => {
             <div className="profile-container">
                 <div className='user-info'>
                     <div className="username">
-                        <h1>username</h1>
+                        <h1>{username}</h1>
                     </div>
                     <button className='followers' onClick = {fetchMyFollowers}>
-                        followers
+                        following
                     </button>
                     <button className='following' onClick = {fetchMyFollowing}>
-                        following
+                        followers
                     </button>
                     <button className="right-icon-button" onClick={handleIconButtonClick}>
                         <div className="right-icon-wrapper">
@@ -113,7 +119,7 @@ const ProfileHeader = ({ username }) => {
             </div>
 
             <div className={`white-rounded-box ${showFollowers ? 'show' : ''}`}>
-                <h3>Followers</h3>
+                <h3>Following</h3>
                 <div className="following-container">
                     {followers.length > 0 ? (
                         followers.map((followers, index) => (
@@ -127,14 +133,14 @@ const ProfileHeader = ({ username }) => {
                         </div>
                         ))
                     ) : (
-                        <p>No followers found.</p>
+                        <p>Not following anyone.</p>
                     )}
                 </div>
                 <button className='submit-button' onClick={() => setShowFollowers(false)}>Close</button>
             </div>
 
             <div className={`white-rounded-box ${showFollowing ? 'show' : ''}`}>
-                <h3>Following</h3>
+                <h3>Followers</h3>
                 <div className="following-container">
                     {following.length > 0 ? (
                         following.map((following, index) => (
@@ -148,7 +154,7 @@ const ProfileHeader = ({ username }) => {
                         </div>
                         ))
                     ) : (
-                        <p>Not following anyone.</p>
+                        <p>No followers found</p>
                     )}
                 </div>
                 <button className='submit-button' onClick={() => setShowFollowing(false)}>Close</button>

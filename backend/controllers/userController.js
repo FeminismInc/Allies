@@ -208,25 +208,38 @@ exports.addFollower = async (req, res, next) => {
 
 // Remove following (unfollow a user)
 exports.removeFollowing = async (req, res, next) => {
-    const { username, followingId } = req.body; 
-  
-    try {
-     
-      await FollowingModel.findOneAndUpdate(
-        { username: username },
-        { $pull: { accounts_followed: followingId } }
+  const { username } = req.body; 
+
+  try {
+      console.log("Username from request body:", username);
+
+      const userToUnfollow = await UserModel.findOne({ username: username });
+      console.log("User to unfollow:", userToUnfollow);
+
+      if (!userToUnfollow) {
+          return res.status(404).json({ message: "User not found" });
+      }
+
+      // Remove the user from the current user's follower_accounts
+      const updateFollowers = await FollowersModel.findOneAndUpdate(
+          { username: req.session.username },
+          { $pull: { follower_accounts: userToUnfollow._id } }, // Remove the user's ID
+          { new: true } // To return the updated document
       );
-  
-     
-      await FollowersModel.findOneAndUpdate(
-        { _id: followingId },
-        { $pull: { follower_accounts: username } }
+      console.log(updateFollowers); // Check if it's returning the expected updated document
+      
+      // Remove the current user's ID from the accounts_followed of the user being unfollowed
+      const updateFollowing = await FollowingModel.findOneAndUpdate(
+          { username: username },
+          { $pull: { accounts_followed: req.session.user_id } }, // Remove the current user's ID
+          { new: true }
       );
-  
-      res.status(200).json({ message: "Successfully unfollowed" });
-    } catch (err) {
+      console.log(updateFollowing);
+
+      res.status(200).json({ message: "Successfully unfollowed", username: req.session.username });
+  } catch (err) {
       next(err);
-    }
+  }
 };
 
 // Fetch posts by a specific username
@@ -366,5 +379,15 @@ exports.getCurrentUserID = async(req, res, next) => {
   } catch (err) {
       console.error(err);
       res.status(500).json({ message: 'Error getting current user ID' });
+  }
+}
+
+exports.searchUsers = async (req, res) => {
+  const { username } = req.body;
+  try {
+    const users = await UserModel.find({ username: { $regex: username, $options: 'i' } });
+    res.json(users);
+  } catch (error) {
+    res.status(500).send('Error searching users');
   }
 }
