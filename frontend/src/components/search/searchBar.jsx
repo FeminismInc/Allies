@@ -8,7 +8,7 @@ const SearchContainer = styled(Paper)`
   display: flex;
   align-items: center;
   padding: 8px;
-  border-radius: 20px;
+  border-radius: 30px;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;

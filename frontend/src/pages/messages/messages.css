@@ -1,95 +1,33 @@
 .conversationMainContent{
   display: flex;
   flex-direction: row;
-  width: calc(100% - 300px);
-  margin-left: 250px;
+  height: 100vh;
+  width: calc(100% - 280px); 
+  margin-left: 280px;
+
 }
+
 .conversationsList {
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 280px;
-    padding: 10px;
+    /* width: 280px; */
+    width: 340px;
     position: fixed;  
     left: 250px;     
-    background: #ffffff;   
-    border-radius: 40px; 
+    background-color: #eaddff65; 
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
   }
-  .convo {
-    display: flex;
-    flex-direction: row;
-  }
-  .header {
-    display: flex;           /* flexbox to align items horizontally */
-    align-items: center;      /* align items vertically*/
-    padding: 10px;
-  }
-  
-  span.username {
-    font-size: smaller;
-  }
-  .header h1 {
-    color: #606060;
-    font-size: 18px;
-    margin-right: 60px;
-   
+  .heading{
+    font-size: 25px; 
+    color: rgb(120, 107, 152); 
+    padding-right: 30px;
+    padding-left: 10px;
+    
   }
 
-  
-.messages-container {
-    margin-top: 300px;
-    margin-left: 310px;
-    width : 100%;
-}
-
-/* Container for the input field and button */
-.message-input-container {
-  position: fixed;
-  bottom: 0; /* Stick to the bottom */
-  width: calc(100% - 580px);
-  display: flex;
-  align-items: center; /* Vertically center the input and button */
-  padding: 10px;
-  background-color: #f0f0f0; /* Background color for the input area */
-  
-}
-
-/* Input field styling */
-.message-input {
-  flex: 1; /* Take up the available width */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  outline: none;
-  font-size: 16px;
-}
-
-.mine {
-  float: right;
-}
-
-.yours {
-  float: left;
-}
-
-/* Send button styling */
-.send-button {
-  margin-left: 10px;
-  margin-bottom: 8px;
-  padding: 10px 20px;
-  background-color: #6d567c; 
-  color: white; /* White text */
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  bottom: 3%;
-}
-
-.send-button:hover {
-  background-color: #514474;
-}
 
 .modal-overlay {
   position: fixed;
@@ -109,6 +47,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px; 
+
 }
 .modal button {
   padding: 10px 15px;
@@ -119,3 +58,6 @@
   border-radius: 4px;
   cursor: pointer;
 }
+body#messages{
+  background-color: #ffffff; 
+} 

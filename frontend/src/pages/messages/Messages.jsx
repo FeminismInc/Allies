@@ -2,11 +2,12 @@ import axios from 'axios';
 import React, { useState, useEffect } from "react";
 import IconButton from '@mui/material/IconButton';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { io } from "socket.io-client"; // Import socket.io
-import { v4 as uuidv4 } from 'uuid';
 import "./messages.css";
+import ConversationTabs from '../../components/messages/ConversationTabs';
+import CreateConversationModal from '../../components/messages/CreateConversationModal';
+import MessageLog from '../../components/messages/Messagelog';
 
 export default function MessagesPage() {
     const uri = 'http://localhost:5050/api';
@@ -29,7 +30,7 @@ export default function MessagesPage() {
         console.log(currentConversation);
         const messageObj = {
             sender: currentUserID,
-            destination: currentConversation.users.filter(user => user !== currentUserID)[0], 
+            destination: currentConversation.users.filter(user => user !== currentUserID)[0],
             id: currentConversation._id,
             message_content: messageContent,
             datetime: Date.now()
@@ -41,12 +42,12 @@ export default function MessagesPage() {
             console.log(newMessage.data);
             // Emit message to the server
             socket.emit("messageOut", { ...messageObj, _id: newMessage.data._id });
-    
+
             await axios.post(`${uri}/messages/addMessageConversation`, {
                 conversationId: currentConversation._id,
                 messageId: newMessage.data._id
             });
-    
+
             // Clear input
             setMessage('');
         } catch (error) {
@@ -60,7 +61,7 @@ export default function MessagesPage() {
             console.log("Message received:", newMessage);
             // If the new message belongs to the current conversation, update the message list
             if (newMessage.id === currentConversation?._id) {
-                setMessageList(prevMessages => [newMessage, ...prevMessages]);
+                setMessageList(prevMessages => [...prevMessages, newMessage]);
             }
         });
 
@@ -90,7 +91,7 @@ export default function MessagesPage() {
     }, [conversationIds]);
 
     const handleOpenModal = () => setShowModal(true);
-    
+
     const handleCloseModal = () => {
         setShowModal(false);
         setOtherUsername('');
@@ -118,112 +119,69 @@ export default function MessagesPage() {
     };
 
     const receiveMessages = async () => {
-            console.log(currentConversation)
-            try {
-                const response = await axios.get(`${uri}/messages/getMessages/${currentConversation.users[1]}`);
-                console.log("hello",response.data)
-                setMessageList(response.data);
-            } catch (error) {
-                console.error('Error fetching messages:', error);
-            }
+        console.log(currentConversation)
+        try {
+            const response = await axios.get(`${uri}/messages/getMessages/${currentConversation.users[1]}`);
+            console.log("hello", response.data)
+            setMessageList(response.data);
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
     };
 
     return (
-        <div className='conversationMainContent'>
-            <div className="sidebarContainer">
+        <body id="messages">
+            <div className='conversationMainContent'>
                 <Sidebar />
-            </div>
-
-            {/* Left side: Conversation List */}
-            <div className='conversationsList'>
-                <div className="header">
-                    <h1>Recent Messages</h1>
-                    
-                    <IconButton aria-label="create-conversation" onClick={handleOpenModal}>
-                        <AddCircleOutlineIcon />
-                    </IconButton>
-
+                {/* Left side: Conversation List */}
+                <div className='conversationsList'>
+                    <div className="header">
+                        <span className='heading' >Recent Messages</span>
+                        <IconButton aria-label="create-conversation" onClick={handleOpenModal} >
+                            <AddCircleOutlineIcon />
+                        </IconButton>
+                    </div>
                     {/* Modal to start a new conversation */}
-                    {showModal && (
-                        <div className="modal-overlay">
-                            <div className="modal">
-                                <h2>Start a Conversation</h2>
-                                <input
-                                    type="text"
-                                    placeholder="Enter username"
-                                    value={otherUsername}
-                                    onChange={(e) => setOtherUsername(e.target.value)}
-                                />
-                                {error && <p className="error">{error}</p>}
-                                <button onClick={handleCreateConversation}>Start Conversation</button>
-                                <button onClick={handleCloseModal}>Cancel</button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {/* Conversation previews */}
-                <div className='conversations'>
-                    {conversationIds.length > 0 ? (
-                        conversationIds.map((conversation) => (
-                            <div
-                                key={conversation._id}
-                                className="convo"
-                                onClick={() => {
-                                    setCurrentConversation(conversation);
-                                    receiveMessages();
-                                }}
-                            >
-                                <IconButton aria-label="profile-picture">
-                                    <AccountCircleOutlinedIcon />
-                                </IconButton>
-                                {conversation.users
-                                    .filter(user => user !== currentUserID)
-                                    .map((user, index) => (
-                                        <div key={index} className="user-info">
-                                            <span className="username">{user}</span>
-                                        </div>
-                                    ))}
-                            </div>
-                        ))
-                    ) : (<p>CURRENT USERNAME: {currentUserID}</p>)}
-                </div>
-            </div>
-
-            {/* Right side: Message display */}
-            <div className='messages-container'>
-                <div className='messagelog-container'>
-                    <ul className='messages'>
-                        {messageList.map((message) => (
-                            <div
-                                key={uuidv4()}
-                                className="message-container"
-                            >
-                                <span className={(message.sender === currentUserID) ? "yours" : "mine"}>
-                                    {message.message_content}
-                                </span>
-                                <br/>
-                            </div>
-                        ))}
-                    </ul>
-                </div>
-                <div className="message-input-container">
-                    <input
-                        type="text"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        className="message-input"
-                        placeholder="Type your message..."
-                        id="message-input"
+                    <CreateConversationModal
+                        showModal={showModal}
+                        closeModal={handleCloseModal}
+                        otherUsername={otherUsername}
+                        setOtherUsername={setOtherUsername}
+                        error={error}
+                        handleCreateConversation={handleCreateConversation}
                     />
-                    <button
-                        className="send-button"
-                        onClick={send}
-                    >
-                        Send
-                    </button>
+                    {/* Conversation previews */}
+                    <div className='conversations'>
+                        {conversationIds.length > 0 ? (
+                            conversationIds.map((conversation) => (
+                                <div
+                                    key={conversation._id}
+                                    onClick={() => {
+                                        setCurrentConversation(conversation);
+                                        receiveMessages();
+                                    }}
+                                >
+                                    <ConversationTabs
+                                        conversation={conversation}
+                                        currentUserID={currentUserID}
+                                        isSelected={currentConversation?._id === conversation._id} 
+                                    />
+                                </div>
+                            ))
+                        ) : (<p>No recent messages</p>)}
+                    </div>
                 </div>
+                {currentConversation && (
+                    <MessageLog
+                        currentUserID={currentUserID}
+                        currentConversation={currentConversation}
+                        messageList={messageList}
+                        message={message}
+                        setMessage={setMessage}
+                        send={send}
+                    />
+                )}
             </div>
-        </div>
+        </body>
     );
 }

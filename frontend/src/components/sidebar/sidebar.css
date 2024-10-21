@@ -4,7 +4,8 @@
     text-decoration: none;
 }
 .sidebar{
-    background: #EADDFF;
+    /* background: #EADDFF; */
+    background: #5a3e8795;
     color: #fff;
     height: 100%;
     width: 200px;
@@ -12,7 +13,7 @@
     top: 0;           /* Positions the sidebar at the top of the page */
     left: 0;          /* Positions the sidebar on the left of the page */
     transition: all 0.5s;
-    border-radius: 40px;
+    border-radius: 0 10px 8px 0;
 }
 .top_section{           
     display: flex;
