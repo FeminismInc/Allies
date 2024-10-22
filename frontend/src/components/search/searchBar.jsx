@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { InputBase, Paper, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
+import { debounce } from 'lodash';
+import axios from 'axios';
 
 const SearchContainer = styled(Paper)`
   display: flex;
@@ -17,7 +19,17 @@ const SearchInput = styled(InputBase)`
   margin-left: 8px;
 `;
 
-const SearchBar = () => {
+const SearchBar = ({ setSearchQuery, fetchResults }) => {
+
+
+  const uri = "http://localhost:5050/api";
+
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    fetchResults(query); 
+};
+
   return (
     <SearchContainer>
       <IconButton>
@@ -26,6 +38,7 @@ const SearchBar = () => {
       <SearchInput
         placeholder="Search..."
         inputProps={{ 'aria-label': 'search' }}
+        onChange={handleSearch}
       />
     </SearchContainer>
   );
