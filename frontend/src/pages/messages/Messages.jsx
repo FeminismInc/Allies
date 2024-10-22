@@ -71,15 +71,22 @@ export default function MessagesPage() {
     }, [currentConversation]);
 
     useEffect(() => {
+        if (currentConversation && currentConversation._id) {
+            receiveMessages();
+        }
+    }, [currentConversation]);
+
+    useEffect(() => {
         axios.get(`${uri}/users/getCurrentUserID`)
             .then(response => {
-                console.log(response.data);
+                console.log("getCurrentUserID",response.data);
                 setCurrentUserID(response.data.username);
                 return axios.get(`${uri}/users/getConversations/${response.data.username}`);
             })
             .then(response => {
                 const conversations = Array.isArray(response.data) ? response.data : [response.data];
                 setConversationIds(conversations);
+                console.log("setConversationIds",conversations);
             })
             .catch(error => {
                 console.error('Error fetching conversations:', error);
@@ -119,11 +126,17 @@ export default function MessagesPage() {
     };
 
     const receiveMessages = async () => {
-        console.log(currentConversation)
+        console.log("currentConversation",currentConversation);
         try {
-            const response = await axios.get(`${uri}/messages/getMessages/${currentConversation.users[1]}`);
-            console.log("hello", response.data)
+
+            const response = await axios.get(`${uri}/messages/conversation/${currentConversation._id}`);
+            // const response = await axios.get(`${uri}/messages/getMessages/${currentConversation.users[1]}`);
+            // returns list of ALL messages that contain the currentUser as either sender or destination
+
+
+            console.log("setMassageList in recieveMessages", response.data)
             setMessageList(response.data);
+            
         } catch (error) {
             console.error('Error fetching messages:', error);
         }
