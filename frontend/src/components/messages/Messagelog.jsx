@@ -6,8 +6,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import './messagelog.css';
 
 
-export default function MessageLog  ({
-    currentUserID,
+export default function MessageLog({
+    currentUsername,
     currentConversation,
     messageList,
     message,
@@ -16,7 +16,7 @@ export default function MessageLog  ({
 }) {
     // gets the usernames of all participants except for current user
     const otherParticipants = currentConversation
-        ? currentConversation.users.filter(user => user !== currentUserID)
+        ? currentConversation.users.filter(user => user !== currentUsername)
         : [];
 
     return (
@@ -28,14 +28,14 @@ export default function MessageLog  ({
                         : 'No other participants'}
                 </span>
                 <IconButton className="delete-button">
-    <DeleteIcon className="delete-icon" />
-</IconButton>
+                    <DeleteIcon className="delete-icon" />
+                </IconButton>
             </div>
 
             <div className='messagelog-container'>
                 {messageList.map((message) => (
                     <div className='message' key={uuidv4()}>
-                        <div className={message.sender === currentUserID ? "mine" : "yours"}>
+                        <div className={message.sender === currentUsername ? "mine" : "yours"}>
                             <span className="message-content">{message.message_content}</span>
                         </div>
                     </div>

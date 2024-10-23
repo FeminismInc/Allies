@@ -5,7 +5,7 @@ import React from "react";
 
 export default function ConversationTabs({
     conversation,
-    currentUserID,
+    currentUsername,
     isSelected
 }) {
     return (
@@ -14,7 +14,7 @@ export default function ConversationTabs({
                 <AccountCircleOutlinedIcon />
             </IconButton>
             {conversation.users
-                .filter(user => user !== currentUserID)
+                .filter(user => user !== currentUsername)
                 .map((user, index) => (
                     <div key={index} className="user-info">
                         <span className="username">{user}</span>
