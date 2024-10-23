@@ -97,7 +97,8 @@
   .yours {
     float: left;
     align-self: flex-start;
-    background-color: #8c4eb51a;
+    /* background-color: #b69fd938; */
+    background-color: #c5b8e96d;
     border-radius: 12px;
     padding:10px;
     max-width: 400px;
