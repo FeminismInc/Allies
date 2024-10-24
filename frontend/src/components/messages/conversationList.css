@@ -1,0 +1,27 @@
+.conversationsList {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* width: 280px; */
+    width: 340px;
+    position: fixed;
+    left: 250px;
+    background-color: #eaddff65;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.heading {
+    font-size: 25px;
+    color: rgb(120, 107, 152);
+    padding-right: 30px;
+    padding-left: 10px;
+
+}
+
+.conversations {
+    display: flex;
+    flex-direction: column;
+    padding: 7px;
+}
