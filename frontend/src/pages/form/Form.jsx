@@ -25,6 +25,7 @@ export default function ProfileForm() {
     //when pressing submit button take all input data for processing
     const submit = async (e) => {
         console.log(username)
+        
         e.preventDefault();
         try {
             if (!email || !password ||  !username || !handle || !pronouns || !birthdate) {
