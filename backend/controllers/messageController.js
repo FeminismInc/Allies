@@ -7,12 +7,14 @@ exports.getConversation = async (req, res) => {
     const { conversationId } = req.params;
 
     try {
+        // const conversation = await ConversationModel.findById(conversationId).populate('messages');
         const conversation = await ConversationModel.findById(conversationId).populate('messages');
+        console.log("getConversation by ID", conversation.messages);
         if (!conversation) {
             return res.status(404).json({ message: 'Conversation not found' });
         }
         //edit this so that it sends a json that also includes the objectIds of the users involved in the conversation 
-        res.status(200).json(conversation);
+        res.status(200).json(conversation.messages);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error fetching conversation' });
@@ -21,7 +23,7 @@ exports.getConversation = async (req, res) => {
 
 // Create a new conversation
 exports.newConversation = async (req, res) => {
-    const { currentUserId, otherUsername } = req.body;
+    const { currentUsername, otherUsername } = req.body;
     console.log("new conversation has been called");
     try {
         // check if other user even exists!
@@ -33,7 +35,7 @@ exports.newConversation = async (req, res) => {
 
         // check if a conversation between the exact same users already exists
         const existingConversation = await ConversationModel.findOne({
-            users: { $all: [currentUserId, otherUser.username] },  // makes sure all users in the conversation don't already have an existing convo
+            users: { $all: [currentUsername, otherUser.username] },  // makes sure all users in the conversation don't already have an existing convo
             $expr: { $eq: [{ $size: "$users" }, 2] }
         });
         if (existingConversation) {
@@ -42,11 +44,11 @@ exports.newConversation = async (req, res) => {
             });
         }
 
-        const newConversation = await ConversationModel.create({ users: [req.session.userId, otherUser.username] });
+        const newConversation = await ConversationModel.create({ users: [currentUsername, otherUser.username] });
 
         // Adds the newly created convo id to each UserDetail obj of the participant users
         await UserModel.updateMany(
-            { username: { $in: [req.session.userId, otherUser.username] } },
+            { username: { $in: [currentUsername, otherUser.username] } },
             { $addToSet: { conversations: newConversation._id } }
         );
         res.status(201).json(newConversation);
@@ -114,6 +116,7 @@ exports.createMessage = async (req, res) => {
         res.status(500).json({ message: 'Error creating message' });
     }
 };
+
 
 exports.getMessagesByDest = async (req, res, next) => {
     const { username } = req.params;

@@ -20,7 +20,8 @@ export default function MessagesPage() {
     const [message, setMessage] = useState('');
     const [messageList, setMessageList] = useState([]);
     const [currentConversation, setCurrentConversation] = useState(null);
-    const [currentUserID, setCurrentUserID] = useState("");
+    const [currentUsername, setCurrentUsername] = useState('');
+
 
     // Function to send a message
     const send = async (e) => {
@@ -29,8 +30,8 @@ export default function MessagesPage() {
         const messageContent = document.getElementById("message-input").value;
         console.log(currentConversation);
         const messageObj = {
-            sender: currentUserID,
-            destination: currentConversation.users.filter(user => user !== currentUserID)[0],
+            sender: currentUsername,
+            destination: currentConversation.users.filter(user => user !== currentUsername)[0],
             id: currentConversation._id,
             message_content: messageContent,
             datetime: Date.now()
@@ -70,25 +71,30 @@ export default function MessagesPage() {
         };
     }, [currentConversation]);
 
+
     useEffect(() => {
-        axios.get(`${uri}/users/getCurrentUserID`)
+        // axios.get(`${uri}/users/getCurrentUserID`)
+        axios.get(`${uri}/users/findUser`, { withCredentials: true }) 
             .then(response => {
-                console.log(response.data);
-                setCurrentUserID(response.data.username);
+                console.log("currentUsername",response.data.username);
+                setCurrentUsername(response.data.username);
                 return axios.get(`${uri}/users/getConversations/${response.data.username}`);
             })
             .then(response => {
                 const conversations = Array.isArray(response.data) ? response.data : [response.data];
                 setConversationIds(conversations);
+                console.log("setConversationIds",conversations);
             })
             .catch(error => {
                 console.error('Error fetching conversations:', error);
             });
     }, []);
 
+
     useEffect(() => {
         console.log('Updated Conversation IDs:', conversationIds);
     }, [conversationIds]);
+
 
     const handleOpenModal = () => setShowModal(true);
 
@@ -101,7 +107,7 @@ export default function MessagesPage() {
     const handleCreateConversation = async () => {
         try {
             const response = await axios.post(`${uri}/messages/conversation`, {
-                currentUserID,
+                currentUsername,
                 otherUsername
             });
 
@@ -111,6 +117,8 @@ export default function MessagesPage() {
                 handleCloseModal();
             } else if (response.status === 404) {
                 setError('User not found');
+            } else if (response.status === 200) {
+                setError('Conversation already exists');
             }
         } catch (error) {
             console.error('Error creating conversation:', error);
@@ -119,18 +127,24 @@ export default function MessagesPage() {
     };
 
     const receiveMessages = async () => {
-        console.log(currentConversation)
+        console.log("currentConversation:",currentConversation);
         try {
-            const response = await axios.get(`${uri}/messages/getMessages/${currentConversation.users[1]}`);
-            console.log("hello", response.data)
+            const response = await axios.get(`${uri}/messages/conversation/${currentConversation._id}`);
+            // const response = await axios.get(`${uri}/messages/getMessages/${currentConversation.users[1]}`);
+            // problem: /getMessages is returning ALL messages that contain the currentUser as either sender or destination, regardless of currentConversation
             setMessageList(response.data);
         } catch (error) {
             console.error('Error fetching messages:', error);
         }
     };
 
+    useEffect(() => {
+        if (currentConversation && currentConversation._id) {
+            receiveMessages();
+        }
+    }, [currentConversation]);
+
     return (
-        <body id="messages">
             <div className='conversationMainContent'>
                 <Sidebar />
                 {/* Left side: Conversation List */}
@@ -158,12 +172,11 @@ export default function MessagesPage() {
                                     key={conversation._id}
                                     onClick={() => {
                                         setCurrentConversation(conversation);
-                                        receiveMessages();
                                     }}
                                 >
                                     <ConversationTabs
                                         conversation={conversation}
-                                        currentUserID={currentUserID}
+                                        currentUsername={currentUsername}
                                         isSelected={currentConversation?._id === conversation._id} 
                                     />
                                 </div>
@@ -173,7 +186,7 @@ export default function MessagesPage() {
                 </div>
                 {currentConversation && (
                     <MessageLog
-                        currentUserID={currentUserID}
+                        currentUsername={currentUsername}
                         currentConversation={currentConversation}
                         messageList={messageList}
                         message={message}
@@ -182,6 +195,5 @@ export default function MessagesPage() {
                     />
                 )}
             </div>
-        </body>
     );
 }
