@@ -127,6 +127,7 @@ exports.createUser = async (req, res, next) => {
       password,  
       handle,
       pronouns,
+      profile_picture: null,
       bio: "",
       public_boolean: true,
       joined: new Date(),
@@ -389,5 +390,49 @@ exports.searchUsers = async (req, res) => {
     res.json(users);
   } catch (error) {
     res.status(500).send('Error searching users');
+  }
+}
+
+
+exports.updateProfilePicture = async (req, res) => {
+  const { imageUrl } = req.body;
+  const userID = req.session.user_id;
+  try {
+      const user = await UserModel.findOneAndUpdate(
+          { _id: userID },
+          { profile_picture: imageUrl },
+          { new: true }
+      );
+
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.json({ message: 'Profile picture updated successfully', user });
+  } catch (error) {
+      console.error('Error updating profile picture:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+
+exports.getProfilePicture = async (req, res) => {
+  const userID = req.session.user_id;
+  try {
+      const user = await UserModel.findOne(
+          { _id: userID },
+      );
+
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.json({
+        message: 'Profile picture retrieved successfully',
+        profilePicture: user.profile_picture, // Accessing the profile picture field
+    });
+  } catch (error) {
+      console.error('Error updating profile picture:', error);
+      res.status(500).json({ message: 'Internal server error' });
   }
 }

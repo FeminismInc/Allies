@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './profileheader.css'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { Button } from '@mui/material';
 import axios from "axios";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import UserCard from '../../components/following/followingComp';
+import FollowerCard from '../../components/following/followerComp';
+import AWS from 'aws-sdk';
 
 const ProfileHeader = ({ username }) => {
     const [showWhiteBox, setShowWhiteBox] = useState(false);
@@ -16,8 +18,36 @@ const ProfileHeader = ({ username }) => {
     const [showFollowing, setShowFollowing] = useState(false);
     const [showFollowers, setShowFollowers] = useState(false);
 
+    const [profileImage, setProfileImage] = useState(null);
+
     const uri = 'http://localhost:5050/api';
     
+    const [awsConfig, setAwsConfig] = useState(null);
+    
+    useEffect(() => {
+        // Fetch AWS configuration when component mounts
+        const fetchAwsConfig = async () => {
+            try {
+                const response = await axios.get(`${uri}/users/aws-config`);
+                AWS.config.update({
+                    accessKeyId: response.data.accessKeyId,
+                    secretAccessKey: response.data.secretAccessKey,
+                    region: response.data.region,
+                });
+                // Store bucket name if needed
+                setAwsConfig(response.data);
+            } catch (error) {
+                console.error('Error fetching AWS config:', error);
+            }
+        };
+
+        fetchProfilePicture();
+
+        fetchAwsConfig();
+    }, []);
+
+    const s3 = new AWS.S3();
+
     const handleButtonClick = () => {
         setShowWhiteBox(!showWhiteBox);
     };
@@ -34,6 +64,48 @@ const ProfileHeader = ({ username }) => {
         console.log("submitted bio:", bioText); // im just logging the text rn im not sure what to do
         setShowWhiteBox(false);
     }
+
+    const fetchProfilePicture = async () => {
+        try {
+            const response = await axios.get(`${uri}/users/getProfilePicture`); // Adjust the endpoint as necessary
+            setProfileImage(response.data.profilePicture); // Update state with the retrieved profile picture
+        } catch (error) {
+            console.error('Error fetching profile picture:', error);
+        }
+    };
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const params = {
+                Bucket: awsConfig.bucketName,
+                Key: `profile-pictures/${username}/${file.name}`, // Unique key for the uploaded image
+                Body: file,
+                ContentType: file.type,
+            };
+            console.log("Uploading with params:", params);
+
+            s3.upload(params, async (err, data) => {
+                if (err) {
+                    console.error("Error uploading image to S3:", err);
+                    return;
+                }
+
+                console.log("Successfully uploaded image to S3:", data.Location);
+                setProfileImage(data.Location); // Set the uploaded image URL
+
+                // Now store the image URL in MongoDB (implement this in your backend)
+                try {
+                    await axios.post(`${uri}/users/updateProfilePicture`, {
+                        imageUrl: data.Location,
+                    });
+                    console.log("Image URL stored in MongoDB");
+                } catch (error) {
+                    console.error("Error storing image URL in MongoDB:", error);
+                }
+            });
+        }
+    };
 
     const fetchFollowers = async (username) => {
         try {
@@ -78,6 +150,20 @@ const ProfileHeader = ({ username }) => {
         <div>
             <div className="profile-container">
                 <div className='user-info'>
+                <button onClick={() => document.getElementById('fileInput').click()}>
+                        {profileImage ? (
+                            <img src={profileImage} alt="Profile" className="profile-picture" />
+                        ) : (
+                            <AccountCircleOutlinedIcon className="profile-picture" />
+                        )}
+                    </button>
+                    <input
+                        type="file"
+                        id="fileInput"
+                        style={{ display: 'none' }}
+                        accept="image/*"
+                        onChange={handleFileChange}
+                    />
                     <div className="username">
                         <h1>{username}</h1>
                     </div>
@@ -124,12 +210,7 @@ const ProfileHeader = ({ username }) => {
                     {followers.length > 0 ? (
                         followers.map((followers, index) => (
                         <div key={index} className="followers">
-                            <div className="followers-header">
-                            <AccountCircleOutlinedIcon className="profile-picture" />
-                            <div className="followers-info">
-                                <span className="username">{followers}</span>
-                            </div>
-                            </div>
+                            <UserCard username={followers}/>
                         </div>
                         ))
                     ) : (
@@ -145,12 +226,7 @@ const ProfileHeader = ({ username }) => {
                     {following.length > 0 ? (
                         following.map((following, index) => (
                         <div key={index} className="following">
-                            <div className="following-header">
-                            <AccountCircleOutlinedIcon className="profile-picture" />
-                            <div className="following-info">
-                                <span className="username">{following}</span>
-                            </div>
-                            </div>
+                            <FollowerCard username={following}/>
                         </div>
                         ))
                     ) : (

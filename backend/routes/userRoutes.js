@@ -15,7 +15,9 @@ const {
     findUser,
     getConversationsByUsername,
     getCurrentUserID,
-    searchUsers
+    searchUsers,
+    updateProfilePicture,
+    getProfilePicture
  } = require('../controllers/userController');
 
 
@@ -39,6 +41,18 @@ router.get('/getConversations/:username',getConversationsByUsername );
 router.get('/getCurrentUserID',getCurrentUserID);
 
 router.post('/search', searchUsers);
+
+router.post('/updateProfilePicture', updateProfilePicture);
+router.get('/getProfilePicture', getProfilePicture);
+
+router.get('/aws-config', (req, res) => {
+    res.json({
+      accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+      region: process.env.REACT_APP_AWS_REGION,
+      bucketName: process.env.REACT_APP_AWS_BUCKET_NAME
+    });
+  });
 
 module.exports = router;
 

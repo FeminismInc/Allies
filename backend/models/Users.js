@@ -26,9 +26,7 @@ const UserSchema = new mongoose.Schema({
     ref: 'convos',
  }],
   public_boolean: Boolean,
-  profile_picture: { 
-    type: mongoose.Schema.Types.ObjectId, 
-     } 
+  profile_picture: String,
 
 
 },{ collection: 'UserDetail' });
