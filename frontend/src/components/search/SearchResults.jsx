@@ -2,6 +2,8 @@ import './searchresults.css';
 import React, { useEffect, useState } from 'react';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+
 
 const SearchResults = ({ username, handle, isFollowing: initialIsFollowing}) => {
 
@@ -41,7 +43,9 @@ const SearchResults = ({ username, handle, isFollowing: initialIsFollowing}) => 
                      <AccountCircleOutlinedIcon style={{ fontSize: '60px' }}/> 
                 </div>
                 <div className='username'>
+                <Link to={`/profile/${username}`} className="username-link">
                     <span className="name">{username}</span>
+                </Link>
                     <span className="handle">@{handle}</span>
                 </div>
             </div>

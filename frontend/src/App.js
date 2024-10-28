@@ -8,6 +8,7 @@ import PostPage from './pages/post/post';
 import MessagesPage from './pages/messages/Messages';
 import Search from './pages/search/Search';
 
+
 function App() {
   return (
     <Router>
@@ -19,9 +20,9 @@ function App() {
               <Route path="/post" element = {<PostPage/>} />
               <Route path="/form" element = {<Form/>} />
               <Route path="/search" element = {<Search/>} />
+              <Route path="/profile/:username" element={<Profile />} />  
             </Routes>
     </Router>
   )
 }
-
 export default App;
