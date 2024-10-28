@@ -10,7 +10,7 @@ export default function SearchPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [results, setResults] = useState([]);
 
-    const uri = "http://localhost:5050/api"; 
+    const uri = "http://localhost:5050/api";
 
     const fetchResults = async (query) => {
         if (query) {
@@ -23,39 +23,35 @@ export default function SearchPage() {
                 console.log(followResponse.data.follower_accounts)
                 const updatedResults = await Promise.all(
                     searchResults.map(async user => {
-                        const isFollowing = followResponse.data.follower_accounts.some(follower => 
-                            follower._id === user._id 
+                        const isFollowing = followResponse.data.follower_accounts.some(follower =>
+                            follower._id === user._id
                         );
-                        return { ...user, isFollowing }; 
+                        return { ...user, isFollowing };
                     })
                 );
                 console.log(updatedResults);
-                setResults(updatedResults); 
+                setResults(updatedResults);
             } catch (error) {
                 console.error("Error fetching search results or follow status", error);
             }
         } else {
-            setResults([]); 
+            setResults([]);
         }
     };
 
     return (
-        <body id="search">
-            <div className='searchPage-container'>
-                <Sidebar />
-                <div className='search-mainContent'>
-                    <div className='searchbar'>
-                        <SearchBar setSearchQuery={setSearchQuery} fetchResults={fetchResults} />
-                        <div className='landing'>
-                            {results.map((result, index) => (
-                                <SearchResults key={index} username={result.username} handle={result.handle} isFollowing={result.isFollowing} />
-                            ))}
-                        </div>
+        <div className='searchPage-container'>
+            <Sidebar />
+            <div className='search-mainContent'>
+                <div className='searchbar'>
+                    <SearchBar setSearchQuery={setSearchQuery} fetchResults={fetchResults} />
+                    <div className='landing'>
+                        {results.map((result, index) => (
+                            <SearchResults key={index} username={result.username} handle={result.handle} isFollowing={result.isFollowing} />
+                        ))}
                     </div>
                 </div>
             </div>
-        </body>
-
-
+        </div>
     );
 }

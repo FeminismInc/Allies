@@ -1,28 +1,22 @@
 
-.conversations{
-    display: flex;
-    flex-direction: column;
-    padding: 7px;
+.convo-tab {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 10px;
+  margin-bottom: 6px; 
+  box-shadow: 0px 0px 0px rgba(52, 33, 65, 0.471);
 }
 
-  .convo:hover {
+  .convo-tab:hover {
     background-color: #7869a366; 
   }
 
-  .convo.selected{
+  .convo-tab.selected{
     box-shadow: 1px 4px 4px rgba(52, 33, 65, 0.471);
     background: #5d329e4a;   
   }
 
-  .convo {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border-radius: 10px;
-    margin-bottom: 6px; 
-    box-shadow: 0px 0px 0px rgba(52, 33, 65, 0.471);
-
-  }
   .header {
     display: flex;           /* flexbox to align items horizontally */
     align-items: center;      /* align items vertically*/

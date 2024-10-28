@@ -5,16 +5,16 @@ import React from "react";
 
 export default function ConversationTabs({
     conversation,
-    currentUserID,
+    currentUsername,
     isSelected
 }) {
     return (
-        <div className={`convo ${isSelected ? 'selected' : ''}`}>
+        <div className={`convo-tab ${isSelected ? 'selected' : ''}`}>
             <IconButton aria-label="profile-picture">
                 <AccountCircleOutlinedIcon />
             </IconButton>
             {conversation.users
-                .filter(user => user !== currentUserID)
+                .filter(user => user !== currentUsername)
                 .map((user, index) => (
                     <div key={index} className="user-info">
                         <span className="username">{user}</span>
