@@ -1,4 +1,5 @@
 import React from 'react';
+import './createConversationModal.css';
 
 export default function CreateConversationModal({
   showModal,

@@ -1,12 +1,9 @@
 import axios from 'axios';
 import React, { useState, useEffect } from "react";
-import IconButton from '@mui/material/IconButton';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { io } from "socket.io-client"; // Import socket.io
 import "./messages.css";
-import ConversationTabs from '../../components/messages/ConversationTabs';
-import CreateConversationModal from '../../components/messages/CreateConversationModal';
+import ConversationList from '../../components/messages/ConversationList';
 import MessageLog from '../../components/messages/Messagelog';
 
 export default function MessagesPage() {
@@ -74,16 +71,16 @@ export default function MessagesPage() {
 
     useEffect(() => {
         // axios.get(`${uri}/users/getCurrentUserID`)
-        axios.get(`${uri}/users/findUser`, { withCredentials: true }) 
+        axios.get(`${uri}/users/findUser`, { withCredentials: true })
             .then(response => {
-                console.log("currentUsername",response.data.username);
+                console.log("currentUsername", response.data.username);
                 setCurrentUsername(response.data.username);
                 return axios.get(`${uri}/users/getConversations/${response.data.username}`);
             })
             .then(response => {
                 const conversations = Array.isArray(response.data) ? response.data : [response.data];
                 setConversationIds(conversations);
-                console.log("setConversationIds",conversations);
+                console.log("setConversationIds", conversations);
             })
             .catch(error => {
                 console.error('Error fetching conversations:', error);
@@ -127,7 +124,7 @@ export default function MessagesPage() {
     };
 
     const receiveMessages = async () => {
-        console.log("currentConversation:",currentConversation);
+        console.log("currentConversation:", currentConversation);
         try {
             const response = await axios.get(`${uri}/messages/conversation/${currentConversation._id}`);
             // const response = await axios.get(`${uri}/messages/getMessages/${currentConversation.users[1]}`);
@@ -145,55 +142,31 @@ export default function MessagesPage() {
     }, [currentConversation]);
 
     return (
-            <div className='conversationMainContent'>
-                <Sidebar />
-                {/* Left side: Conversation List */}
-                <div className='conversationsList'>
-                    <div className="header">
-                        <span className='heading' >Recent Messages</span>
-                        <IconButton aria-label="create-conversation" onClick={handleOpenModal} >
-                            <AddCircleOutlineIcon />
-                        </IconButton>
-                    </div>
-                    {/* Modal to start a new conversation */}
-                    <CreateConversationModal
-                        showModal={showModal}
-                        closeModal={handleCloseModal}
-                        otherUsername={otherUsername}
-                        setOtherUsername={setOtherUsername}
-                        error={error}
-                        handleCreateConversation={handleCreateConversation}
-                    />
-                    {/* Conversation previews */}
-                    <div className='conversations'>
-                        {conversationIds.length > 0 ? (
-                            conversationIds.map((conversation) => (
-                                <div
-                                    key={conversation._id}
-                                    onClick={() => {
-                                        setCurrentConversation(conversation);
-                                    }}
-                                >
-                                    <ConversationTabs
-                                        conversation={conversation}
-                                        currentUsername={currentUsername}
-                                        isSelected={currentConversation?._id === conversation._id} 
-                                    />
-                                </div>
-                            ))
-                        ) : (<p>No recent messages</p>)}
-                    </div>
-                </div>
-                {currentConversation && (
-                    <MessageLog
-                        currentUsername={currentUsername}
-                        currentConversation={currentConversation}
-                        messageList={messageList}
-                        message={message}
-                        setMessage={setMessage}
-                        send={send}
-                    />
-                )}
-            </div>
+        <div className='conversationMainContent'>
+            <Sidebar />
+            <ConversationList
+                conversationIds={conversationIds}
+                currentUsername={currentUsername}
+                currentConversation={currentConversation}
+                setCurrentConversation={setCurrentConversation}
+                showModal={showModal}
+                handleOpenModal={handleOpenModal}
+                handleCloseModal={handleCloseModal}
+                otherUsername={otherUsername}
+                setOtherUsername={setOtherUsername}
+                error={error}
+                handleCreateConversation={handleCreateConversation}
+            />
+            {currentConversation && (
+                <MessageLog
+                    currentUsername={currentUsername}
+                    currentConversation={currentConversation}
+                    messageList={messageList}
+                    message={message}
+                    setMessage={setMessage}
+                    send={send}
+                />
+            )}
+        </div>
     );
 }
