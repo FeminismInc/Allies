@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { BrowserRouter, useNavigate } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import axios from  'axios'
 import ProfileForm from './Form'
 
@@ -26,8 +26,6 @@ describe('ProfileForm Component', () => {
     beforeEach(() => {
         vi.clearAllMocks()
         // mocking useNavigate
-        vi.spyOn(require('react-router-dom'), 'useNavigate').mockImplementation(() => mockNavigate)
-
     })
 
     afterEach(() => {
