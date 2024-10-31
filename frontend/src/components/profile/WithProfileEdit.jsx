@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
+import IconButton from '@mui/material/IconButton';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import './profileheader.css';
+import CreatePostModal from '../../components/profile/CreatePostModal';
+
 
 const WithProfileEdit = (WrappedComponent) => {
     return function ProfileHeaderForCurrentUser(props) {
@@ -8,6 +12,10 @@ const WithProfileEdit = (WrappedComponent) => {
         const [bioText, setBioText] = useState("");
         const [showWhiteBox, setShowWhiteBox] = useState(false);
         const [showIconBox, setShowIconBox] = useState(false);
+        const [showModal, setShowModal] = useState(false);
+
+        const openModal = () => setShowModal(true);
+        const closeModal = () => setShowModal(false);
         const handleButtonClick = () => {
             setShowWhiteBox(!showWhiteBox);
         };
@@ -23,6 +31,8 @@ const WithProfileEdit = (WrappedComponent) => {
             console.log("submitted bio:", bioText); // im just logging the text rn im not sure what to do
             setShowWhiteBox(false);
         }
+
+
 
         return (
             <div className="profile-header-container">
@@ -41,7 +51,17 @@ const WithProfileEdit = (WrappedComponent) => {
                         <button className='edit-bio-button' onClick={handleButtonClick}>
                             <h3>Edit Bio</h3>
                         </button>
+                            <button className='create-post-button' onClick={openModal} >
+                                New Post
+                            </button>
+                            <CreatePostModal
+                                showModal={showModal}
+                                closeModal={closeModal}
+                                onPostCreated={() => console.log("Post created!")}
+                            />
+                      
                     </div>
+
                 )}
                 {showWhiteBox && <div className="overlay" onClick={handleButtonClick}></div>}
 
