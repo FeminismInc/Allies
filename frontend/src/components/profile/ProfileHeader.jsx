@@ -1,39 +1,15 @@
 import React, { useState } from 'react'
 import './profileheader.css'
-import SettingsIcon from '@mui/icons-material/Settings'
-import { Button } from '@mui/material';
 import axios from "axios";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 
 const ProfileHeader = ({ username }) => {
-    const [showWhiteBox, setShowWhiteBox] = useState(false);
-    const [bioText, setBioText] = useState("");
-    const [showIconBox, setShowIconBox] = useState(false);
-
     const [followers, setFollowersList] = useState([]);
     const [following, setFollowingList] = useState([]);
-
     const [showFollowing, setShowFollowing] = useState(false);
     const [showFollowers, setShowFollowers] = useState(false);
 
     const uri = 'http://localhost:5050/api';
-    
-    const handleButtonClick = () => {
-        setShowWhiteBox(!showWhiteBox);
-    };
-
-    const handleIconButtonClick = () => {
-        setShowIconBox(!showIconBox);
-    }
-
-    const handleTextChange = (e) => {
-        setBioText(e.target.value);
-    }
-
-    const handleSubmit = () => {
-        console.log("submitted bio:", bioText); // im just logging the text rn im not sure what to do
-        setShowWhiteBox(false);
-    }
 
     const fetchFollowers = async (username) => {
         try {
@@ -87,37 +63,8 @@ const ProfileHeader = ({ username }) => {
                     <button className='following' onClick = {fetchMyFollowing}>
                         followers
                     </button>
-                    <button className="right-icon-button" onClick={handleIconButtonClick}>
-                        <div className="right-icon-wrapper">
-                            <SettingsIcon className='right-icon' />
-                        </div>
-                    </button>
                 </div>
-                <button className='edit-bio-button' onClick={handleButtonClick}>
-                    <h3>edit bio</h3>
-                </button>
             </div>
-
-            {showWhiteBox && <div className="overlay" onClick={handleButtonClick}></div>}
-
-            {/* conditional show class for transition */}
-            <div className={`white-rounded-box ${showWhiteBox ? 'show' : ''}`}>
-                <h3>Edit Bio</h3>
-                <textarea
-                    className="textbox"
-                    value={bioText}
-                    onChange={handleTextChange}
-                    placeholder="Write your bio here..."
-                ></textarea>
-                <button className="submit-button" onClick={handleSubmit}>Save</button>
-            </div>
-
-            <div className={`white-rounded-box ${showIconBox ? 'show' : ''}`}>
-                <h3>Settings</h3>
-                <p>blocked accounts, private or public, ...</p>
-                <button className='submit-button' onClick={() => setShowIconBox(false)}>Close</button>
-            </div>
-
             <div className={`white-rounded-box ${showFollowers ? 'show' : ''}`}>
                 <h3>Following</h3>
                 <div className="following-container">
@@ -138,7 +85,6 @@ const ProfileHeader = ({ username }) => {
                 </div>
                 <button className='submit-button' onClick={() => setShowFollowers(false)}>Close</button>
             </div>
-
             <div className={`white-rounded-box ${showFollowing ? 'show' : ''}`}>
                 <h3>Followers</h3>
                 <div className="following-container">

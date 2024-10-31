@@ -4,7 +4,16 @@
     justify-content: flex-start;
     gap: 10px;
     margin-top: 20px;
-    margin-left: 20px;
+
+}
+.profile-header-container{
+    display: flex;
+    flex-direction: column;
+
+}
+.user-info-container {
+    display: flex;
+    flex-direction: row;
 }
 
 .right-icon-button {
@@ -19,6 +28,7 @@
     flex-direction: row;
     width: 60vw;
     justify-content: space-between;
+    padding-right: 20px;
 }
 
 .following, .followers{
@@ -63,7 +73,9 @@
     font-size: 20px;
 }
 
-
+.edit-bio-container{
+    margin-left: 50px;
+}
 .edit-bio-button {
     background-color: #eaddff;
     border: none;

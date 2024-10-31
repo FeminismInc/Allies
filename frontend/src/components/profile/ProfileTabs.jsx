@@ -30,7 +30,7 @@ export default function ProfileTabs({ username }) {
 
 
   // Dummy data for media, and followers
-  const media = ["Image 1", "Video 1", "Image 2"];
+
   const followers = ["Follower 1", "Follower 2", "Follower 3"];
 
   // render content based on active tab

@@ -7,9 +7,10 @@ const CommentModel = require('../models/Comments');
 exports.createPost = async (req, res) => {
     const { text, media, hashtags } = req.body;
     try {
+        console.log("creating post for ",req.session.username );
         const newPost = new PostModel({
             text,
-            author: req.session.userId, //username
+            author: req.session.username, //username
             media: media || [],
             hashtags: hashtags || [],
             datetime: new Date(),
