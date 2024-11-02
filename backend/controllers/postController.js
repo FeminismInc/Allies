@@ -161,7 +161,7 @@ exports.addDislike = async (req, res) => {
 // Add a comment to a post
 exports.addComment = async (req, res) => {
     const { postId } = req.params;
-    const { authorId, text } = req.body; 
+    const { username, text } = req.body; 
 
     try {
         // Check if the post exists
@@ -172,7 +172,7 @@ exports.addComment = async (req, res) => {
 
         // Create a new comment
         const newComment = new CommentModel({
-            author: authorId,
+            author: username,
             text: text,
             likes: [], 
             dislikes: [], 
