@@ -7,7 +7,7 @@ import ConversationList from '../../components/messages/ConversationList';
 import MessageLog from '../../components/messages/Messagelog';
 
 export default function MessagesPage() {
-    const uri = 'http://localhost:5050/api';
+    const uri = process.env.REACT_APP_URI;
     const socket = io("http://localhost:5050"); // Initialize socket connection http://54.176.5.254:5050/api
 
     const [conversationIds, setConversationIds] = useState([]);

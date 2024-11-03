@@ -9,7 +9,7 @@ exports.createPost = async (req, res) => {
     try {
         const newPost = new PostModel({
             text,
-            author: req.session.userId, //username
+            author: req.session.username, //username
             media: media || [],
             hashtags: hashtags || [],
             datetime: new Date(),

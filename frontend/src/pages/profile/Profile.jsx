@@ -10,7 +10,7 @@ import ProfileHeader from './ProfileHeader'
 export default function Profile() {
   
   const [username, setUsername] = useState('');
-  const uri = 'http://localhost:5050/api';
+  const uri = process.env.REACT_APP_URI;
 
 
   useEffect(() => {

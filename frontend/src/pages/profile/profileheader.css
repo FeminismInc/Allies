@@ -158,4 +158,13 @@ body, html {
     opacity: 1;
 }
 
-
+.profile-picture {
+    width: 100px;
+    height: 100px; /* Let height adjust based on width */
+    border-radius: 50%; /* Round shape */  
+    border: 3px solid purple;
+    cursor: pointer;
+}
+.profile-upload:hover .profile-picture {
+    opacity: 0.8; /* Darkens the image on hover */
+}

@@ -5,7 +5,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 
 export default function ProfileTabs({ username }) {
 
-  const uri = 'http://localhost:5050/api' // http://54.176.5.254:5050/api
+  const uri = process.env.REACT_APP_URI; // http://54.176.5.254:5050/api
   const [activeTab, setActiveTab] = useState('posts');
   const [posts, setPosts] = useState([]);
 
@@ -15,6 +15,7 @@ export default function ProfileTabs({ username }) {
       console.log(username);
       const response = await axios.get(`${uri}/users/getPosts/${username}`, {
       });
+      console.log(response.data)
       setPosts(response.data);
     } catch (error) {
       console.error('Error fetching posts:', error);

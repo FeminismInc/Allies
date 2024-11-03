@@ -20,7 +20,7 @@ const ProfileHeader = ({ username }) => {
 
     const [profileImage, setProfileImage] = useState(null);
 
-    const uri = 'http://localhost:5050/api';
+    const uri = process.env.REACT_APP_URI;
     
     const [awsConfig, setAwsConfig] = useState(null);
     
@@ -150,13 +150,13 @@ const ProfileHeader = ({ username }) => {
         <div>
             <div className="profile-container">
                 <div className='user-info'>
-                <button onClick={() => document.getElementById('fileInput').click()}>
+                    <div onClick={() => document.getElementById('fileInput').click()} className="profile-upload">
                         {profileImage ? (
                             <img src={profileImage} alt="Profile" className="profile-picture" />
                         ) : (
                             <AccountCircleOutlinedIcon className="profile-picture" />
                         )}
-                    </button>
+                    </div>
                     <input
                         type="file"
                         id="fileInput"
