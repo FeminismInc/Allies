@@ -11,7 +11,7 @@ const commentsSchema = new mongoose.Schema({
     dislikes: {
       type: mongoose.Schema.Types.ObjectId,  // Reference to dislikes
     },
-    replies: [{
+    replies: [{ //rename this to comments, 
       type: mongoose.Schema.Types.ObjectId,  // Array of ObjectIds referencing replies
     }],
     text: String,  // The comment content

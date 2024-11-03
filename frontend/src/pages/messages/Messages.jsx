@@ -115,7 +115,10 @@ export default function MessagesPage() {
             } else if (response.status === 404) {
                 setError('User not found');
             } else if (response.status === 200) {
-                setError('Conversation already exists');
+                // if conversation already exists, direct user to the conversation
+                setCurrentConversation(response.data)
+                handleCloseModal();
+                // setError('Conversation already exists');
             }
         } catch (error) {
             console.error('Error creating conversation:', error);

@@ -38,9 +38,11 @@ exports.newConversation = async (req, res) => {
             $expr: { $eq: [{ $size: "$users" }, 2] }
         });
         if (existingConversation) {
-            return res.status(200).json({
-                message: 'Conversation already exists'
-            });
+            console.log("Conversation exists, returning: ", existingConversation);
+            return res.status(200).json(
+                existingConversation
+                // {message: 'Conversation already exists'}
+            );
         }
 
         const newConversation = await ConversationModel.create({ users: [currentUsername, otherUser.username] });
