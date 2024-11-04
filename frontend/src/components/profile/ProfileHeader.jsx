@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import './profileheader.css'
 import axios from "axios";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import { Link } from 'react-router-dom';
 
 const ProfileHeader = ({ username }) => {
     const [followers, setFollowersList] = useState([]);
@@ -63,6 +64,7 @@ const ProfileHeader = ({ username }) => {
                     <button className='following' onClick = {fetchMyFollowing}>
                         followers
                     </button>
+                    
                 </div>
             </div>
             <div className={`white-rounded-box ${showFollowers ? 'show' : ''}`}>

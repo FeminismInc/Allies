@@ -6,8 +6,10 @@ import axios from "axios";
 import ProfileHeader from '../../components/profile/ProfileHeader'
 import { useParams } from "react-router-dom"; // for dynamic routing
 import WithProfileEdit from '../../components/profile/WithProfileEdit';
+import ForOtherUser from "../../components/profile/ForOtheruser";
 
 const ProfileHeaderForCurrentUser = WithProfileEdit(ProfileHeader);
+const ProfileHeaderForOthertUser = ForOtherUser(ProfileHeader);
 
 export default function Profile() {
 
@@ -48,6 +50,11 @@ export default function Profile() {
         <ProfileHeaderForCurrentUser
           username={username}
           isCurrentUser={isCurrentUser}
+        />
+        <ProfileHeaderForOthertUser
+          username={username}
+          isCurrentUser={isCurrentUser}
+
         />
         <div className="profile-tabs">
           <ProfileTabs username={username} />

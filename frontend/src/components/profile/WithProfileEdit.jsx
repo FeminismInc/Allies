@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
-import IconButton from '@mui/material/IconButton';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import './profileheader.css';
 import CreatePostModal from '../../components/profile/CreatePostModal';
 
@@ -32,22 +30,25 @@ const WithProfileEdit = (WrappedComponent) => {
             setShowWhiteBox(false);
         }
 
-
-
         return (
-            <div className="profile-header-container">
-                <div className='user-info-container'>
-                    <WrappedComponent {...props} />
+            <div className="currentuser-header-container">
                     {isCurrentUser && (
+                        <>
+                        <div className='header'>
+                        <WrappedComponent {...props} />
+                        <div className='currentuser-header-rightside'>
                         <button className="right-icon-button" onClick={handleIconButtonClick}>
                             <div className="right-icon-wrapper">
                                 <SettingsIcon className='right-icon' />
                             </div>
                         </button>
+                        </div>
+                        </div>
+                        </>
                     )}
-                </div>
+                
                 {isCurrentUser && (
-                    <div className='edit-bio-container'>
+                    <div className='currentuser-header-below'>
                         <button className='edit-bio-button' onClick={handleButtonClick}>
                             <h3>Edit Bio</h3>
                         </button>
