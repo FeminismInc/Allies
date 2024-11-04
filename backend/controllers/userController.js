@@ -7,19 +7,19 @@ const mongoose = require('mongoose');
 const ConversationModel = require('../models/Conversations');
 const io = require('../node_modules/socket.io/client-dist/socket.io.js');
 
-// Get all users
+// Find a User
 exports.findUser = async (req, res, next) => {
   try {
-    const username = req.session.username;
+    const username = req.session.username; // Username from Cookies
 
     if (!username) {
-      return res.status(401).json({ message: 'User is not logged in' });
+      return res.status(401).json({ message: 'User is not logged in' }); // Cannot find Username from Cookie/Cookie isnt there
     }
 
-    const user = await UserModel.findOne({ username });
+    const user = await UserModel.findOne({ username }); //Finding User
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'User not found' }); //Cannot find the User from the Username
     }
 
     res.status(200).json(user); // Return the found user
@@ -33,21 +33,22 @@ exports.findUserByEmail = async (req, res, next) => {
   const { email, password } = req.body;
   
   try {
+
     const user = await UserModel.findOne({ email });
+
     if (!user) {
-      return res.status(404).json({ message: 'User does not exist' }); //email is not connected to any user
+      return res.status(404).json({ message: 'User does not exist' }); // Cannot Find a User from Email
     }
 
     if (user.password !== password) {
-      return res.status(400).json({ message: 'Handle does not match' }); //password doesnt match email
+      return res.status(400).json({ message: 'Handle does not match' }); // If Input Password Doesnt Match Email Password
     }
 
-    req.session.user_id = user._id;
-    req.session.username = user.username; // saving username
-    req.session.email = user.email; // saving email
+    req.session.user_id = user._id; // Saving User Id
+    req.session.username = user.username; // Saving User Username
+    req.session.email = user.email; // Saving User Email
 
-    res.status(200).json({ exists: true }); //return true if login was successful
-    // about to change res.status to return anything, another way to get info rather than sessions
+    res.status(200).json({ exists: true }); // Return true if login was successful
   } catch (err) {
     next(err);
   }
@@ -254,7 +255,13 @@ exports.getPostsByUsername = async (req, res, next) => {
         return res.status(404).json({ message: 'User not found' });
       }
   
-      const posts = await PostModel.find({ author: user.username }).sort({ datetime: -1 });   //might need to change to user._id
+      const posts = await PostModel.find({ author: user.username })  // Or use author: user._id if author stores user IDs
+            .sort({ datetime: -1 })
+            .populate({
+                path: 'media', // Ensure this matches the field name in your Post model
+                model: 'media', // The name of the Media model
+                select: 'url'   // Only retrieve the 'url' field from the Media documents
+            });   
       res.status(200).json(posts);
     } catch (err) {
       next(err);

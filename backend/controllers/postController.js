@@ -2,6 +2,7 @@ const PostModel = require('../models/Posts');
 const LikeModel = require('../models/Likes'); 
 const DislikeModel = require('../models/Dislikes'); 
 const CommentModel = require('../models/Comments');
+const MediaModel = require('../models/Media');
 
 // Create a new post
 exports.createPost = async (req, res) => {
@@ -27,6 +28,27 @@ exports.createPost = async (req, res) => {
     }
 };
 
+exports.createMedia = async(req,res) => {
+
+        const { url, tagged_accounts } = req.body;
+    
+        try {
+            // Create a new Media object
+            const media = new MediaModel({
+                url,
+                tagged_accounts: tagged_accounts || [] // Default to an empty array if not provided
+            });
+    
+            // Save to MongoDB
+            await media.save();
+    
+            // Send back the media ID
+            res.status(201).json({ _id: media._id, message: "Media object created successfully" });
+        } catch (error) {
+            console.error("Error creating media object:", error);
+            res.status(500).json({ error: "Error creating media object" });
+        }
+}
 // Delete a post by ID
 exports.deletePost = async (req, res) => {
     const { postId } = req.params;

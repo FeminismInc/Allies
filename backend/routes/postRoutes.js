@@ -1,10 +1,12 @@
 const express = require('express');
-const { createPost, deletePost, getPostLikes, getPostDislikes, addLike, addDislike, addComment, } = require('../controllers/postController');
+const { createPost, deletePost, getPostLikes, getPostDislikes, addLike, addDislike, addComment, createMedia} = require('../controllers/postController');
 
 const router = express.Router();
 
 // Route to create a post
 router.post('/createPost', createPost);
+
+router.post('/createMedia', createMedia);
 
 // Route to delete a post
 router.delete('/deletePost/:postId', deletePost);

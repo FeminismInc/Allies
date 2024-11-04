@@ -57,6 +57,14 @@ export default function ProfileTabs({ username }) {
                     </div>
                     <div className="post-content">
                       <p>{post.text}</p>
+                      {post.media && post.media.length > 0 ? (
+                      <>
+                          {console.log("Image URL:", post.media[0].url)}  {/* Log the URL to the console */}
+                          <img src={post.media[0].url} alt="Post media" className="post-image" />
+                      </>
+                  ) : (
+                      console.log("No media found for this post.")
+                  )}
                     </div>
                   </div>
                 ))
