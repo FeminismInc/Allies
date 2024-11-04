@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
-import IconButton from '@mui/material/IconButton';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import './profileheader.css';
 import CreatePostModal from '../../components/profile/CreatePostModal';
 
@@ -32,8 +30,6 @@ const WithProfileEdit = (WrappedComponent) => {
                                                     //TODO: create profile APIs for bio
             setShowWhiteBox(false);
         }
-
-
 
         return (
             <div className="currentuser-header-container">

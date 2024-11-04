@@ -4,8 +4,11 @@
     justify-content: flex-start; 
     gap: 10px;
     margin-top: 20px;
-    
+    padding-left: auto;
+
 }
+
+.currentuser-header-container{
 
 .currentuser-header-container{
     display: flex;
@@ -13,7 +16,6 @@
     align-items: center; 
 
 }
-
 .otheruser-header-container {
     display: flex;
     flex-direction: row;
@@ -98,7 +100,7 @@
     transition: background-color 0.3s ease;
     font-size: 14px;
 }
-.edit-bio-container{
+.currentuser-header-below{
     margin-left: 50px;
 }
 .edit-bio-button {
