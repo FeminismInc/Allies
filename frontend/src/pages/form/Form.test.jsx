@@ -1,12 +1,15 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react'
+import { render, screen, cleanup, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, useNavigate } from 'react-router-dom'
 import axios from  'axios'
 import ProfileForm from './Form'
 
+
 //mocking modules
 vi.mock('axios')
+const mockNavigate = vi.fn()
+
 vi.mock('react-router-dom', async () => {
     const actual = await vi.importActual('react-router-dom')
     return {
@@ -57,13 +60,14 @@ describe('ProfileForm Component', () => {
     it('should render all the pronoun options', () => {
         //arrange
         renderProfileForm()
-
+    
         // act and assert
-        expect(screen.getByLabelText(/she\her/i)).toBeInTheDocument()
-        expect(screen.getByLabelText(/he\him/i)).toBeInTheDocument()
+        expect(screen.getByLabelText(/she\/her/i)).toBeInTheDocument()
+        expect(screen.getByLabelText(/he\/him/i)).toBeInTheDocument()
         expect(screen.getByLabelText(/they\/them/i)).toBeInTheDocument()
         expect(screen.getByLabelText(/other/i)).toBeInTheDocument()
     })
+    
 
     it('should show an alert when an empty field is submitted', async () => {
         //arrange
@@ -99,7 +103,7 @@ describe('ProfileForm Component', () => {
         await userEvent.type(birthdateInput, '2000-01-01')
 
         //assert
-        expect(screen.getByLabelText(/username/i)).toHaveValue('testUser')
+        expect(screen.getByLabelText(/username/i)).toHaveValue('testuser')
         expect(screen.getByLabelText(/email/i)).toHaveValue('test@example.com')
         expect(screen.getByLabelText(/password/i)).toHaveValue('password123')
         expect(screen.getByLabelText(/handle/i)).toHaveValue('TestHandle')
@@ -127,10 +131,10 @@ describe('ProfileForm Component', () => {
         await userEvent.type(screen.getByLabelText(/email/i), formData.email)
         await userEvent.type(screen.getByLabelText(/password/i), formData.password)
         await userEvent.type(screen.getByLabelText(/handle/i), formData.handle)
-        await userEvent.click(screen.getByLabelText(/they\them/i))
+        await userEvent.click(screen.getByLabelText(/they\/them/i))
         await userEvent.type(screen.getByLabelText(/birthday/i), formData.birthdate)
 
-        await userEvent.click(screen.getByText(/submit/i))
+        await userEvent.click(screen.getByRole('button', { name: /submit/i }))
 
         //assert
         await waitFor(() => {
@@ -175,8 +179,8 @@ describe('ProfileForm Component', () => {
         await userEvent.type(screen.getByLabelText(/username/i), 'testuser')
         await userEvent.type(screen.getByLabelText(/email/i), 'test@example.com')
         await userEvent.type(screen.getByLabelText(/password/i), 'password123')
-        await userEvent.type(scren.getByLabelText(/handle/i), 'TestHandle')
-        await userEvent.click(screen.getByLabelText(/they\them/i))
+        await userEvent.type(screen.getByLabelText(/handle/i), 'TestHandle')
+        await userEvent.click(screen.getByLabelText(/they\/them/i))
         await userEvent.type(screen.getByLabelText(/birthday/i), '2000-01-01')
 
         await userEvent.click(screen.getByText(/submit/i))
