@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './profileheader.css';
 import { Link } from 'react-router-dom';
 import EmailIcon from '@mui/icons-material/Email';
+import { useNavigate } from 'react-router-dom';
 
 const ForOtherUser = (WrappedComponent) => {
     return function ProfileHeaderForOthertUser(props) {
-        const { isCurrentUser } = props;
-        console.log("iscurrentuser:",isCurrentUser);
+        const { isCurrentUser,username } = props;
+        const navigate = useNavigate();
+        const handleMessageClick = () => {
+            navigate('/messages', { state: { username } });
+        }; 
+        // const [isCurrentUser, setIsCurrentUser] = useState(false);
+        // console.log("iscurrentuser:",isCurrentUser);
+        // console.log("username :",username);
 
         return (
              <div className="otheruser-header-container">
@@ -15,11 +22,10 @@ const ForOtherUser = (WrappedComponent) => {
                          <div className='header'>
                         <WrappedComponent {...props} />
                         <div className='otheruser-header-rightside'> 
-                            <Link to={`/messages/`} className="messages-link">
-                                <button className='message'>
+                                <button onClick={handleMessageClick} className='message'>
                                     <EmailIcon/>
                                 </button>
-                            </Link>
+                            
                          </div>
                          </div></> 
                        

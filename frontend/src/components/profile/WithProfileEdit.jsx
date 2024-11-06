@@ -27,6 +27,7 @@ const WithProfileEdit = (WrappedComponent) => {
         }
         const handleSubmit = () => {
             console.log("submitted bio:", bioText); // im just logging the text rn im not sure what to do
+                                                    //TODO: create profile APIs for bio
             setShowWhiteBox(false);
         }
 

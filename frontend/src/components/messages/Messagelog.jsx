@@ -4,6 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
 import DeleteIcon from '@mui/icons-material/Delete';
 import './messagelog.css';
+import { Link } from 'react-router-dom';
 
 
 export default function MessageLog({
@@ -24,7 +25,13 @@ export default function MessageLog({
             <div className="header-container" >
                 <span className="header">
                     {otherParticipants.length > 0
-                        ? otherParticipants.join(', ')
+                        ? otherParticipants.map((participant) => (
+                            <span key={participant}>
+                                <Link to={`/profile/${participant}`} className="username-link">
+                                    <span className="name">{participant}</span>
+                                </Link>
+                            </span>
+                        ))
                         : 'No other participants'}
                 </span>
                 <IconButton className="delete-button">
