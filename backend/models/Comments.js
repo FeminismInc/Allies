@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const commentsSchema = new mongoose.Schema({
     author: {
-      type: mongoose.Schema.Types.ObjectId,  // Reference to the author
+      String,  // Reference to the author, update to string
     },
     likes: {
       type: mongoose.Schema.Types.ObjectId,  // Reference to likes
