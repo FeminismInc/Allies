@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './profiletabs.css';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import CachedIcon from '@mui/icons-material/Cached';
 
 export default function ProfileTabs({ username }) {
 
@@ -46,7 +47,7 @@ export default function ProfileTabs({ username }) {
                     <div className="post-header">
                       <AccountCircleOutlinedIcon className="profile-picture" />
                       <div className="post-info">
-                        <span className="username">{username}</span>
+                        <span className="username_poster">{username}</span>
                         <span className="handle">@{post.author}</span>
                         <span className="post-date">
                           {new Date(post.datetime).toLocaleString()}
@@ -56,6 +57,12 @@ export default function ProfileTabs({ username }) {
                     </div>
                     <div className="post-content">
                       <p>{post.text}</p>
+                    </div>
+                    <div className='post-interactions'>
+                      <CachedIcon className='repost-button'/>
+                      {/* Create a Post component and then reposts will just be a wrapper of posts!!
+                       Reposts will pretty much just be a nested post component!!!!
+                      */}
                     </div>
                   </div>
                 ))
