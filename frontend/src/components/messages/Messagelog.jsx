@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { v4 as uuidv4 } from 'uuid';
 import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
@@ -13,12 +13,15 @@ export default function MessageLog({
     messageList,
     message,
     setMessage,
-    send
+    send,
+    deleteConversation,
 }) {
     // gets the usernames of all participants except for current user
+
     const otherParticipants = currentConversation
         ? currentConversation.users.filter(user => user !== currentUsername)
         : [];
+        
 
     return (
         <div className='messages-container'>
@@ -34,8 +37,11 @@ export default function MessageLog({
                         ))
                         : 'No other participants'}
                 </span>
-                <IconButton className="delete-button">
-                    <DeleteIcon className="delete-icon" />
+                <IconButton
+                    className="delete-button"
+                    onClick={() => {deleteConversation()}}>
+                <DeleteIcon   
+                    />
                 </IconButton>
             </div>
 

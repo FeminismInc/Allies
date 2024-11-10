@@ -170,6 +170,20 @@ export default function MessagesPage() {
         }
     };
 
+    const deleteConversation = async () => {
+        try {
+            const response = await axios.delete(`${uri}/messages/conversation/${currentConversation._id}`);
+            if (response.status === 201) {
+                alert('Conversation deleted successfully');
+            } else if (response.status === 404) {
+                setError('Conversation not found');
+            }
+        } catch (error) {
+            console.error('Error deleting conversation:', error);
+            setError('Something went wrong, please try again.');
+        }
+    };
+
     
     const receiveMessages = async () => {
         console.log("currentConversation:", currentConversation);
@@ -214,6 +228,7 @@ export default function MessagesPage() {
                     message={message}
                     setMessage={setMessage}
                     send={send}
+                    deleteConversation={deleteConversation}
                 />
                 
             )}
