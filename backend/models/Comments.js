@@ -15,6 +15,12 @@ const commentsSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,  // Array of ObjectIds referencing replies
     }],
     text: String,  // The comment content
+    parentIsPost: [{
+      type: Boolean, default: true
+    }], // Boolean to check wether or not the comment is under another comment or a post
+    parentID: { 
+      type: mongoose.Schema.Types.ObjectId, ref: 'Posts' //could reference Comments
+    }
   }, { collection: 'Comments' });
   
 const CommentModel = mongoose.model('comments', commentsSchema);

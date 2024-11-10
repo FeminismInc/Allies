@@ -54,6 +54,21 @@ exports.deletePost = async (req, res) => {
     }
 };
 
+// gets comments of the post by ID
+// not sure if this works havent tested yet
+exports.getPostComments = async (req, res, next) => {
+    const { postId } = req.params;
+
+    try {
+        const comments = await FollowingModel.findbyID(postId) // use postId to find
+            .populate('comments'); // Assuming comments is an array of ObjectIds
+        res.status(200).json(comments);
+    } catch (err) {
+        next(err);
+    }
+  
+};
+
 // Get likes for a post by ID
 exports.getPostLikes = async (req, res) => {
     const { postId } = req.params;
@@ -161,7 +176,7 @@ exports.addDislike = async (req, res) => {
 // Add a comment to a post
 exports.addComment = async (req, res) => {
     const { postId } = req.params;
-    const { username, text } = req.body; 
+    const { username, text, PostId } = req.body; 
 
     try {
         // Check if the post exists
@@ -176,7 +191,9 @@ exports.addComment = async (req, res) => {
             text: text,
             likes: [], 
             dislikes: [], 
-            replies: [] 
+            replies: [],
+            parentIsPost: true,
+            parentID: PostId,
         });
 
         // Save the comment to the database

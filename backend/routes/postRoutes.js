@@ -9,6 +9,9 @@ router.post('/createPost', createPost);
 // Route to delete a post
 router.delete('/deletePost/:postId', deletePost);
 
+// route to get comments for a post
+router.get('/getPostComments/:postId', getPostComments);
+
 // Route to get likes for a post
 router.get('/getPostLikes/:postId', getPostLikes);
 

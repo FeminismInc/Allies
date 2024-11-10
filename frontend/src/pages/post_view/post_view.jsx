@@ -14,26 +14,29 @@ export default function PostViewPage(){
 
     const [text, setText] = useState('')
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        axios.get(`${uri}/users/findUser`, { withCredentials: true }) 
-          .then(response => {
-            setUsername(response.data.username); 
-          })
-          .catch(error => {
-            console.error('Error fetching user:', error);
+    //     axios.get(`${uri}/users/findUser`, { withCredentials: true }) 
+    //       .then(response => {
+    //         setUsername(response.data.username); 
+    //       })
+    //       .catch(error => {
+    //         console.error('Error fetching user:', error);
             
-          });
-      }, []); 
+    //       });
+    //   }, []); 
 
     const submit = async (e) => {
         console.log("entered submit");
         e.preventDefault();
         try {
             // create a comment
+            // comments are tied to posts or another comment
+            // comments should not infinately chain, a comment of a comment cannot shouldnt have further comments
+            // instagram style
             console.log("trying");
             const comment = await axios.post(`${uri}/posts/addComment`, { //create new comment object
-                username, text,
+                username, text, 
             })
 
             // add it to the post currently on screen
@@ -58,9 +61,26 @@ export default function PostViewPage(){
             <div className="sidebarContainer">
                 <Sidebar/>
             </div>
-            <div className="postContainer">
-                
+            {/** will likely have a component deal with post and comments that are displayed */}
 
+            <div className='post-container'>
+                <div className='main-post'>
+                    <h1>Imagine this is an actual post</h1>
+                </div>
+
+                {/* <div className="comment-input-container">
+                    <input
+                        type="text"
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        className="comment-input"
+                        placeholder="Type your message..."
+                        id="comment-input"
+                    />
+                    <IconButton aria-label="send-button" size='large' onClick={send}>
+                        <SendIcon fontSize="inherit" />
+                    </IconButton>
+                </div> */}
             </div>
         </div>
     )
