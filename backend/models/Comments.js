@@ -5,6 +5,7 @@ const commentsSchema = new mongoose.Schema({
     author: {
       String,  // Reference to the author, update to string
     },
+    datetime: Date,
     likes: {
       type: mongoose.Schema.Types.ObjectId,  // Reference to likes
     },
@@ -18,7 +19,7 @@ const commentsSchema = new mongoose.Schema({
     parentIsPost: [{
       type: Boolean, default: true
     }], // Boolean to check wether or not the comment is under another comment or a post
-    parentID: { 
+    postId: { 
       type: mongoose.Schema.Types.ObjectId, ref: 'Posts' //could reference Comments
     }
   }, { collection: 'Comments' });

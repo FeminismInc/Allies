@@ -16,6 +16,7 @@ exports.addComment = async (req, res) => {
         // Create a new reply as a comment
         const newReply = new CommentModel({
             author: author,
+            datetime: new Date(),
             text: text,
             likes: [], 
             dislikes: [], 
