@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const DislikesSchema = new mongoose.Schema({
     accounts_that_disliked: [{
       type: mongoose.Schema.Types.ObjectId, // Array of ObjectIds representing accounts
+      ref: 'users',
     }],
   }, { collection: 'Dislikes' });  // Specify the collection name 'Likes'
   

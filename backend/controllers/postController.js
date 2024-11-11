@@ -9,16 +9,15 @@ exports.createPost = async (req, res) => {
     try {
         const newPost = new PostModel({
             text,
-            author: req.session.userId, //username
+            author: req.session.username, //username
             media: media || [],
             hashtags: hashtags || [],
             datetime: new Date(),
             comments: [],
-            likes: null,
-            dislikes: null,
+            likes: [],
+            dislikes: [],
             repost: null
         });
-
         const savedPost = await newPost.save();
         res.status(201).json(savedPost);
     } catch (err) {
@@ -94,8 +93,10 @@ exports.getPostDislikes = async (req, res) => {
 
 // Add a like to a post
 exports.addLike = async (req, res) => {
+    console.log("trying to add like")
     const { postId } = req.params;
-    const { userId } = req.body; 
+    const { username } = req.body; 
+    console.log(postId, username)
 
     try {
         
@@ -106,15 +107,15 @@ exports.addLike = async (req, res) => {
 
         // Check if the user already liked the post
         const likeEntry = await LikeModel.findOne({ postId });
-        if (likeEntry && likeEntry.accounts_that_liked.includes(userId)) {
+        if (likeEntry && likeEntry.accounts_that_liked.includes(username)) {
             return res.status(400).json({ message: 'You have already liked this post' });
         }
 
-        // Add userId to the likes
+        // Add username to the likes
         if (!likeEntry) {
-            await LikeModel.create({ postId, accounts_that_liked: [userId] });
+            await LikeModel.create({ postId, accounts_that_liked: [username] });
         } else {
-            likeEntry.accounts_that_liked.push(userId);
+            likeEntry.accounts_that_liked.push(username);
             await likeEntry.save();
         }
 
