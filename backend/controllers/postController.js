@@ -29,7 +29,7 @@ exports.createPost = async (req, res) => {
 // Delete a post by ID
 exports.deletePost = async (req, res) => {
     const { postId } = req.params;
-    const { username } = req.body; 
+    const { username } = req.session.username; 
 
     try {
         
@@ -53,19 +53,16 @@ exports.deletePost = async (req, res) => {
     }
 };
 
-// Get likes for a post by ID
 exports.getPostLikes = async (req, res) => {
     const { postId } = req.params;
 
     try {
-        const post = await PostModel.findById(postId).populate('likes');
-
-        if (!post) {
-            return res.status(404).json({ message: 'Post not found' });
+        const entry = await LikeModel.findOne({ postId });        
+        if (!entry) {
+            res.status(500).json({ message: 'Post does not exist' });
+        } else {
+            res.status(200).json(entry.accounts_that_liked);
         }
-
-        const likes = post.likes; 
-        res.status(200).json(likes);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error fetching likes for post' });
@@ -77,48 +74,41 @@ exports.getPostDislikes = async (req, res) => {
     const { postId } = req.params;
 
     try {
-        const post = await PostModel.findById(postId).populate('dislikes');
-
-        if (!post) {
-            return res.status(404).json({ message: 'Post not found' });
+        const entry = await DislikeModel.findOne({ postId });        
+        if (!entry) {
+            res.status(500).json({ message: 'Post does not exist' });
+        } else {
+            res.status(200).json(entry.accounts_that_disliked);
         }
-
-        const dislikes = post.dislikes; 
-        res.status(200).json(dislikes);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error fetching dislikes for post' });
     }
 };
 
-// Add a like to a post
 exports.addLike = async (req, res) => {
-    console.log("trying to add like")
     const { postId } = req.params;
     const { username } = req.body; 
-    console.log(postId, username)
 
     try {
-        
         const post = await PostModel.findById(postId);
         if (!post) {
             return res.status(404).json({ message: 'Post not found' });
         }
 
         // Check if the user already liked the post
-        const likeEntry = await LikeModel.findOne({ postId });
-        if (likeEntry && likeEntry.accounts_that_liked.includes(username)) {
-            return res.status(400).json({ message: 'You have already liked this post' });
-        }
-
-        // Add username to the likes
-        if (!likeEntry) {
+        const entry = await LikeModel.findOne({ postId });        
+        if (!entry) {
             await LikeModel.create({ postId, accounts_that_liked: [username] });
         } else {
-            likeEntry.accounts_that_liked.push(username);
-            await likeEntry.save();
+            if (entry.accounts_that_liked.includes(username)) {
+                entry.accounts_that_liked.splice(entry.accounts_that_liked.indexOf(username),1);
+            }
+            else {
+                entry.accounts_that_liked.push(username);
+            }
+            await entry.save();
         }
-
         res.status(200).json({ message: 'Post liked successfully' });
     } catch (err) {
         console.error(err);
@@ -129,7 +119,7 @@ exports.addLike = async (req, res) => {
 // Add a dislike to a post
 exports.addDislike = async (req, res) => {
     const { postId } = req.params;
-    const { userId } = req.body; 
+    const { username } = req.body; 
 
     try {
         
@@ -139,17 +129,17 @@ exports.addDislike = async (req, res) => {
         }
 
         // Check if the user already disliked the post
-        const dislikeEntry = await DislikeModel.findOne({ postId });
-        if (dislikeEntry && dislikeEntry.accounts_that_disliked.includes(userId)) {
-            return res.status(400).json({ message: 'You have already disliked this post' });
-        }
-
-        // Add userId to the dislikes
-        if (!dislikeEntry) {
-            await DislikeModel.create({ postId, accounts_that_disliked: [userId] });
+        const entry = await DislikeModel.findOne({ postId });        
+        if (!entry) {
+            await DislikeModel.create({ postId, accounts_that_disliked: [username] });
         } else {
-            dislikeEntry.accounts_that_disliked.push(userId);
-            await dislikeEntry.save();
+            if (entry.accounts_that_disliked.includes(username)) {
+                entry.accounts_that_disliked.splice(entry.accounts_that_disliked.indexOf(username),1);
+            }
+            else {
+                entry.accounts_that_disliked.push(username);
+            }
+            await entry.save();
         }
 
         res.status(200).json({ message: 'Post disliked successfully' });

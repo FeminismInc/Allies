@@ -16,12 +16,12 @@ router.get('/getPostLikes/:postId', getPostLikes);
 router.get('/getPostDislikes/:postId', getPostDislikes);
 
 // Route to add likes for a post
-router.get('/addLike/:postId', addLike);
+router.post('/addLike/:postId', addLike);
 
 // Route to add dislikes for a post
-router.get('/addDislike/:postId', addDislike);
+router.post('/addDislike/:postId', addDislike);
 
 // Route to add comment for a post
-router.get('/addComment/:postId', addComment);
+router.post('/addComment/:postId', addComment);
 
 module.exports = router;

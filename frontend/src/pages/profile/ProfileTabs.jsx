@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './profiletabs.css';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
-import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import UserPost from '../../components/post/userPost';
 
 export default function ProfileTabs({ username }) {
@@ -52,6 +47,7 @@ export default function ProfileTabs({ username }) {
                   <div key={index} className="post">
                     <UserPost
                     post = {post}
+                    username = {username}
                     />
                   </div>
                 ))
