@@ -53,6 +53,7 @@ exports.deletePost = async (req, res) => {
     }
 };
 
+// Get likes for a post by ID
 exports.getPostLikes = async (req, res) => {
     const { postId } = req.params;
 
@@ -149,10 +150,41 @@ exports.addDislike = async (req, res) => {
     }
 };
 
+// functions used to create like and dislike models associated with posts and comments
+exports.newLikes = async(req, res, next) => {
+  
+    try {
+      const newLiked = new LikeModel({
+        accounts_that_liked: []
+      })
+  
+      await newLiked.save();
+      res.status(201).json({ message: "Likes created successfully" });
+  
+    } catch (err) {
+      next(err);  
+    }
+  }
+
+exports.newDislikes = async(req, res, next) => {
+  
+    try {
+      const newDisliked = new DislikeModel({
+        accounts_that_disliked: []
+      })
+  
+      await newDisliked.save();
+      res.status(201).json({ message: "Dislikes created successfully" });
+  
+    } catch (err) {
+      next(err);  
+    }
+}
+
 // Add a comment to a post
 exports.addComment = async (req, res) => {
     const { postId } = req.params;
-    const { authorId, text } = req.body; 
+    const { username, text, PostId } = req.body; 
 
     try {
         // Check if the post exists
@@ -161,13 +193,23 @@ exports.addComment = async (req, res) => {
             return res.status(404).json({ message: 'Post not found' });
         }
 
+        const newLikes = new LikeModel();
+        const newDislikes = new DislikeModel();
+
+        // Save the new models to get their IDs
+        await newLikes.save();
+        await newDislikes.save();
+
         // Create a new comment
         const newComment = new CommentModel({
-            author: authorId,
+            author: username,
+            datetime: new Date(),
             text: text,
-            likes: [], 
-            dislikes: [], 
-            replies: [] 
+            likes: newLikes._id, 
+            dislikes: newDislikes._id, 
+            replies: [],
+            parentIsPost: true,
+            postId: PostId,
         });
 
         // Save the comment to the database
@@ -182,4 +224,23 @@ exports.addComment = async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Error adding comment' });
     }
+};
+
+// gets comments of the post by ID
+// not sure if this works havent tested yet
+exports.getPostComments = async (req, res, next) => {
+    const { postId } = req.params;
+
+    try {
+        const post = await PostModel.findById(postId).populate('comments') // use postId to find
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' })
+        }
+
+        const comments = post.comments
+        res.status(200).json(comments);
+    } catch (err) {
+        next(err);
+    }
+  
 };
