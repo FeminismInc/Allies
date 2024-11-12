@@ -15,7 +15,6 @@ export default function MessagesPage() {
     const location = useLocation();
     // const { currentUsername, otherUsername } = location.state || {};
 
-
     const [conversationIds, setConversationIds] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState('');
@@ -173,8 +172,14 @@ export default function MessagesPage() {
     const deleteConversation = async () => {
         try {
             const response = await axios.delete(`${uri}/messages/conversation/${currentConversation._id}`);
-            if (response.status === 201) {
-                alert('Conversation deleted successfully');
+            if (response.status === 200) {
+                // alert('Conversation deleted successfully');
+                setConversationIds(prevConversations =>
+                    prevConversations.filter(convo => convo._id !== currentConversation._id)
+                );
+                setCurrentConversation(null);
+
+                
             } else if (response.status === 404) {
                 setError('Conversation not found');
             }
