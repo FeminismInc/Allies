@@ -8,15 +8,15 @@ const PostSchema = new mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId, ref: 'Comments'
   }],
   datetime: Date,
-  dislikes: {
+  dislikes: [{
     type: mongoose.SchemaTypes.ObjectId
-  },
+  }],
   media: [{
     type: mongoose.SchemaTypes.ObjectId
   }],
-  likes: {
+  likes: [{
     type: mongoose.SchemaTypes.ObjectId
-  },
+  }],
   hashtags: [{
     type: String
   }],
