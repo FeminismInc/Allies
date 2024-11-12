@@ -29,7 +29,7 @@ exports.createPost = async (req, res) => {
 // Delete a post by ID
 exports.deletePost = async (req, res) => {
     const { postId } = req.params;
-    const { username } = req.session.username; 
+    const { username } = req.body; 
 
     try {
         
