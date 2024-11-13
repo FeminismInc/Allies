@@ -9,7 +9,6 @@ import MessagesPage from './pages/messages/Messages';
 import Search from './pages/search/Search';
 import PostViewPage from './pages/post_view/post_view'
 
-
 function App() {
   return (
     <Router>
