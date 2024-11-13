@@ -22,6 +22,7 @@ function App() {
               <Route path="/search" element = {<Search/>} />
               <Route path="/profile/:username" element={<Profile />} />  
               <Route path="/postView" element = {<PostViewPage/>} />
+              <Route path="/postView" element = {<PostViewPage/>} />
             </Routes>
     </Router>
   )
