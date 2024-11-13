@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './profiletabs.css';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import UserPost from '../../components/post/userPost';
 
 export default function ProfileTabs({ username }) {
 
   const uri = 'http://localhost:5050/api' // http://54.176.5.254:5050/api
   const [activeTab, setActiveTab] = useState('posts');
   const [posts, setPosts] = useState([]);
-
+  const [likes, setLikes] = useState([]);
+  const [dislikes, setDislikes] = useState([]);
 
   const fetchPostsByUsername = async (username) => {
     try {
@@ -25,6 +26,7 @@ export default function ProfileTabs({ username }) {
   useEffect(() => {
     if (activeTab === 'posts' && username) {
       fetchPostsByUsername(username);
+      console.log(posts)
     }
   }, [activeTab, username]);
 
@@ -43,20 +45,10 @@ export default function ProfileTabs({ username }) {
               {posts.length > 0 ? (
                 posts.map((post, index) => (
                   <div key={index} className="post">
-                    <div className="post-header">
-                      <AccountCircleOutlinedIcon className="profile-picture" />
-                      <div className="post-info">
-                        <span className="username">{username}</span>
-                        <span className="handle">@{post.author}</span>
-                        <span className="post-date">
-                          {new Date(post.datetime).toLocaleString()}
-
-                        </span>
-                      </div>
-                    </div>
-                    <div className="post-content">
-                      <p>{post.text}</p>
-                    </div>
+                    <UserPost
+                    post = {post}
+                    username = {username}
+                    />
                   </div>
                 ))
               ) : (

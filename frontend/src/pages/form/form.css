@@ -10,6 +10,29 @@
     display: flex;
     flex-direction: column;
 }
+
+.passHide{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.Radio{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center
+}
+
+.radioButtons{
+    display: flex;
+    flex-direction: row;
+}
+
+#otherPronouns{
+    display: none;
+}
+
 .userInfo {
     margin-top: 70px;
     display: flex;
@@ -39,6 +62,7 @@ input[type="password"]{
 input[type="date"]{
     border-radius: 20px;
 }
+
 .passwordRec{
     font-size: 10px;
     text-align: center;

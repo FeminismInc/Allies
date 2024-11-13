@@ -16,7 +16,7 @@ export default function LoginSignUp() {
 
   useEffect(()=>{
       function start() {
-          gapi.client.init({
+          gapi.auth2.init({
           clientId: clientID,
           scope: ""
           })
