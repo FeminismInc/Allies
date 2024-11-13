@@ -7,16 +7,13 @@
     justify-content: center;  /* Center the tabs horizontally */
     align-items: center;      /* Align the tabs vertically */
     margin-top: 215px;
-      /* Add some spacing from the top of the page */
     gap: 140px;                /* Evenly space out the tabs */
     top: 0;                   /* Stick to the top of the viewport */
-   /* Add a bottom border to separate tabs from content?????? */
   }
   
   /* Styling each individual tab button */
   .tabs button {
     background-color: transparent;
-    /*background-color: #efecf4;   Light gray background */
     border: none;               /* Remove default border */
     padding: 10px 60px;       /* Padding inside the buttons??? */
     font: roboto;        
@@ -24,7 +21,7 @@
     color: #595b5d;     
     font-weight: normal;        
     cursor: pointer;            /* Show pointer when hovering */
-    /*border-radius: 10px;         Rounded corners */
+    box-shadow: none;
     transition: background-color 0.5s;  /* Smooth transition for hover effect */
     position: relative;
     outline: none;  
@@ -46,6 +43,7 @@
   .tabs button:hover::after,
   .tabs button.active::after {
     width: 100%;                    /* Full width on hover or when active */
+
   }
   
   /* Active tab styling */
