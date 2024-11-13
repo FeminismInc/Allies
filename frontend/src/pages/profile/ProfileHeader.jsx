@@ -82,10 +82,10 @@ const ProfileHeader = ({ username }) => {
                         <h1>{username}</h1>
                     </div>
                     <button className='followers' onClick = {fetchMyFollowers}>
-                        following
+                       {followers.length} following
                     </button>
                     <button className='following' onClick = {fetchMyFollowing}>
-                        followers
+                        {followers.length} followers
                     </button>
                     <button className="right-icon-button" onClick={handleIconButtonClick}>
                         <div className="right-icon-wrapper">
