@@ -48,6 +48,7 @@ export default function MessageLog({
                     </div>
                 ))}
             </div>
+            
             <div className="message-input-container">
                 <input
                     type="text"

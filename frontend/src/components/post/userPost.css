@@ -1,0 +1,26 @@
+.post-interaction, .post-stats{
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+}
+
+.white-rounded-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background-color: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    text-align: center;
+    z-index: 1001;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.white-rounded-box.show {
+    opacity: 1; /* visible */
+    transform: translate(-50%, -50%) scale(1); /* full size */
+}

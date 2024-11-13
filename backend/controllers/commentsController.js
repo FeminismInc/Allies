@@ -4,7 +4,7 @@ const DislikeModel = require('../models/Dislikes');
 // Add a reply to an existing comment
 exports.addComment = async (req, res) => {
     const { commentId } = req.params; 
-    const { author, text } = req.body; 
+    const { author, text, PostId } = req.body; 
 
     try {
 
@@ -16,10 +16,13 @@ exports.addComment = async (req, res) => {
         // Create a new reply as a comment
         const newReply = new CommentModel({
             author: author,
+            datetime: new Date(),
             text: text,
             likes: [], 
             dislikes: [], 
-            replies: [] 
+            replies: [], 
+            parentIsPost: true,
+            parentID: PostId,
         });
 
         // Save the reply to the database
