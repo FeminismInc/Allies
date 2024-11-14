@@ -14,21 +14,22 @@ export default function CommentLog({
     const uri = 'http://localhost:5050/api' // http://54.176.5.254:5050/api
     const [comments, setComments] = useState([]);
 
-    
-
-    const fetchCommentsById = async (PostId) => {
-        try {
-          console.log(PostId);
-          const response = await axios.get(`${uri}/posts/getPostComments/${PostId}`, {
-          });
-          setComments(response.data);
-        } catch (error) {
-          console.error('Error fetching comments:', error);
-        }
+  
+  useEffect(() => {
+    const fetchCommentsById = async () => {
+      try {
+        console.log(PostId);
+        const response = await axios.get(`${uri}/posts/getPostComments/${PostId}`);
+        setComments(response.data);  
+      } catch (error) {
+        console.error('Error fetching comments:', error);
       }
+    };
 
-    // fetch comments of a post
-    fetchCommentsById(PostId)
+    if (PostId) {
+      fetchCommentsById();
+    }
+  }, [PostId]);
 
     // render comments underneath a post
     return (

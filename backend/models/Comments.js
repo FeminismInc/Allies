@@ -6,12 +6,12 @@ const commentsSchema = new mongoose.Schema({
       String,  // Reference to the author, update to string
     },
     datetime: Date,
-    likes: {
+    likes: [{
       type: mongoose.Schema.Types.ObjectId,  // Reference to likes
-    },
-    dislikes: {
+    }],
+    dislikes: [{
       type: mongoose.Schema.Types.ObjectId,  // Reference to dislikes
-    },
+    }],
     replies: [{ //rename this to comments, 
       type: mongoose.Schema.Types.ObjectId,  // Array of ObjectIds referencing replies
     }],

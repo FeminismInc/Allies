@@ -3,7 +3,7 @@
     flex-direction: row;
     height: 100vh;
     width: calc(100% - 280px); 
-    margin-left: 280px;
+    margin-left: 0px;
   
   }
 
@@ -43,10 +43,10 @@
     margin-right: 15%;
     flex-direction: row;
     margin-top: auto;
-    bottom: 0; /* Stick to the bottom */
+    bottom: 0; 
     position: sticky;
     display: flex;
-    align-items: center; /* Vertically center the input and button */
+    align-items: center; 
   
   }
   .comment-input {
