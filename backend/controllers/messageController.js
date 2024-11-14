@@ -38,9 +38,11 @@ exports.newConversation = async (req, res) => {
             $expr: { $eq: [{ $size: "$users" }, 2] }
         });
         if (existingConversation) {
-            return res.status(200).json({
-                message: 'Conversation already exists'
-            });
+            console.log("Conversation exists, returning: ", existingConversation);
+            return res.status(200).json(
+                existingConversation
+                // {message: 'Conversation already exists'}
+            );
         }
 
         const newConversation = await ConversationModel.create({ users: [currentUsername, otherUser.username] });
@@ -62,11 +64,20 @@ exports.deleteConversation = async (req, res) => {
     const { conversationId } = req.params;
 
     try {
+        const conversation = await ConversationModel.findById(conversationId); // need to save the ID first before deleting so we can remove it from the participant's Conversations
+        if (!conversation) {
+            return res.status(404).json({ message: 'Conversation not found' });
+        }
+        const participants = conversation.users;
+        await UserModel.updateMany(
+            {username: {$in:participants}},
+            {$pull: {conversations:conversationId}}
+        );
+        await MessageModel.deleteMany({id: conversationId});
         const deletedConversation = await ConversationModel.findByIdAndDelete(conversationId);
         if (!deletedConversation) {
             return res.status(404).json({ message: 'Conversation not found' });
         }
-
         res.status(200).json({ message: 'Conversation deleted successfully' });
     } catch (err) {
         console.error(err);
