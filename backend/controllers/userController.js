@@ -118,10 +118,11 @@ exports.createUser = async (req, res, next) => {
     await newFollowing.save();
     await newFollowers.save();
     await newBlocked.save();
+    console.log(birthdate);
 
     const newUser = new UserModel({
       _id: new mongoose.Types.ObjectId(),
-      birthdate,
+      birthday: new Date(birthdate),
       username,
       email,
       password,  

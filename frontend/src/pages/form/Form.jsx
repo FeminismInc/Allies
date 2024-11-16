@@ -25,6 +25,7 @@ export default function ProfileForm() {
     //when pressing submit button take all input data for processing
     const submit = async (e) => {
         console.log(username)
+        
         e.preventDefault();
         try {
             if (!email || !password ||  !username || !handle || !pronouns || !birthdate) {
@@ -59,6 +60,24 @@ export default function ProfileForm() {
                 .catch(err => console.log(err)); 
     }
 
+    function hidePassword() {
+        var passInput = document.getElementById("password");
+        if (passInput.type === "password") {
+            passInput.type = "text";
+        } else {
+            passInput.type = "password";
+        }
+      } 
+
+    function otherTextBox() {
+        var other = document.getElementById("other");
+        var otherPronouns = document.getElementById("otherPronouns");
+        if (other.checked === true) {
+            setPronouns("");
+            otherPronouns.style.display = 'block';
+        }
+    }
+
     return (
         <div className='userForm'>
             <form className="userInfo">
@@ -71,7 +90,10 @@ export default function ProfileForm() {
                     <input type="email" value={email} onChange={(e) => { setEmail(e.target.value) }} name="email" id="email" placeholder='Enter your email' required />
                 </div>
                 <div class="Password">
-                    <label for="password">Enter your password: </label>
+                    <div className='passHide'>
+                        <label for="password">Enter your password: </label>
+                        <Button title = "Hide" id="passwordButton" color="#bfa1f0" onPress={hidePassword}> Hide</Button>
+                    </div>
                     <input type="password" value={password} onChange={(e) => { setPassword(e.target.value) }} name="password" id="password" minlength="8" placeholder='Enter your password' required />
                     <p className='passwordRec'>Use 8 or more characters with a mix of letters, numbers & symbols</p>
                 </div>
@@ -82,10 +104,15 @@ export default function ProfileForm() {
                 <div className="Pronouns">
                 <legend>Preferred Pronouns?</legend>
                     <div className='Radio'>
-                        <label><input type="radio" onClick={(e) => { setPronouns(e.target.value) }} name="radio" value="she/her"/>She/Her</label>
-                        <label><input type="radio" onClick={(e) => { setPronouns(e.target.value) }} name="radio" value="he/him"/>He/Him</label>
-                        <label><input type="radio" onClick={(e) => { setPronouns(e.target.value) }} name="radio" value="they/them"/>They/Them</label>
-                        <label><input type="radio" onClick={(e) => { setPronouns(e.target.value) }} name="radio" value="other"/>Other</label>
+                        <div className='radioButtons'>
+                            <label><input type="radio" onClick={(e) => { setPronouns(e.target.value) }} name="radio" id = "she/her" value="she/her"/>She/Her</label>
+                            <label><input type="radio" onClick={(e) => { setPronouns(e.target.value) }} name="radio" id="he/him" value="he/him"/>He/Him</label>
+                            <label><input type="radio" onClick={(e) => { setPronouns(e.target.value) }} name="radio" id="they/them" value="they/them"/>They/Them</label>
+                            <label><input type="radio" onClick= {otherTextBox} name="radio" id = "other"/>Other</label>
+                        </div>
+                        <div className='otherText'>
+                            <input type='text' value = {pronouns} onChange={(e) => { setPronouns(e.target.value) }} name="otherPronouns" id="otherPronouns" placeholder='Enter your preferred pronouns' required/>
+                        </div>
                     </div>
                 </div>
                 <div className="Birthdate">
