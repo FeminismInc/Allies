@@ -245,3 +245,56 @@ exports.getPostComments = async (req, res, next) => {
     }
   
 };
+exports.createRepost = async (req, res) => {
+    const { post } = req.body;
+    console.log("creating repost for........... ");
+    try {
+        
+        const childPost = await PostModel.findById(post._id)
+        console.log(childPost);
+        const newPost = new PostModel({
+            author: req.session.username, //username
+            datetime: new Date(),
+            comments: [],
+            likes: [],
+            dislikes: [],
+            repost: childPost._id
+        });
+        const savedPost = await newPost.save();
+        const populatedRepost = await PostModel.findById(savedPost._id)
+            .populate({
+                path: 'repost',
+                select: 'text author media datetime', 
+            });
+        // const repost = await PostModel.findById(newPost._id).select('reposts').populate('posts');
+        // }).populate({ path:'repost', populate: { path: 'posts', select: 'text author media datetime',}
+        //  });
+        const savedRepost = await populatedRepost.save();
+        console.log("saved repost",savedRepost);
+        res.status(201).json(savedRepost);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error creating repost'})
+    }
+};
+
+exports.getChildPost = async (req, res) => {
+    
+    const { childPostId } = req.params;
+    console.log("childPostId",childPostId);
+    try {
+        const post = await PostModel.findById(childPostId).populate({
+            path: 'repost',
+            select: 'text author media datetime', 
+        });
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' })
+        }
+        const childPost = post
+        console.log("saved post",childPost);
+        res.status(200).json(childPost);
+    } catch (err) {
+        next(err);
+    }
+  
+};

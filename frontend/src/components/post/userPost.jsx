@@ -1,15 +1,25 @@
 import axios from 'axios';
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "./userPost.css";
+import { useNavigate } from 'react-router-dom';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import PostContent from './postContent';
+import RepostWrapper from './RepostWrapper';
+//Abigail's TODO: Posts will be wrapped with delete button for user and for when they are reposts
 
-
+const Repost = RepostWrapper(PostContent);
+// export default function UserPost({post, username}) { had to remove username as param because we will use this function
+// in the main feed
 export default function UserPost({post, username}) {
-    const uri = 'http://localhost:5050/api'
+    const uri = 'http://localhost:5050/api';
     const [likes, setLikes] = useState([]);
     const [dislikes, setDislikes] = useState([]);
     const [showLikeBox, setShowLikeBox] = useState(false);
     const [showDislikeBox, setShowDislikeBox] = useState(false);
+    const [isAParent, setIsAParent] = useState(false);
+    const [childPost, setChildPosts] = useState('');
+    
+
 
     const handleLikeClick = () => {
         setShowLikeBox(!showLikeBox);
@@ -18,6 +28,52 @@ export default function UserPost({post, username}) {
     const handleDislikeClick = () => {
         setShowDislikeBox(!showDislikeBox);
     };
+
+    const handleRepostClick = async (post) => {
+      try {
+        console.log("now in try block ");
+       await axios.post(`${uri}/posts/createRepost`, {post});
+
+      } catch (error) {
+        console.error('Error creating repost:', error);
+      }
+    };
+    // const fetchChildPostByRepostID = async (post.repost) => {
+
+    //   //get objID of posts, which will have all post information
+    //   // wrap the post component itself with a repost wrapper, which will add the delete button '{username} reposted at {datetime}
+    //   //click repost: post gets added to user's repost db
+    // };
+    const fetchChildPostByRepostID = async (post) => {
+      try {
+          const response = await axios.get(`${uri}/posts/getChildPost/${post.repost}`, {});
+          setChildPosts(response.data);
+          console.log("fetching child post: ",response.data);
+        }
+       catch (error) {
+        console.error('Error fetching child posts:', error);
+      }
+  };
+
+    useEffect(() =>{
+      if (post.repost!=null) {
+        console.log("is a parent post");
+          setIsAParent(true);
+          fetchChildPostByRepostID(post); 
+      }
+    },[post])
+  //   useEffect(() => {
+  //     try {
+  //       axios.get(`${uri}/posts//getChildPost//${post.repost}`, {})
+  //       .then(response => {
+  //     setChildPosts(response.data);
+  //       console.log(childPost);
+  //       })
+        
+  //     } catch (error) {
+  //       console.error('Error fetching child posts:', error);
+  //     }
+  // },[]);
     
     const fetchLikesByPostID = async (post) => {
         try {
@@ -68,19 +124,17 @@ export default function UserPost({post, username}) {
     return(
         <div>
             <div className="posts-container">
-                <div className="post-header">
-                  <AccountCircleOutlinedIcon className="profile-picture" />
-                  <div className="post-info">
-                    <span className="username">{username}</span>
-                    <span className="handle">@{post.author}</span>
-                    <span className="post-date">
-                      {new Date(post.datetime).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-                <div className="post-content">
-                  <p>{post.text}</p>
-                </div>
+            
+              <PostContent post={post} username={username} isAParent={isAParent}/>
+              <Repost post={post} username={username} isAParent={isAParent} childPost={childPost}/>
+ 
+                  
+            {/* {!isARepost ? (
+              <PostContent post={post} username={username}/>
+            ):(
+              <Repost post={post} username={username}/>
+            )} */}
+            
                 <div className = "post-stats"> 
                   <p onClick = {handleLikeClick}> {likes.length} likes</p>
                   <p onClick = {handleDislikeClick}> {dislikes.length} dislikes</p>
@@ -95,9 +149,12 @@ export default function UserPost({post, username}) {
                   <button>
                     Comment
                   </button>
-                  <button>
-                    Repost
+                   {/* if 'isRepost' == true, don't render this button */}
+                  {!isAParent && (
+                    <button onClick={()=>{handleRepostClick(post)}}>
+                     Repost
                   </button>
+                  )}
                 </div>
               </div>
 

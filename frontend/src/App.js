@@ -22,7 +22,7 @@ function App() {
               <Route path="/form" element = {<Form/>} />
               <Route path="/search" element = {<Search/>} />
               <Route path="/profile/:username" element={<Profile />} />  
-              <Route path="/postView" element = {<PostViewPage/>} />
+              <Route path="/postView/:postId" element = {<PostViewPage/>} />
             </Routes>
     </Router>
   )

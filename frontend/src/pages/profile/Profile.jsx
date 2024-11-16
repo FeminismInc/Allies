@@ -9,7 +9,7 @@ import WithProfileEdit from '../../components/profile/WithProfileEdit';
 import ForOtherUser from "../../components/profile/ForOtheruser";
 
 const ProfileHeaderForCurrentUser = WithProfileEdit(ProfileHeader);
-const ProfileHeaderForOthertUser = ForOtherUser(ProfileHeader);
+const ProfileHeaderForOtherUser = ForOtherUser(ProfileHeader);
 
 export default function Profile() {
 
@@ -51,7 +51,7 @@ export default function Profile() {
           username={username}
           isCurrentUser={isCurrentUser}
         />
-        <ProfileHeaderForOthertUser
+        <ProfileHeaderForOtherUser
           username={username}
           isCurrentUser={isCurrentUser}
 

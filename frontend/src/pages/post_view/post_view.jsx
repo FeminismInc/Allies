@@ -1,16 +1,16 @@
 import "./post_view.css";
 import {Button} from 'react-native';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import React, {useEffect} from "react";
 import axios from "axios"
 import { useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Commentlog from '../../components/postView/Commentlog'
 
-export default function PostViewPage(){
+export default function PostViewPage(userPost){
 
     const uri = "http://localhost:5050/api";
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [message, setMessage] = useState('');
 

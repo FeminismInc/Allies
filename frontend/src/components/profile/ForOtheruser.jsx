@@ -5,7 +5,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import { useNavigate } from 'react-router-dom';
 
 const ForOtherUser = (WrappedComponent) => {
-    return function ProfileHeaderForOthertUser(props) {
+    return function ProfileHeaderForOtherUser(props) {
         const { isCurrentUser,username } = props;
         const navigate = useNavigate();
         const handleMessageClick = () => {

@@ -1,0 +1,28 @@
+.repost-container {
+    display: flex;
+    flex-direction: column;
+    
+}
+.repost-header{
+    display: flex;
+
+    flex-direction: column;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    align-items: flex-start; 
+    justify-items: center;
+}
+button.childPost  {
+    margin: 20px;
+    box-shadow:10%;
+    color: rgba(90, 85, 85, 0.9);
+    background-color: rgba(144, 102, 162, 0);
+    width: 90%;
+    outline: solid;
+    outline-width: thin;
+
+}
+
+button.childPost:hover {
+    background-color: rgba(144, 102, 162, 0);
+}
