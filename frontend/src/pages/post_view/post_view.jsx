@@ -25,6 +25,7 @@ export default function PostViewPage(){
                 console.log("Fetching post with ID:", PostId);
                 const response = await axios.get(`${uri}/post/getPost/${PostId}`);
                 setPost(response.data); // Set the fetched post in state
+                console.log(response.data)
             } catch (error) {
                 console.error("Error fetching post:", error);
                 
@@ -95,7 +96,8 @@ export default function PostViewPage(){
                 <div className="profile-tabs">
                     <Commentlog 
                         PostId = {PostId}
-                        message={message}
+                        username = {username}
+                        message = {message}
                         setMessage={setMessage}
                         send={send}
                         /> 

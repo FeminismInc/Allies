@@ -210,10 +210,10 @@ exports.getPostComments = async (req, res, next) => {
 };
 
 exports.getPost = async(req, res, next) => {
-    const { postId } = req.params;
+    const { PostId } = req.params;
 
     try {
-        const post = await PostModel.findById(postId);
+        const post = await PostModel.findById(PostId);
         console.log(post);
         if (!post) {
             return res.status(404).json({ message: 'Post not found' })

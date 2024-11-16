@@ -6,6 +6,7 @@ import './commentlog.css';
 
 export default function CommentLog({
     PostId,
+    username,
     message,
     setMessage,
     send

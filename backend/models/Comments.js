@@ -2,9 +2,7 @@
 const mongoose = require('mongoose');
 
 const commentsSchema = new mongoose.Schema({
-    author: {
-      String,  // Reference to the author, update to string
-    },
+    author: String, // username of user posting comment
     datetime: Date,
     likes: [{
       type: mongoose.Schema.Types.ObjectId,  // Reference to likes
