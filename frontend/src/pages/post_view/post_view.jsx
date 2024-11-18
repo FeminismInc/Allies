@@ -94,13 +94,16 @@ export default function PostViewPage(){
                 </div>
 
                 <div className="profile-tabs">
-                    <Commentlog 
-                        PostId = {PostId}
-                        username = {username}
-                        message = {message}
-                        setMessage={setMessage}
-                        send={send}
-                        /> 
+                    <div className="commentlog-container">
+                        <Commentlog 
+                            PostId = {PostId}
+                            username = {username}
+                            message = {message}
+                            setMessage={setMessage}
+                            send={send}
+                            /> 
+                    </div>
+                    
                 </div>
 
             </div>

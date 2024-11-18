@@ -4,6 +4,8 @@ import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
 import './commentlog.css';
 
+import CommentComponent from '../comment/CommentComponent';
+
 export default function CommentLog({
     PostId,
     username,
@@ -39,19 +41,10 @@ export default function CommentLog({
               {comments.length > 0 ? (
                 comments.map((comment, index) => (
                   <div key={index} className="comment">
-                    <div className="comment-header">
-                      {/* <AccountCircleOutlinedIcon className="profile-picture" /> */}
-                      <div className="comment-info">
-                        <span className="username">{comment.author}</span>
-                        <span className="comment-date">
-                          {new Date(comment.datetime).toLocaleString()}
-
-                        </span>
-                      </div>
-                    </div>
-                    <div className="comment-content">
-                      <p>{comment.text}</p>
-                    </div>
+                    <CommentComponent
+                      comment = {comment}
+                      username = {comment.author}
+                      />
                   </div>
                 ))
               ) : (
