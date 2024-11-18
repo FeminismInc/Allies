@@ -24,15 +24,17 @@ const RepostWrapper = (WrappedComponent) => {
         return (
             <div className='repost-container'>
                 <div className="repost-header">
-                <Link to={`/profile/${username}`} className="username-link">
-                    <span className="repost-username">{username}</span>
                     <AccountCircleOutlinedIcon className="profile-picture" />
-                </Link>
-                <span className="repost-handle">@{post.author}</span>
+                    <div className='repost-info'>
+                    <Link to={`/profile/${username}`} className="username-link">
+                        <span className="repost-username">{username}</span>    
+                    </Link>
+                    <span className="repost-handle">@{post.author}</span>
                     <span className="repost-date">
-                        {new Date(post.datetime).toLocaleString()}
+                    {new Date(post.datetime).toLocaleString()}
                     </span>
                     </div>
+                </div>
                     
                    
                     {/* in the css, repost child will have a shadow */}

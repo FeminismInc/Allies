@@ -69,7 +69,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;  /* Adds spacing between posts */
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 
@@ -90,7 +90,7 @@
 /* Post header (user info) */
 .post-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   
 }
 
@@ -104,15 +104,16 @@
 .post-info {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 
-.username_poster{
-  font-weight: bold;
+.post-username{
   font-size: 20px;
+  border: 0px;
 
 }
 
-.handle {
+.post-handle {
   color: #657786;
   font-size: 10px;
 }
@@ -124,8 +125,10 @@
 
 /* Post content */
 .post-content {
-  font-size: 18px;
-  line-height: 3;
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 15px;
+  width: 95%;
 }
 .media-container {
   display: flex;

@@ -10,8 +10,8 @@ return (
         <div className="post-header">
                   <AccountCircleOutlinedIcon className="profile-picture" />
                   <div className="post-info">
-                    <span className="username">{username}</span>
-                    <span className="handle">@{post.author}</span>
+                    <span className="post-username">{post.author}</span>
+                    <span className="post-handle">@{post.author}</span>
                     <span className="post-date">
                       {new Date(post.datetime).toLocaleString()}
                     </span>

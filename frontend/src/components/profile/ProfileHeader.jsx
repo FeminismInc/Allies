@@ -55,7 +55,7 @@ const ProfileHeader = ({ username }) => {
         <div>
             <div className="profile-container">
                 <div className='user-info'>
-                    <div className="username">
+                    <div className="header-username">
                         <h1>{username}</h1>
                     </div>
                     <button className='followers' onClick = {fetchMyFollowers}>
