@@ -6,7 +6,7 @@ import CreatePostModal from '../../components/profile/CreatePostModal';
 
 const WithProfileEdit = (WrappedComponent) => {
     return function ProfileHeaderForCurrentUser(props) {
-        const { isCurrentUser } = props;
+        const { username,isCurrentUser } = props;
         const [bioText, setBioText] = useState("");
         const [showWhiteBox, setShowWhiteBox] = useState(false);
         const [showIconBox, setShowIconBox] = useState(false);
@@ -61,6 +61,7 @@ const WithProfileEdit = (WrappedComponent) => {
                                 showModal={showModal}
                                 closeModal={closeModal}
                                 onPostCreated={() => console.log("Post created!")}
+                                username={username}
                             />
                       
                     </div>

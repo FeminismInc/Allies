@@ -45,8 +45,9 @@ exports.findUserByEmail = async (req, res, next) => {
     req.session.user_id = user._id;
     req.session.username = user.username; // saving username
     req.session.email = user.email; // saving email
+    res.status(200).json(user);
 
-    res.status(200).json({ exists: true }); //return true if login was successful
+    // res.status(200).json({ exists: true }); //return true if login was successful
     // about to change res.status to return anything, another way to get info rather than sessions
   } catch (err) {
     next(err);

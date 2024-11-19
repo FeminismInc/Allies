@@ -2,7 +2,7 @@ const PostModel = require('../models/Posts');
 const LikeModel = require('../models/Likes'); 
 const DislikeModel = require('../models/Dislikes'); 
 const CommentModel = require('../models/Comments');
-
+const UserModel = require('../models/Users');
 // Create a new post
 exports.createPost = async (req, res) => {
     const { text, media, hashtags } = req.body;
@@ -20,6 +20,13 @@ exports.createPost = async (req, res) => {
             repost: null
         });
         const savedPost = await newPost.save();
+        
+        const updatePost = await UserModel.findOneAndUpdate(
+            { username: req.session.username },
+            { $addToSet: { posts: savedPost._id } },
+            { new: true } // To return the updated document
+          );
+        console.log("Update post",updatePost);
         res.status(201).json(savedPost);
     } catch (err) {
         console.error(err);
@@ -270,6 +277,10 @@ exports.createRepost = async (req, res) => {
         // }).populate({ path:'repost', populate: { path: 'posts', select: 'text author media datetime',}
         //  });
         const savedRepost = await populatedRepost.save();
+        await UserModel.updateOne(
+            req.session.username ,
+            { $addToSet: { posts: savedRepost._id } }
+        );
         console.log("saved repost",savedRepost);
         res.status(201).json(savedRepost);
     } catch (err) {
