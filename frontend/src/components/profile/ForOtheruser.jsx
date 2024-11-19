@@ -14,7 +14,7 @@ const ForOtherUser = (WrappedComponent) => {
         // const [isCurrentUser, setIsCurrentUser] = useState(false);
         // console.log("iscurrentuser:",isCurrentUser);
         // console.log("username :",username);
-
+        if (isCurrentUser) return null;
         return (
              <div className="otheruser-header-container">
                     {!isCurrentUser && (

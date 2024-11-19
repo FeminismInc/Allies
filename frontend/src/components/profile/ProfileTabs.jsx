@@ -50,16 +50,6 @@ export default function ProfileTabs({ username }) {
                     post = {post}
                     username = {username}
                     />
-                    {/* {post.repost!=null? (
-                      
-                    ):(
-                      <UserPost
-                    post = {post}
-                    username = {username}
-                    />
-
-                    )} */}
-                    
                     
                   </div>
                 ))

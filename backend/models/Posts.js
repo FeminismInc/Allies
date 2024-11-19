@@ -22,7 +22,6 @@ const PostSchema = new mongoose.Schema({
   }],
   repost: {
     type: mongoose.SchemaTypes.ObjectId, //links back to original post?
-    //when a user creates a repost, does 
     ref: 'posts'
   }
 },{ collection: 'Posts' });

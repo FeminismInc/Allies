@@ -30,6 +30,7 @@ const WithProfileEdit = (WrappedComponent) => {
                                                     //TODO: create profile APIs for bio
             setShowWhiteBox(false);
         }
+        console.log("iscurrentuser:",isCurrentUser);
 
         return (
             <div className="currentuser-header-container">

@@ -17,12 +17,13 @@ const RepostWrapper = (WrappedComponent) => {
         const uri = 'http://localhost:5050/api' // http://54.176.5.254:5050/api
 
         const handleChildPostClick = () => {
-            <Link to={`/PostView/${post._id}`} className="repost"></Link>
+           navigate(`/PostView` ,{ state: { childPost } });
         }
 
 
         return (
             <div className='repost-container'>
+                {/* if we have time, should probably make the post header into a component */}
                 <div className="repost-header">
                     <AccountCircleOutlinedIcon className="profile-picture" />
                     <div className='repost-info'>
@@ -45,7 +46,7 @@ const RepostWrapper = (WrappedComponent) => {
                     <WrappedComponent post={childPost} username={username} isAParent={false} />
                     </Link>  */}
                     <button onClick={handleChildPostClick} className='childPost'>
-                    <WrappedComponent post={childPost} username={username} isAParent={false} />
+                    <WrappedComponent post={childPost} username={childPost.author} isAParent={false} />
                     </button>  
                     </div>
                 
