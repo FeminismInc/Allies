@@ -1,5 +1,5 @@
 const express = require('express');
-const { createPost, deletePost, getPostComments, getPostLikes, getPostDislikes, addLike, addDislike, addComment, } = require('../controllers/postController');
+const { createPost, deletePost, getPostComments, getPostLikes, getPostDislikes, addLike, addDislike, addComment, getPost } = require('../controllers/postController');
 
 const router = express.Router();
 
@@ -26,5 +26,7 @@ router.post('/addDislike/:postId', addDislike);
 
 // Route to add comment for a post
 router.post('/addComment/:postId', addComment);
+
+router.get('/getPost/:postId', getPost);
 
 module.exports = router;

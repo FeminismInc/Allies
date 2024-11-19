@@ -5,7 +5,7 @@ const PostSchema = new mongoose.Schema({
   text: String,
   author: String,
   comments: [{
-    type: mongoose.SchemaTypes.ObjectId, ref: 'Comments'
+    type: mongoose.SchemaTypes.ObjectId, ref: 'comments'
   }],
   datetime: Date,
   dislikes: [{
