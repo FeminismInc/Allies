@@ -36,7 +36,7 @@ export default function LoginSignUp() {
   const navigate = useNavigate();
 
   const GoToHomePage = () => {
-    navigate('/profile');
+    navigate(`/profile/${username}`);
   };
 
   const postEmail  = () => {

@@ -12,8 +12,8 @@ const RepostWrapper = (WrappedComponent) => {
         const { post,username,isAParent,childPost } = props;
         const navigate = useNavigate();
         if (!isAParent) return null;
-        console.log('wrapper: post',post);
-        console.log('wrapper: childpost',childPost);
+        //console.log('wrapper: post',post);
+        //console.log('wrapper: childpost',childPost);
         const uri = 'http://localhost:5050/api' // http://54.176.5.254:5050/api
 
         const handleChildPostClick = () => {

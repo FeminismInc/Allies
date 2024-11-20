@@ -9,7 +9,7 @@ Make post contain both handle and username */}
 
 export default function PostContent({post,username,isAParent}) {
   if (isAParent) return null;
-  console.log('this post is not a parent',post);
+  //console.log('this post is not a parent',post);
 return (
     <div className="postContent-container">
         <div className="post-header">

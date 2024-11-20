@@ -64,12 +64,22 @@ exports.deletePost = async (req, res) => {
 // Get likes for a post by ID
 exports.getPostLikes = async (req, res) => {
     const { postId } = req.params;
-
-    try {
-        const entry = await LikeModel.findOne({ postId });        
+    
+    try { 
+        const post = await PostModel.findById(postId);
+        if (!post) {
+            res.status(404).json({ message: 'Post not found' });
+        }
+        // ensure post even exists here
+        const entry = await LikeModel.findOne({ postId }); 
+        // console.log("getPostLikes: postId ",postId); 
+        // console.log("entry:  ",entry);   
         if (!entry) {
-            res.status(500).json({ message: 'Post does not exist' });
+            console.log("!entry:  ",entry);  
+            res.status(200).json({ message: 'Post does not contain likes' });
         } else {
+            console.log("else entry:  ",entry);  
+            
             res.status(200).json(entry.accounts_that_liked);
         }
     } catch (err) {
@@ -83,12 +93,16 @@ exports.getPostDislikes = async (req, res) => {
     const { postId } = req.params;
 
     try {
-        const entry = await DislikeModel.findOne({ postId });        
-        if (!entry) {
-            res.status(500).json({ message: 'Post does not exist' });
-        } else {
-            res.status(200).json(entry.accounts_that_disliked);
+        const post = await PostModel.findById(postId);
+        if (!post) {
+            res.status(404).json({ message: 'Post not found' });
         }
+        const entry = await DislikeModel.findOne({ postId });        
+        if (!entry) { 
+            res.status(200).json({ message: 'Post does not contain dislikes' });
+        }
+        res.status(200).json(entry.accounts_that_disliked);
+        
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error fetching dislikes for post' });
@@ -281,7 +295,7 @@ exports.createRepost = async (req, res) => {
             req.session.username ,
             { $addToSet: { posts: savedRepost._id } }
         );
-        console.log("saved repost",savedRepost);
+        //console.log("saved repost",savedRepost);
         res.status(201).json(savedRepost);
     } catch (err) {
         console.error(err);
@@ -292,7 +306,7 @@ exports.createRepost = async (req, res) => {
 exports.getChildPost = async (req, res) => {
     
     const { childPostId } = req.params;
-    console.log("childPostId",childPostId);
+    //console.log("childPostId",childPostId);
     try {
         const post = await PostModel.findById(childPostId).populate({
             path: 'repost',
@@ -302,7 +316,7 @@ exports.getChildPost = async (req, res) => {
             return res.status(404).json({ message: 'Post not found' })
         }
         const childPost = post
-        console.log("saved post",childPost);
+        //console.log("saved post",childPost);
         res.status(200).json(childPost);
     } catch (err) {
         next(err);
