@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './profileheader.css'
 import axios from "axios";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
@@ -11,6 +11,13 @@ const ProfileHeader = ({ username }) => {
     const [showFollowers, setShowFollowers] = useState(false);
 
     const uri = 'http://localhost:5050/api';
+
+    const handleFollowingListClick = () => {
+        setShowFollowing(!showFollowing);
+    }
+    const handleFollowerListClick = () => {
+        setShowFollowers(!showFollowers);
+    }
 
     const fetchFollowers = async (username) => {
         try {
@@ -26,7 +33,7 @@ const ProfileHeader = ({ username }) => {
         }
     
         // Toggle the visibility of the followers list
-        setShowFollowers(!showFollowers);
+        // setShowFollowers(!showFollowers);
     };
 
     const fetchMyFollowers = async () => {
@@ -39,17 +46,25 @@ const ProfileHeader = ({ username }) => {
             axios.get(`${uri}/users/following/${username}`).then(response => {
                 const usernames = response.data.accounts_followed.map(following => following.username);
                 setFollowingList(usernames);
-                console.log(response);
+                console.log("fetch following usernames: ",usernames);
             });
           } catch (error) {
             console.error('Error fetching following:', error);
         }
-        setShowFollowing(!showFollowing)
+        // setShowFollowing(!showFollowing)
     }
 
     const fetchMyFollowing = async () => {
         fetchFollowing(username);
     }
+
+    useEffect(() => {
+        if (username){
+            fetchMyFollowers();
+            fetchMyFollowing();
+        }
+
+    }, [username])
 
     return (
         <div>
@@ -58,10 +73,10 @@ const ProfileHeader = ({ username }) => {
                     <div className="header-username">
                         <h1>{username}</h1>
                     </div>
-                    <button className='followers' onClick = {fetchMyFollowers}>
-                       {followers.length} following
+                    <button className='followers' onClick = {handleFollowingListClick}>
+                       {following.length} following
                     </button>
-                    <button className='following' onClick = {fetchMyFollowing}>
+                    <button className='following' onClick = {handleFollowerListClick}>
                         {followers.length} followers
                     </button>
                     

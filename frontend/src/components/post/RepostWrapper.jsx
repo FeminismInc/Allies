@@ -17,7 +17,7 @@ const RepostWrapper = (WrappedComponent) => {
         const uri = 'http://localhost:5050/api' // http://54.176.5.254:5050/api
 
         const handleChildPostClick = () => {
-           navigate(`/PostView` ,{ state: { childPost } });
+           navigate(`/PostView` ,{ state: { post: childPost } });
         }
 
 

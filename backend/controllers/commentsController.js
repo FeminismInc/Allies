@@ -61,14 +61,22 @@ exports.getComments = async (req, res) => {
 // Get likes for a comment by ID
 exports.getCommentLikes = async (req, res) => {
     const { commentId } = req.params;
-
     try {
-        const entry = await LikeModel.findOne({ postId: commentId });        
+        const comment = await CommentModel.findById(commentId);    
+        if (!comment) {
+            return res.status(404).json({ message: 'comment does not exist' });
+        }    
+        const entry = await LikeModel.findOne({ postId: commentId });   
+        //console.log("get comment likes: ", entry)
         if (!entry) {
-            res.status(500).json({ message: 'comment does not exist' });
-        } else {
-            res.status(200).json(entry.accounts_that_liked);
+            return res.status(200).json({ message: 'comment does not contain likes' });
+  
         }
+        return res.status(200).json(entry);
+        // else {
+        //     console.log("comment likes ",entry);
+        //     res.status(200).json(entry);
+        // }
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error fetching likes for comment' });
@@ -80,12 +88,20 @@ exports.getCommentDislikes = async (req, res) => {
     const { commentId } = req.params;
 
     try {
-        const entry = await DislikeModel.findOne({ postId: commentId });        
+        // check if the comment even exists first 
+        const comment = await CommentModel.findById(commentId);    
+        //console.log("comment dislikes",comment);
+        if (!comment) {
+            return res.status(404).json({ message: 'comment does not exist' });
+        }    
+        const entry = await DislikeModel.findOne({ postId: commentId });  
+        //console.log("entry: ",entry)  ;
         if (!entry) {
-            res.status(500).json({ message: 'comment does not exist' });
-        } else {
-            res.status(200).json(entry.accounts_that_disliked);
+            return res.status(200).json({ message: 'comment does not contain dislikes' });
+            
         }
+        return res.status(200).json(entry);
+        
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error fetching dislikes for comment' });

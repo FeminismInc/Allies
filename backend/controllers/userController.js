@@ -150,10 +150,11 @@ exports.createUser = async (req, res, next) => {
 // Get followers of a user
 exports.getFollowers = async (req, res, next) => {
   const { username } = req.params; 
-
+  console.log("username", username);
   try {
       const followers = await FollowersModel.findOne({ username }) // Wrap username in an object
           .populate('follower_accounts', 'username'); // Assuming follower_accounts is an array of ObjectIds
+          console.log("follower_accounts", followers );
       res.status(200).json(followers);
   } catch (err) {
       next(err);
@@ -167,7 +168,8 @@ exports.getFollowing = async (req, res, next) => {
   try {
       const following = await FollowingModel.findOne({ username }) // Wrap username in an object
           .populate('accounts_followed', 'username'); // Assuming accounts_followed is an array of ObjectIds
-      res.status(200).json(following);
+          console.log("accounts_followed", following );
+          res.status(200).json(following);
   } catch (err) {
       next(err);
   }

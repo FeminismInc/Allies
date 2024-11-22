@@ -16,6 +16,7 @@ export default function UserPost({ post, username }) {  // { post object, userna
   const [showDislikeBox, setShowDislikeBox] = useState(false);
   const [isAParent, setIsAParent] = useState(false);
   const [childPost, setChildPosts] = useState('');
+  const navigate = useNavigate();
 
 
 
@@ -25,6 +26,11 @@ export default function UserPost({ post, username }) {  // { post object, userna
 
   const handleDislikeClick = () => {
     setShowDislikeBox(!showDislikeBox);
+  };
+
+  const handleCommentClick = () => {
+    navigate(`/PostView` ,{ state: { post: post } });
+
   };
 
   const handleRepostClick = async (post) => {
@@ -123,7 +129,7 @@ export default function UserPost({ post, username }) {  // { post object, userna
           <button onClick={() => { dislikePost(post, username) }}>
             Dislike
           </button>
-          <button>
+          <button onClick={() => { handleCommentClick(post) }}>
             Comment
           </button>
           {/* if 'isRepost' == true, don't render this button */}

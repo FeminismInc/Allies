@@ -78,7 +78,7 @@ exports.getPostLikes = async (req, res) => {
             //console.log("!entry:  ",entry);  
             return res.status(200).json({ message: 'Post does not contain likes' });
         } else {
-            console.log("else entry:  ",entry);  
+            //console.log("else entry:  ",entry);  
             res.status(200).json(entry.accounts_that_liked);
         }
     } catch (err) {
@@ -95,7 +95,7 @@ exports.getPostDislikes = async (req, res) => {
         const post = await PostModel.findById(postId);
         if (!post) {
             return res.status(404).json({ message: 'Post not found' });
-            return res.status(404).json({ message: 'Post not found' });
+            
         }
         const entry = await DislikeModel.findOne({ postId });        
         if (!entry) { 
@@ -178,7 +178,7 @@ exports.addDislike = async (req, res) => {
 // Add a comment to a post
 exports.addComment = async (req, res) => {
     const { postId } = req.params;
-    const { username, text, PostId } = req.body; 
+    const { username, text} = req.body; 
 
     try {
         // Check if the post exists
@@ -196,7 +196,7 @@ exports.addComment = async (req, res) => {
             dislikes: [],
             replies: [],
             parentIsPost: true,
-            postId: PostId,
+            postId: postId,
         });
 
         // Save the comment to the database
@@ -220,10 +220,11 @@ exports.getPostComments = async (req, res, next) => {
 
     try {
         const post = await PostModel.findById(postId).populate('comments'); // use postId to find
-        if (!post) {
+        if (!post.comments) {
             return res.status(404).json({ message: 'Post not found' })
         }
-        console.log(post);
+        
+        //console.log(post);
         console.log(post.comments);
         res.status(200).json(post.comments);
     } catch (err) {
