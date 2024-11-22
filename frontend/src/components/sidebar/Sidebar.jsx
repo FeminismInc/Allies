@@ -13,19 +13,17 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
 //will connect to pages: Home, Profile, Messages, Notifications, Logout
-
 export default function Sidebar() {
     const[isOpen ,setIsOpen] = useState(true);
     const toggle = () => setIsOpen (!isOpen);
     const uri = 'http://localhost:5050/api';
-
-    const [loggedInUsername, setLoggedInUsername] = useState('');
+    const [username, setUsername] = useState('');
 
     useEffect(() => {
         axios.get(`${uri}/users/findUser`, { withCredentials: true }) 
           .then(response => {
-            setLoggedInUsername(response.data.username); 
-            console.log("loggininusername:",response.data.username);
+            setUsername(response.data.username); 
+            //console.log("loggininusername:",response.data.username);
           })
           .catch(error => {
             console.error('Error fetching user:', error);
@@ -39,7 +37,7 @@ export default function Sidebar() {
             icon:<HomeOutlinedIcon/>
         },
         {
-            path: `/profile/${loggedInUsername}`,
+            path: `/profile/${username}`,
             name: "Profile",
             icon:<AccountCircleOutlinedIcon/>
         },

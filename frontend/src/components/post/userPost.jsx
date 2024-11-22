@@ -36,12 +36,7 @@ export default function UserPost({ post, username }) {  // { post object, userna
       console.error('Error creating repost:', error);
     }
   };
-  // const fetchChildPostByRepostID = async (post.repost) => {
 
-  //   //get objID of posts, which will have all post information
-  //   // wrap the post component itself with a repost wrapper, which will add the delete button '{username} reposted at {datetime}
-  //   //click repost: post gets added to user's repost db
-  // };
   const fetchChildPostByRepostID = async (post) => {
     try {
       const response = await axios.get(`${uri}/posts/getChildPost/${post.repost}`, {});
@@ -64,9 +59,9 @@ export default function UserPost({ post, username }) {  // { post object, userna
   const fetchLikesByPostID = async (post) => {
     try {
       const response = await axios.get(`${uri}/posts/getPostLikes/${post._id}`, {});
-      if (response.data.accounts_that_liked){
-      console.log("response.data: ", response.data);
-      setLikes([...response.data]);
+      if (response.data.accounts_that_liked) {
+        console.log("response.data: ", response.data);
+        setLikes([...response.data]);
       }
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -81,7 +76,7 @@ export default function UserPost({ post, username }) {  // { post object, userna
   const fetchDislikesByPostID = async (post) => {
     try {
       const response = await axios.get(`${uri}/posts/getPostDislikes/${post._id}`, {});
-      if (response.data.accounts_that_disliked){
+      if (response.data.accounts_that_disliked) {
         setDislikes([...response.data]);
       }
     } catch (error) {
@@ -115,11 +110,8 @@ export default function UserPost({ post, username }) {  // { post object, userna
   return (
     <div>
       <div className="posts-container">
-
         <PostContent post={post} username={username} isAParent={isAParent} />
         <Repost post={post} username={username} isAParent={isAParent} childPost={childPost} />
-
-
         <div className="post-stats">
           <p onClick={handleLikeClick}> {likes.length} likes</p>
           <p onClick={handleDislikeClick}> {dislikes.length} dislikes</p>
@@ -142,7 +134,6 @@ export default function UserPost({ post, username }) {  // { post object, userna
           )}
         </div>
       </div>
-
       <div className={`white-rounded-box ${showLikeBox ? 'show' : ''}`}>
         <h3>Accounts that liked</h3>
         <div className="likes-accounts-container">
@@ -163,7 +154,6 @@ export default function UserPost({ post, username }) {  // { post object, userna
         </div>
         <button className='submit-button' onClick={() => setShowLikeBox(false)}>Close</button>
       </div>
-
       <div className={`white-rounded-box ${showDislikeBox ? 'show' : ''}`}>
         <h3>Accounts that disliked</h3>
         <div className="dislikes-accounts-container">

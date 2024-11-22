@@ -1,5 +1,5 @@
 const express = require('express');
-const { createPost, createRepost,getChildPost, deletePost, getPostComments, getPostLikes, getPostDislikes, addLike, addDislike, addComment, } = require('../controllers/postController');
+const { createPost, createRepost,getChildPost, getFeedPosts, deletePost, getPostComments, getPostLikes, getPostDislikes, addLike, addDislike, addComment, } = require('../controllers/postController');
 
 const router = express.Router();
 
@@ -10,6 +10,10 @@ router.post('/createPost', createPost);
 router.post('/createRepost', createRepost);
 
 router.get('/getChildPost/:childPostId', getChildPost);
+
+router.get('/getFeedPosts/:loggedInUsername', getFeedPosts);
+
+
 
 // Route to delete a post
 router.delete('/deletePost/:postId', deletePost);

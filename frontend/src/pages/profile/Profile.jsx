@@ -14,24 +14,18 @@ const ProfileHeaderForOtherUser = ForOtherUser(ProfileHeader);
 export default function Profile() {
 
   const { username: routeUsername } = useParams(); // gets the username from url params
-
   const [username, setUsername] = useState('');
   const [isCurrentUser, setIsCurrentUser] = useState(true);
-  // const [isLoggedInUser, setIsLoggedInUser] = useState(false);
   const [loggedInUsername, setLoggedInUsername] = useState('');
 
   const uri = 'http://localhost:5050/api';
 
 
   useEffect(() => {
-    console.log("routeUsername:", routeUsername);
-    console.log("Username:", username);
-
+    // console.log("routeUsername:", routeUsername);
+    // console.log("Username:", username);
     axios.get(`${uri}/users/findUser`, { withCredentials: true }) 
       .then(response => {
-        setLoggedInUsername(response.data.username); 
-        console.log("loggininusername:",loggedInUsername);
-        console.log("routeUsername:", routeUsername);
          if (routeUsername && (routeUsername!=response.data.username)) { //if a username was provided in the url, then we are trying to view their profile 
           setIsCurrentUser(false);
           console.log("display other user's profile:", routeUsername);

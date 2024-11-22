@@ -188,15 +188,15 @@ exports.addFollower = async (req, res, next) => {
       }
 
       const updateFollowers = await FollowersModel.findOneAndUpdate(
-        { username: req.session.username },
-        { $addToSet: { follower_accounts: userToFollow._id } },
+        { username: userToFollow.username },
+        { $addToSet: { follower_accounts: req.session.user_id } },
         { new: true } // To return the updated document
       );
-      console.log(updateFollowers); // Check if it's returning the expected updated document
+      console.log(updateFollowers); 
       
       const updateFollowing = await FollowingModel.findOneAndUpdate(
-        { username: username },
-        { $addToSet: { accounts_followed: req.session.user_id } },
+        { username: req.session.username },
+        { $addToSet: { accounts_followed: userToFollow._id } },
         { new: true }
       );
       console.log(updateFollowing);
@@ -223,17 +223,24 @@ exports.removeFollowing = async (req, res, next) => {
       }
 
       // Remove the user from the current user's follower_accounts
+      // const updateFollowers = await FollowersModel.findOneAndUpdate(
+      //     { username: req.session.username },
+      //     { $pull: { follower_accounts: userToUnfollow._id } }, // Remove the user's ID
+      //     { new: true } // To return the updated document
+
+
+      // if we're unfollowing someone, we update THEIR follower list and remove ourselves from it 
       const updateFollowers = await FollowersModel.findOneAndUpdate(
-          { username: req.session.username },
-          { $pull: { follower_accounts: userToUnfollow._id } }, // Remove the user's ID
-          { new: true } // To return the updated document
+        { username: userToUnfollow },
+        { $pull: { follower_accounts: req.session.user_id } }, // Remove the user's ID
+        { new: true } // To return the updated document
       );
       console.log(updateFollowers); // Check if it's returning the expected updated document
       
       // Remove the current user's ID from the accounts_followed of the user being unfollowed
       const updateFollowing = await FollowingModel.findOneAndUpdate(
-          { username: username },
-          { $pull: { accounts_followed: req.session.user_id } }, // Remove the current user's ID
+          { username: req.session.username },
+          { $pull: { accounts_followed: userToUnfollow._id } }, // Remove the current user's ID
           { new: true }
       );
       console.log(updateFollowing);
