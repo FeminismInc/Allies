@@ -43,7 +43,7 @@ export default function CommentLog({
                   <div key={index} className="comment">
                     <CommentComponent
                       comment = {comment}
-                      username = {comment.author}
+                      username = {username}
                       />
                   </div>
                 ))

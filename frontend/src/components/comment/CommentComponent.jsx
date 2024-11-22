@@ -70,7 +70,7 @@ export default function CommentComponent({comment, username}) {
             <div className="comments-container">
                 <div className="comment-header">
                   <div className="comment-info">
-                    <div className="username">{username}
+                    <div className="username">{comment.author}
                       {/* <span className="handle">@{comment.author}</span> */}
                       <span className="comment-date">
                         {new Date(comment.datetime).toLocaleString()}
