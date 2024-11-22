@@ -2,16 +2,14 @@
 const mongoose = require('mongoose');
 
 const commentsSchema = new mongoose.Schema({
-    author: {
-      String,  // Reference to the author, update to string
-    },
+    author: String, // username of user posting comment
     datetime: Date,
-    likes: {
+    likes: [{
       type: mongoose.Schema.Types.ObjectId,  // Reference to likes
-    },
-    dislikes: {
+    }],
+    dislikes: [{
       type: mongoose.Schema.Types.ObjectId,  // Reference to dislikes
-    },
+    }],
     replies: [{ //rename this to comments, 
       type: mongoose.Schema.Types.ObjectId,  // Array of ObjectIds referencing replies
     }],

@@ -6,6 +6,7 @@ import axios from "axios"
 import { useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Commentlog from '../../components/postView/Commentlog'
+import UserPost from '../../components/post/userPost'
 
 export default function PostViewPage(userPost){
 
@@ -13,8 +14,26 @@ export default function PostViewPage(userPost){
     // const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [message, setMessage] = useState('');
+    const [post, setPost] = useState('');
 
-    const PostId = '6721c00533c38e0dc9baaf56'; {/**For testing purposes */}
+    const PostId = '67358b16426e9b7ea12adc2c'; {/**For testing purposes */}
+    
+    useEffect(() => {
+        // Function to fetch the post data
+        const getPostById = async (PostId) => {
+            try {
+                const response = await axios.get(`${uri}/post/getPost/${PostId}`);
+                setPost(response.data); // Set the fetched post in state
+                
+            } catch (err) {
+                console.error('Error fetching post:', err);
+                
+            }
+        };
+
+        getPostById(PostId); // Call the function to fetch the post when the component mounts
+    }, [PostId]); // Re-run this effect whenever `postId` changes
+
 
     useEffect(() => {
 
@@ -46,7 +65,6 @@ export default function PostViewPage(userPost){
             // add it to the post currently on screen
             // small note, it seems that creating a comment for a post, and creating a comment for a comment are in different controllers
 
-
             setMessage('');
             
         }
@@ -68,17 +86,24 @@ export default function PostViewPage(userPost){
             {/** will likely have a component deal with post and comments that are displayed */}
 
             <div className='post-container'>
-                <div className='main-post'>
-                    <h1>Imagine this is an actual post</h1>
+                <div className='post'>
+                    <UserPost
+                        post = {post}
+                        username = {post.author}
+                    />
                 </div>
 
                 <div className="profile-tabs">
-                    <Commentlog 
-                        PostId={PostId}
-                        message={message}
-                        setMessage={setMessage}
-                        send={send}
-                        /> 
+                    <div className="commentlog-container">
+                        <Commentlog 
+                            PostId = {PostId}
+                            username = {username}
+                            message = {message}
+                            setMessage={setMessage}
+                            send={send}
+                            /> 
+                    </div>
+                    
                 </div>
 
             </div>

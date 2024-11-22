@@ -17,13 +17,12 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path='/messages' element={<MessagesPage />} />
               <Route path='/messages/:otherUsername' element={<MessagesPage />} />
-              {/* //<Route path="/profile" element={<Profile />} /> */}
+              <Route path="/profile" element={<Profile />} />
               <Route path="/post" element = {<PostPage/>} />
               <Route path="/form" element = {<Form/>} />
               <Route path="/search" element = {<Search/>} />
               <Route path="/profile/:username" element={<Profile />} />  
-              {/* <Route path="/postView/:postId" element = {<PostViewPage/>} /> */}
-              <Route path="/postView" element = {<PostViewPage/>} />
+              <Route path="/postview" element = {<PostViewPage/>} />
             </Routes>
     </Router>
   )
