@@ -63,7 +63,7 @@ exports.getCommentLikes = async (req, res) => {
     const { commentId } = req.params;
 
     try {
-        const entry = await LikeModel.findOne({ commentId });        
+        const entry = await LikeModel.findOne({ postId: commentId });        
         if (!entry) {
             res.status(500).json({ message: 'comment does not exist' });
         } else {
@@ -80,7 +80,7 @@ exports.getCommentDislikes = async (req, res) => {
     const { commentId } = req.params;
 
     try {
-        const entry = await DislikeModel.findOne({ commentId });        
+        const entry = await DislikeModel.findOne({ postId: commentId });        
         if (!entry) {
             res.status(500).json({ message: 'comment does not exist' });
         } else {
@@ -103,9 +103,9 @@ exports.addLike = async (req, res) => {
         }
 
         // Check if the user already liked the comment
-        const entry = await LikeModel.findOne({ commentId });        
+        const entry = await LikeModel.findOne({ postId: commentId });        
         if (!entry) {
-            await LikeModel.create({ commentId, accounts_that_liked: [username] });
+            await LikeModel.create({ postId: commentId , accounts_that_liked: [username] });
         } else {
             if (entry.accounts_that_liked.includes(username)) {
                 entry.accounts_that_liked.splice(entry.accounts_that_liked.indexOf(username),1);
@@ -135,9 +135,9 @@ exports.addDislike = async (req, res) => {
         }
 
         // Check if the user already disliked the comment
-        const entry = await DislikeModel.findOne({ commentId });        
+        const entry = await DislikeModel.findOne({ postId: commentId });        
         if (!entry) {
-            await DislikeModel.create({ commentId, accounts_that_disliked: [username] });
+            await DislikeModel.create({ postId: commentId, accounts_that_disliked: [username] });
         } else {
             if (entry.accounts_that_disliked.includes(username)) {
                 entry.accounts_that_disliked.splice(entry.accounts_that_disliked.indexOf(username),1);

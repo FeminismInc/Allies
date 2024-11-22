@@ -18,22 +18,22 @@ export default function PostViewPage(){
 
     const PostId = '67358b16426e9b7ea12adc2c'; {/**For testing purposes */}
     
-
     useEffect(() => {
-        const getPostById = async () => {
+        // Function to fetch the post data
+        const getPostById = async (PostId) => {
             try {
-                console.log("Fetching post with ID:", PostId);
                 const response = await axios.get(`${uri}/post/getPost/${PostId}`);
                 setPost(response.data); // Set the fetched post in state
-                console.log(response.data)
-            } catch (error) {
-                console.error("Error fetching post:", error);
+                
+            } catch (err) {
+                console.error('Error fetching post:', err);
                 
             }
         };
 
-        getPostById(); // Call the function to fetch the post when component mounts
-    }, [PostId]);
+        getPostById(PostId); // Call the function to fetch the post when the component mounts
+    }, [PostId]); // Re-run this effect whenever `postId` changes
+
 
     useEffect(() => {
 
