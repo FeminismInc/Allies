@@ -21,7 +21,8 @@ const PostSchema = new mongoose.Schema({
     type: String
   }],
   repost: {
-    type: mongoose.SchemaTypes.ObjectId
+    type: mongoose.SchemaTypes.ObjectId, //links back to original post?
+    ref: 'posts'
   }
 },{ collection: 'Posts' });
 

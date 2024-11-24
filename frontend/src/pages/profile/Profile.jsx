@@ -9,35 +9,48 @@ import WithProfileEdit from '../../components/profile/WithProfileEdit';
 import ForOtherUser from "../../components/profile/ForOtheruser";
 
 const ProfileHeaderForCurrentUser = WithProfileEdit(ProfileHeader);
-const ProfileHeaderForOthertUser = ForOtherUser(ProfileHeader);
+const ProfileHeaderForOtherUser = ForOtherUser(ProfileHeader);
 
 export default function Profile() {
 
   const { username: routeUsername } = useParams(); // gets the username from url params
-
-  const [username, setUsername] = useState('');
-  const [isCurrentUser, setIsCurrentUser] = useState(false);
+  const [isCurrentUser, setIsCurrentUser] = useState('');
+  
   const uri = 'http://localhost:5050/api';
 
 
   useEffect(() => {
-    if (routeUsername) { //if a username was provided in the url, then we are trying to view their profile 
-      setUsername(routeUsername);
-      setIsCurrentUser(false);
-      console.log("display other user's profile:", routeUsername);
-    } else {  //otherwise, we are trying to view the currently logged in user's profile 
-      axios.get(`${uri}/users/findUser`, { withCredentials: true })
-        .then(response => {
-          setUsername(response.data.username);
-          setIsCurrentUser(true);
-          console.log("display current user's profile:", response.data.username);
-        })
-        .catch(error => {
-          console.error('Error fetching user:', error);
+    axios.get(`${uri}/users/findUser`, { withCredentials: true }) 
+      .then(response => {
+        console.log("routeUsername:", routeUsername);
+         if (routeUsername && response.data.username && (routeUsername!==response.data.username)) { //if a username was provided in the url, then we are trying to view their profile 
+          setIsCurrentUser(false);
+          console.log("display other user's profile:", routeUsername);
+      }
+      else {  //otherwise, we are trying to view the currently logged in user's profile 
+        setIsCurrentUser(true);
+        
+      }
+    })
+      .catch(error => {
+       console.error('Error fetching user:', error);
+      })
+      }); 
 
-        });
-    }
-  }, [routeUsername]);  //if routeUsername changes, call this effect again
+
+  // useEffect(() => {
+  //   if (routeUsername && (routeUsername!=loggedInUsername)) { //if a username was provided in the url, then we are trying to view their profile 
+  //     setUsername(routeUsername);
+  //     setIsCurrentUser(false);
+  //     console.log("display other user's profile:", routeUsername);
+  //   } else {  //otherwise, we are trying to view the currently logged in user's profile 
+  //         setUsername(loggedInUsername);
+  //         setIsCurrentUser(true);
+  //         console.log("display current user's profile:", loggedInUsername);
+  //       }
+  //   }
+  // , [routeUsername]);  //if routeUsername changes, call this effect again
+  // //if routeusername = anything or
 
   return (
     <div className="profileMainContent">
@@ -45,19 +58,14 @@ export default function Profile() {
         <Sidebar />
       </div>
       <div className="profile-container">
-        {/* since ProfileHeader includes profile editing buttons, we would need to conditionally render those buttons 
-        based on whether or not 'username' is the authorized user or not */}
-        <ProfileHeaderForCurrentUser
-          username={username}
-          isCurrentUser={isCurrentUser}
-        />
-        <ProfileHeaderForOthertUser
-          username={username}
-          isCurrentUser={isCurrentUser}
-
-        />
+      <ProfileHeaderForCurrentUser
+            username={routeUsername}
+            isCurrentUser={isCurrentUser}/>
+      <ProfileHeaderForOtherUser
+            username={routeUsername}
+            isCurrentUser={isCurrentUser}/>
         <div className="profile-tabs">
-          <ProfileTabs username={username} />
+          <ProfileTabs username={routeUsername} />
         </div>
       </div>
     </div>

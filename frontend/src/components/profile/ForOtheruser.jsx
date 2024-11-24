@@ -5,7 +5,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import { useNavigate } from 'react-router-dom';
 
 const ForOtherUser = (WrappedComponent) => {
-    return function ProfileHeaderForOthertUser(props) {
+    return function ProfileHeaderForOtherUser(props) {
         const { isCurrentUser,username } = props;
         const navigate = useNavigate();
         const handleMessageClick = () => {
@@ -14,7 +14,9 @@ const ForOtherUser = (WrappedComponent) => {
         // const [isCurrentUser, setIsCurrentUser] = useState(false);
         // console.log("iscurrentuser:",isCurrentUser);
         // console.log("username :",username);
-
+        if (isCurrentUser) return null;
+        console.log("iscurrentuser:",isCurrentUser);
+        console.log("username :",username);
         return (
              <div className="otheruser-header-container">
                     {!isCurrentUser && (

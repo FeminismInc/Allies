@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './profiletabs.css';
 import UserPost from '../../components/post/userPost';
+import CachedIcon from '@mui/icons-material/Cached';
 
 export default function ProfileTabs({ username }) {
 
@@ -49,6 +50,7 @@ export default function ProfileTabs({ username }) {
                     post = {post}
                     username = {username}
                     />
+                    
                   </div>
                 ))
               ) : (

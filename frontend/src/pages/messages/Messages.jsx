@@ -5,7 +5,6 @@ import { io } from "socket.io-client"; // Import socket.io
 import "./messages.css";
 import ConversationList from '../../components/messages/ConversationList';
 import MessageLog from '../../components/messages/Messagelog';
-
 import { useLocation } from 'react-router-dom';
 
 export default function MessagesPage() {
@@ -14,7 +13,7 @@ export default function MessagesPage() {
     
     const location = useLocation();
     // const { currentUsername, otherUsername } = location.state || {};
-
+    //const { currentUsername } = useContext(UserContext);
     const [conversationIds, setConversationIds] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState('');
@@ -23,6 +22,7 @@ export default function MessagesPage() {
     const [messageList, setMessageList] = useState([]);
     const [currentConversation, setCurrentConversation] = useState(null);
     const [currentUsername, setCurrentUsername] = useState('');
+    
 
 
     // Function to send a message
@@ -74,43 +74,50 @@ export default function MessagesPage() {
     }, [currentConversation]);
 
 
-    useEffect(() => {
-        // axios.get(`${uri}/users/getCurrentUserID`)
-        axios.get(`${uri}/users/findUser`, { withCredentials: true })
-            .then(response => {
-                console.log("currentUsername", response.data.username);
-                setCurrentUsername(response.data.username);
-                // console.log("location.state?.username", location.state.username);
-                if (location.state?.username) {
-                    setOtherUsername(location.state.username);
-                }              
-                return axios.get(`${uri}/users/getConversations/${response.data.username}`);
-            })
-            .then(response => {
-                const conversations = Array.isArray(response.data) ? response.data : [response.data];
-                setConversationIds(conversations);
-                console.log("setConversationIds", conversations);
-            })
-            .catch(error => {
-                console.error('Error fetching conversations:', error);
-            });
- 
-    }, []);
+//     useEffect(() => {
+//         axios.get(`${uri}/users/getCurrentUserID`)
+//         axios.get(`${uri}/users/findUser`, { withCredentials: true })
+                 
+//                  console.log("location.state?.username", location.state.username);
+//                 if (location.state?.username) {
+//                     setOtherUsername(location.state.username);
+//                 }              
+//                 const response = axios.get(`${uri}/users/getConversations/$ currentUsername}`);
+//                 const conversations = Array.isArray(response.data) ? response.data : [response.data];
+//                 setConversationIds(conversations);
+//             // catch(error => {
+//             //     console.error('Error fetching conversations:', error);
+//             // });
+// },[]);
+
+useEffect(() => {
+    axios.get(`${uri}/users/findUser`, { withCredentials: true })
+        .then(response => {
+            //console.log("currentUsername", response.data.username);
+            setCurrentUsername(response.data.username);
+            if (location.state?.username) {
+                setOtherUsername(location.state.username);
+            }              
+            return axios.get(`${uri}/users/getConversations/${response.data.username}`);
+        })
+        .then(response => {
+            const conversations = Array.isArray(response.data) ? response.data : [response.data];
+            setConversationIds(conversations);
+            console.log("setConversationIds", conversations);
+        })
+        .catch(error => {
+            console.error('Error fetching conversations:', error);
+        });
+
+}, []);
 
     useEffect(() => {
         console.log('otherUsername or currentUsername has changed ');
-        if (currentUsername && otherUsername) {
-            console.log('otherUsername and currentUsername have been defined:',otherUsername,',',currentUsername);
+        if (otherUsername && currentUsername) {
+            //console.log('otherUsername and currentUsername have been defined:',otherUsername,',',currentUsername);
             handleCreateConversation();
         }
-        else {
-            console.log('but one of them hasnt been defined: ');
-            console.log('otherUsername :',otherUsername);
-            console.log('currentUsername :',currentUsername);
-            console.log('location.state?.username:',location.state?.username);
-        }
-        
-    }, [currentUsername,otherUsername]); // pulls up the createConversation function when both currentUsername and otherUsername 
+    },  [currentUsername,otherUsername]); // pulls up the createConversation function when both currentUsername and otherUsername 
 
 
     useEffect(() => {
@@ -147,7 +154,7 @@ export default function MessagesPage() {
         // console.log("current..", currentUsername);
         try {
             const response = await axios.post(`${uri}/messages/conversation`, {
-                currentUsername,
+             currentUsername,
                 otherUsername
             });
 
@@ -213,7 +220,7 @@ export default function MessagesPage() {
             <Sidebar />
             <ConversationList
                 conversationIds={conversationIds}
-                currentUsername={currentUsername}
+                currentUsername= {currentUsername}
                 currentConversation={currentConversation}
                 setCurrentConversation={setCurrentConversation}
                 showModal={showModal}
@@ -227,7 +234,7 @@ export default function MessagesPage() {
             {currentConversation && (
                 
                 <MessageLog
-                    currentUsername={currentUsername}
+                    currentUsername= {currentUsername}
                     currentConversation={currentConversation}
                     messageList={messageList}
                     message={message}

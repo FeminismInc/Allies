@@ -65,7 +65,6 @@ export default function CommentLog({
                     <SendIcon fontSize="inherit" />
                 </IconButton>
             </div>
-            
           </div>
     )
 }

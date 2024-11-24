@@ -45,8 +45,9 @@ exports.findUserByEmail = async (req, res, next) => {
     req.session.user_id = user._id;
     req.session.username = user.username; // saving username
     req.session.email = user.email; // saving email
+    res.status(200).json(user);
 
-    res.status(200).json({ exists: true }); //return true if login was successful
+    // res.status(200).json({ exists: true }); //return true if login was successful
     // about to change res.status to return anything, another way to get info rather than sessions
   } catch (err) {
     next(err);
@@ -149,10 +150,11 @@ exports.createUser = async (req, res, next) => {
 // Get followers of a user
 exports.getFollowers = async (req, res, next) => {
   const { username } = req.params; 
-
+  console.log("username", username);
   try {
       const followers = await FollowersModel.findOne({ username }) // Wrap username in an object
           .populate('follower_accounts', 'username'); // Assuming follower_accounts is an array of ObjectIds
+          console.log("follower_accounts", followers );
       res.status(200).json(followers);
   } catch (err) {
       next(err);
@@ -166,7 +168,8 @@ exports.getFollowing = async (req, res, next) => {
   try {
       const following = await FollowingModel.findOne({ username }) // Wrap username in an object
           .populate('accounts_followed', 'username'); // Assuming accounts_followed is an array of ObjectIds
-      res.status(200).json(following);
+          console.log("accounts_followed", following );
+          res.status(200).json(following);
   } catch (err) {
       next(err);
   }
@@ -187,15 +190,15 @@ exports.addFollower = async (req, res, next) => {
       }
 
       const updateFollowers = await FollowersModel.findOneAndUpdate(
-        { username: req.session.username },
-        { $addToSet: { follower_accounts: userToFollow._id } },
+        { username: userToFollow.username },
+        { $addToSet: { follower_accounts: req.session.user_id } },
         { new: true } // To return the updated document
       );
-      console.log(updateFollowers); // Check if it's returning the expected updated document
+      console.log(updateFollowers); 
       
       const updateFollowing = await FollowingModel.findOneAndUpdate(
-        { username: username },
-        { $addToSet: { accounts_followed: req.session.user_id } },
+        { username: req.session.username },
+        { $addToSet: { accounts_followed: userToFollow._id } },
         { new: true }
       );
       console.log(updateFollowing);
@@ -222,17 +225,24 @@ exports.removeFollowing = async (req, res, next) => {
       }
 
       // Remove the user from the current user's follower_accounts
+      // const updateFollowers = await FollowersModel.findOneAndUpdate(
+      //     { username: req.session.username },
+      //     { $pull: { follower_accounts: userToUnfollow._id } }, // Remove the user's ID
+      //     { new: true } // To return the updated document
+
+
+      // if we're unfollowing someone, we update THEIR follower list and remove ourselves from it 
       const updateFollowers = await FollowersModel.findOneAndUpdate(
-          { username: req.session.username },
-          { $pull: { follower_accounts: userToUnfollow._id } }, // Remove the user's ID
-          { new: true } // To return the updated document
+        { username: userToUnfollow },
+        { $pull: { follower_accounts: req.session.user_id } }, // Remove the user's ID
+        { new: true } // To return the updated document
       );
       console.log(updateFollowers); // Check if it's returning the expected updated document
       
       // Remove the current user's ID from the accounts_followed of the user being unfollowed
       const updateFollowing = await FollowingModel.findOneAndUpdate(
-          { username: username },
-          { $pull: { accounts_followed: req.session.user_id } }, // Remove the current user's ID
+          { username: req.session.username },
+          { $pull: { accounts_followed: userToUnfollow._id } }, // Remove the current user's ID
           { new: true }
       );
       console.log(updateFollowing);

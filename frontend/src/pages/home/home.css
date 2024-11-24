@@ -1,12 +1,15 @@
 .homeMainContent{
     display: flex;
-    flex-direction: row;
+  flex-direction: row;
+  margin-left: 250px;
 }
 
-.dataContainer{
+.feed-container{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    /* flex-grow: 1;
+    min-height: 100vh; */
     flex-grow: 1;
-    min-height: 100vh;
     justify-content: center;
+    margin-top: 200px;
 }

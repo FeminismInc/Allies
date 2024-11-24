@@ -17,7 +17,7 @@ export default function ConversationTabs({
                 .filter(user => user !== currentUsername)
                 .map((user, index) => (
                     <div key={index} className="user-info">
-                        <span className="username">{user}</span>
+                        <span className="convo-username">{user}</span>
                     </div>
                 ))}
         </div>

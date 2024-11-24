@@ -19,7 +19,7 @@ export default function ProfileForm() {
     const navigate = useNavigate();
 
     const GoToProfile = () => {
-        navigate('/profile');
+        navigate(`/profile/${username}`);
     };
 
     //when pressing submit button take all input data for processing
@@ -36,8 +36,8 @@ export default function ProfileForm() {
                         const response = await axios.post(`${uri}/users/form`, { //send data to index.js to check
                             username, email, password, handle, pronouns, birthdate,
                         })
-                        //console.log(response)
-                        navigate('/profile');
+                        console.log(response)
+                        `/profile/${response.data.username}`
                     }
                     catch(e) {
                         console.log('test1')
@@ -52,7 +52,7 @@ export default function ProfileForm() {
                 .then(response => {
                   console.log(response.data); 
                   if (response.data.exists) {
-                    navigate("/profile");
+                    navigate(`/profile/${response.data.username}`);
                   } else {
                     alert("Email not found. Please sign up.");
                   }

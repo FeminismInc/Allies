@@ -1,10 +1,19 @@
 const express = require('express');
-const { createPost, deletePost, getPostComments, getPostLikes, getPostDislikes, addLike, addDislike, addComment, getPost } = require('../controllers/postController');
+const { createPost, createRepost, getChildPost, getFeedPosts, deletePost, getPostComments, getPostLikes, getPostDislikes, addLike, addDislike, addComment, getPost } = require('../controllers/postController');
 
 const router = express.Router();
 
 // Route to create a post
 router.post('/createPost', createPost);
+
+// Route to create a repost
+router.post('/createRepost', createRepost);
+
+router.get('/getChildPost/:childPostId', getChildPost);
+
+router.get('/getFeedPosts/:loggedInUsername', getFeedPosts);
+
+
 
 // Route to delete a post
 router.delete('/deletePost/:postId', deletePost);

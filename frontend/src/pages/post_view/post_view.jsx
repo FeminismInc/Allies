@@ -1,42 +1,45 @@
 import "./post_view.css";
 import {Button} from 'react-native';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import React, {useEffect} from "react";
 import axios from "axios"
 import { useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Commentlog from '../../components/postView/Commentlog'
 import UserPost from '../../components/post/userPost'
+import { useLocation } from 'react-router-dom';
 
 export default function PostViewPage(){
 
     const uri = "http://localhost:5050/api";
-    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [message, setMessage] = useState('');
-    const [post, setPost] = useState('');
+    //const [post, setPost] = useState('');
+    const location = useLocation();
+    const post =location.state?.post;
+    console.log(post);
 
-    const PostId = '67358b16426e9b7ea12adc2c'; {/**For testing purposes */}
+
+    //const PostId = '67358b16426e9b7ea12adc2c'; {/**For testing purposes */}
     
-    useEffect(() => {
-        // Function to fetch the post data
-        const getPostById = async (PostId) => {
-            try {
-                const response = await axios.get(`${uri}/post/getPost/${PostId}`);
-                setPost(response.data); // Set the fetched post in state
+    // useEffect(() => {
+    //     // Function to fetch the post data
+    //     const getPostById = async (PostId) => {
+    //         try {
+    //             const response = await axios.get(`${uri}/post/getPost/${PostId}`);
+    //             setPost(response.data); // Set the fetched post in state
                 
-            } catch (err) {
-                console.error('Error fetching post:', err);
+    //         } catch (err) {
+    //             console.error('Error fetching post:', err);
                 
-            }
-        };
+    //         }
+    //     };
 
-        getPostById(PostId); // Call the function to fetch the post when the component mounts
-    }, [PostId]); // Re-run this effect whenever `postId` changes
+    //     getPostById(PostId); // Call the function to fetch the post when the component mounts
+    // }, [PostId]); // Re-run this effect whenever `postId` changes
 
 
     useEffect(() => {
-
         axios.get(`${uri}/users/findUser`, { withCredentials: true }) 
           .then(response => {
             setUsername(response.data.username); 
@@ -58,8 +61,8 @@ export default function PostViewPage(){
             // comments should not infinately chain, a comment of a comment cannot shouldnt have further comments
             // instagram style
             console.log("trying");
-            const comment = await axios.post(`${uri}/posts/addComment/${PostId}`, { //create new comment object
-                username, text, PostId
+            const comment = await axios.post(`${uri}/posts/addComment/${post._id}`, { //create new comment object
+                username, text,  //gonna swap out postId
             })
 
             // add it to the post currently on screen
@@ -93,10 +96,10 @@ export default function PostViewPage(){
                     />
                 </div>
 
-                <div className="profile-tabs">
+                
                     <div className="commentlog-container">
                         <Commentlog 
-                            PostId = {PostId}
+                            PostId = {post._id}
                             username = {username}
                             message = {message}
                             setMessage={setMessage}
@@ -104,7 +107,6 @@ export default function PostViewPage(){
                             /> 
                     </div>
                     
-                </div>
 
             </div>
         </div>

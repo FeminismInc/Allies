@@ -30,26 +30,25 @@ export default function LoginSignUp() {
 
   });
   
-  const [email, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setHandle] = useState("");
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
   const GoToHomePage = () => {
-    navigate('/profile');
+    navigate(`/profile/${username}`);
   };
 
   const postEmail  = () => {
-    
     if (!email || !password) {
       alert("Please fill in both email and password.");
       return;
     }
-
     axios.post(`${uri}/users/findUserbyEmail`, { email, password })
       .then(response => {
         console.log(response.data); 
-        if (response.data.exists) {
-          navigate("/profile");
+        if (response.data) {
+          navigate(`/profile/${response.data.username}`);
         } else {
           alert("Email not found. Please sign up.");
         }
@@ -72,7 +71,7 @@ export default function LoginSignUp() {
         <h1>Log in</h1>
         <div className ="inputEmail"> {/*Make inputs into components */}
           <img src={personIcon}/>
-          <input type="email" placeholder ="email" value={email} onChange={(e) => setUsername(e.target.value)}/>
+          <input type="email" placeholder ="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
         </div>
         <div className = "inputPassword">
           <img src={passwordIcon}/>
