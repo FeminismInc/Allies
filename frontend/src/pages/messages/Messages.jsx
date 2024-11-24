@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from '../../components/sidebar/Sidebar';
 import { io } from "socket.io-client"; // Import socket.io
 import "./messages.css";
@@ -91,12 +91,10 @@ export default function MessagesPage() {
 // },[]);
 
 useEffect(() => {
-    // axios.get(`${uri}/users/getCurrentUserID`)
     axios.get(`${uri}/users/findUser`, { withCredentials: true })
         .then(response => {
-            console.log("currentUsername", response.data.username);
+            //console.log("currentUsername", response.data.username);
             setCurrentUsername(response.data.username);
-            // console.log("location.state?.username", location.state.username);
             if (location.state?.username) {
                 setOtherUsername(location.state.username);
             }              
@@ -116,16 +114,9 @@ useEffect(() => {
     useEffect(() => {
         console.log('otherUsername or currentUsername has changed ');
         if (otherUsername && currentUsername) {
-            console.log('otherUsername and currentUsername have been defined:',otherUsername,',',currentUsername);
+            //console.log('otherUsername and currentUsername have been defined:',otherUsername,',',currentUsername);
             handleCreateConversation();
         }
-        else {
-            console.log('but one of them hasnt been defined: ');
-            
-            //console.log('currentUsername :',currentUsername);
-            console.log('location.state?.username:',location.state?.username);
-        }
-        
     },  [currentUsername,otherUsername]); // pulls up the createConversation function when both currentUsername and otherUsername 
 
 

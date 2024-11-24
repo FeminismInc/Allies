@@ -14,31 +14,28 @@ const ProfileHeaderForOtherUser = ForOtherUser(ProfileHeader);
 export default function Profile() {
 
   const { username: routeUsername } = useParams(); // gets the username from url params
-  const [username, setUsername] = useState('');
-  const [isCurrentUser, setIsCurrentUser] = useState(true);
-  const [loggedInUsername, setLoggedInUsername] = useState('');
-
+  const [isCurrentUser, setIsCurrentUser] = useState('');
+  
   const uri = 'http://localhost:5050/api';
 
 
   useEffect(() => {
-    // console.log("routeUsername:", routeUsername);
-    // console.log("Username:", username);
     axios.get(`${uri}/users/findUser`, { withCredentials: true }) 
       .then(response => {
-         if (routeUsername && (routeUsername!=response.data.username)) { //if a username was provided in the url, then we are trying to view their profile 
+        console.log("routeUsername:", routeUsername);
+         if (routeUsername && response.data.username && (routeUsername!==response.data.username)) { //if a username was provided in the url, then we are trying to view their profile 
           setIsCurrentUser(false);
           console.log("display other user's profile:", routeUsername);
       }
       else {  //otherwise, we are trying to view the currently logged in user's profile 
-        console.log("display current user's profile:", loggedInUsername);
+        setIsCurrentUser(true);
+        
       }
     })
       .catch(error => {
        console.error('Error fetching user:', error);
       })
-      },
-   []); 
+      }); 
 
 
   // useEffect(() => {
@@ -61,17 +58,12 @@ export default function Profile() {
         <Sidebar />
       </div>
       <div className="profile-container">
-        {/* since ProfileHeader includes profile editing buttons, we would need to conditionally render those buttons 
-        based on whether or not 'username' is the authorized user or not */}
-        
       <ProfileHeaderForCurrentUser
             username={routeUsername}
-            isCurrentUser={isCurrentUser} />
-            <ProfileHeaderForOtherUser
-              username={routeUsername}
-              isCurrentUser={isCurrentUser} />
-      
-       
+            isCurrentUser={isCurrentUser}/>
+      <ProfileHeaderForOtherUser
+            username={routeUsername}
+            isCurrentUser={isCurrentUser}/>
         <div className="profile-tabs">
           <ProfileTabs username={routeUsername} />
         </div>
