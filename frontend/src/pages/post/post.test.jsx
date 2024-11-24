@@ -1,24 +1,23 @@
-import { describe, it, expect, vi, beforEach, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import PostPage from './post'
 import axios from 'axios'
 
-
-//mock axios
+// Mock axios
 vi.mock('axios')
-//mock useNavigate hook
+
+// Mock useNavigate hook
 const mockNavigate = vi.fn()
 vi.mock('react-router-dom', () => ({
     useNavigate: () => mockNavigate
 }))
 
-//mock sidebar
+// Mock sidebar
 vi.mock('../../components/sidebar/Sidebar', () => ({
     default: () => <div data-testid="sidebar">Sidebar</div>
 }))
 
-
-//mock react native button
+// Mock react-native Button
 vi.mock('react-native', () => ({
     Button: ({ onPress, title }) => (
         <button onClick={onPress} data-testid="submit-button">
@@ -26,50 +25,38 @@ vi.mock('react-native', () => ({
         </button>
     )
 }))
-describe('PostPage Component', () => {
 
+describe('PostPage Component', () => {
     beforeEach(() => {
         vi.clearAllMocks()
-
     })
 
     it('renders the component with all required elements', () => {
-        //arrange and act
         render(<PostPage />)
-        //assert
         expect(screen.getByText("What's on your mind?")).toBeInTheDocument()
         expect(screen.getByTestId('sidebar')).toBeInTheDocument()
         expect(screen.getByRole('textbox')).toBeInTheDocument()
         expect(screen.getByTestId('submit-button')).toBeInTheDocument()
-
     })
 
     it('updates text state when input value changes', () => {
-        //arrange
         render(<PostPage />)
         const input = screen.getByRole('textbox')
-
-        //act
         fireEvent.change(input, { target: { value: 'Test post content' } })
-
-        //assert
         expect(input.value).toBe('Test post content')
     })
 
     it('successfully creates a post and navigates to profile', async () => {
-        //arrange
         const mockPost = { data: { success: true } }
         axios.post.mockResolvedValueOnce(mockPost)
 
         render(<PostPage />)
-
         const input = screen.getByRole('textbox')
         const submitButton = screen.getByTestId('submit-button')
-        //act
+
         fireEvent.change(input, { target: { value: 'Test post content' } })
         fireEvent.click(submitButton)
 
-        //assert
         await waitFor(() => {
             expect(axios.post).toHaveBeenCalledWith(
                 'http://localhost:5050/api/posts/createPost',
@@ -80,42 +67,32 @@ describe('PostPage Component', () => {
     })
 
     it('handles post creation error well', async () => {
-        //arrange
         const logs = []
         const consoleSpy = vi.spyOn(console, 'log').mockImplementation(msg => logs.push(msg))
         axios.post.mockRejectedValueOnce(new Error('Network error'))
 
         render(<PostPage />)
-
         const submitButton = screen.getByTestId('submit-button')
-
         //act
         fireEvent.click(submitButton)
-
         //assert
         await waitFor(() => {
             expect(logs).toContain('entered submit')
             expect(logs).toContain('trying')
-            expect(logs).toContain('Something went wrong with creating a post')
+            expect(logs.some(log => log.includes('Something went wrong with creating a post'))).toBe(true)
         })
         consoleSpy.mockRestore()
     })
 
     it('prevents default form submission behavior', async () => {
-        //arrange
         render(<PostPage />)
-
-        const submitButton = screen.getByTestId('submit-button')
         const preventDefault = vi.fn()
+        const submitButton = screen.getByTestId('submit-button')
 
-        //act
-        fireEvent.click(submitButton, {
-            preventDefault
-        })
+        fireEvent.click(submitButton, { preventDefault })
 
-        //assert
         await waitFor(() => {
-            expect(preventDefault).toBeCalled()
+            expect(preventDefault).toHaveBeenCalled()
         })
     })
 })

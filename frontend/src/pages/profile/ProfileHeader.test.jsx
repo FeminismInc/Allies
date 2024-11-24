@@ -48,7 +48,7 @@ describe('ProfileHeader Component', () => {
     it('should toggle the settings box when clicking the settings button', () => {
         // Arrange
         render(<ProfileHeader username={username} />)
-        const settingsButton = screen.getByRole('button', { name: /settings/i })
+        const settingsButton = screen.getByLabelText(/settings/i)
 
         // Act - Toggle on
         fireEvent.click(settingsButton)
