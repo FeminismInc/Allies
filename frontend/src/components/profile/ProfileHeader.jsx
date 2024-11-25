@@ -10,6 +10,7 @@ const ProfileHeader = ({ username }) => {
     const [following, setFollowingList] = useState([]);
     const [showFollowing, setShowFollowing] = useState(false);
     const [showFollowers, setShowFollowers] = useState(false);
+    const [bio, setBio] = useState('');
 
     const uri = 'http://localhost:5050/api';
 
@@ -55,6 +56,37 @@ const ProfileHeader = ({ username }) => {
         }
         // setShowFollowing(!showFollowing)
     }
+    const fetchBio = async (username) => {
+        try {
+            console.log(username);
+            axios.get(`${uri}/users/getBio/${username}`).then(response => {
+                console.log("response: ", response);
+                setBio(response.data);
+                
+            });
+          } catch (error) {
+            console.error('Error fetching following:', error);
+        }
+        // setShowFollowing(!showFollowing)
+    }
+    // const fetchBio = async (username) => {
+    //     try {
+    //         const response = axios.get(`${uri}/users/getBio/${username}`);
+    //         console.log( "response",response);
+    //         if (!response.data) {
+    //                 setBio('no bio');
+    //                 //console.log( "response",response.data);
+    //             }
+    //             else {
+    //             setBio(response.data);
+    //             }
+ 
+    //     } catch (error) {
+    //         console.error('Error fetching following:', error);
+    //     }
+        
+    // }
+    
 
     const fetchMyFollowing = async () => {
         fetchFollowing(username);
@@ -64,9 +96,12 @@ const ProfileHeader = ({ username }) => {
         if (username){
             fetchMyFollowers();
             fetchMyFollowing();
+            fetchBio(username);
         }
 
     }, [username])
+
+    
 
     return (
         <div>
@@ -82,6 +117,10 @@ const ProfileHeader = ({ username }) => {
                         {followers.length} followers
                     </button>
                     
+                </div>
+                <div className="profile-bio">
+                    <span>{bio}</span>
+
                 </div>
             </div>
             <div className={`white-rounded-box ${showFollowers ? 'show' : ''}`}>

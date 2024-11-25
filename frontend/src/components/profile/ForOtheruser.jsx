@@ -21,10 +21,10 @@ const ForOtherUser = (WrappedComponent) => {
              <div className="otheruser-header-container">
                     {!isCurrentUser && (
                         <>
-                         <div className='header'>
+                         <div className='otheruser-header-top'>
                         <WrappedComponent {...props} />
                         <div className='otheruser-header-rightside'> 
-                                <button onClick={handleMessageClick} className='message'>
+                                <button onClick={handleMessageClick} className='message-button'>
                                     <EmailIcon/>
                                 </button>
                             
