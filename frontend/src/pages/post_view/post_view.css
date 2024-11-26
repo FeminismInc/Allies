@@ -1,0 +1,81 @@
+.postViewContent{
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: calc(100% - 280px); 
+    margin-left: 0px;
+  
+  }
+
+/* Everything past this point will be deleted just being used for testing without components */
+
+  .post-container {
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    margin-left: 278px;
+    padding-left: 50px;
+    flex: 1;
+}
+
+.commentlog-container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    height: 60vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    
+}
+
+.comment {
+    display: flex;
+    flex-direction: column;
+    border-radius: 22px;
+    margin: 4px 0;
+  }
+  .comment-content {
+    width: fit-content;
+    word-wrap: break-word;
+    font-family: Verdana;
+}
+
+.comment-input-container {
+    margin-right: 15%;
+    flex-direction: row;
+    margin-top: auto;
+    bottom: 0; 
+    position: sticky;
+    display: flex;
+    align-items: center; 
+  
+  }
+  .comment-input {
+    padding: 15px;
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 13px;
+    outline: none;
+    font-size: 16px;
+    background-color: #f1f1f1d3;
+    z-index: 100;
+  }
+
+  .send-button {
+    margin-left: 19px;
+    margin-bottom: 8px;
+    padding: 10px 20px;
+    background-color: #9781dc;
+    color: rgb(82, 72, 72); 
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    bottom: 3%;
+  }
+  
+  .send-button:hover {
+    background-color: #514474;
+  }

@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
   handle: String,
   bio: String,
   pronouns: String,
-  blocked: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Change to ObjectId array
+  blocked: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], 
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Followers' }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Following' }],
   posts: [{ 

@@ -5,6 +5,7 @@
   align-items: center;
   border-radius: 10px;
   margin-bottom: 6px; 
+  padding: 10px;
   box-shadow: 0px 0px 0px rgba(52, 33, 65, 0.471);
 }
 
@@ -24,8 +25,8 @@
     margin-top:3%;
   }
   
-  span.username {
-    font-size: 20px;
+  span.convo-username {
+    font-size: 25px;
   }
 
   .header h1 {

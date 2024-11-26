@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, {useEffect, useState } from "react";
+import axios from "axios";
 import "./sidebar.css"
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
@@ -12,10 +13,23 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
 //will connect to pages: Home, Profile, Messages, Notifications, Logout
-
 export default function Sidebar() {
     const[isOpen ,setIsOpen] = useState(true);
     const toggle = () => setIsOpen (!isOpen);
+    const uri = 'http://localhost:5050/api';
+    const [username, setUsername] = useState('');
+
+    useEffect(() => {
+        axios.get(`${uri}/users/findUser`, { withCredentials: true }) 
+          .then(response => {
+            setUsername(response.data.username); 
+            //console.log("loggininusername:",response.data.username);
+          })
+          .catch(error => {
+            console.error('Error fetching user:', error);
+          });
+      }, []); 
+
     const menuItem =[
         {
             path: "/home",
@@ -23,7 +37,7 @@ export default function Sidebar() {
             icon:<HomeOutlinedIcon/>
         },
         {
-            path: "/profile",
+            path: `/profile/${username}`,
             name: "Profile",
             icon:<AccountCircleOutlinedIcon/>
         },

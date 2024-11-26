@@ -1,13 +1,25 @@
 const express = require('express');
-const { createPost, deletePost, getPostLikes, getPostDislikes, addLike, addDislike, addComment, } = require('../controllers/postController');
+const { createPost, createRepost, getChildPost, getFeedPosts, deletePost, getPostComments, getPostLikes, getPostDislikes, addLike, addDislike, addComment, getPost } = require('../controllers/postController');
 
 const router = express.Router();
 
 // Route to create a post
 router.post('/createPost', createPost);
 
+// Route to create a repost
+router.post('/createRepost', createRepost);
+
+router.get('/getChildPost/:childPostId', getChildPost);
+
+router.get('/getFeedPosts/:loggedInUsername', getFeedPosts);
+
+
+
 // Route to delete a post
 router.delete('/deletePost/:postId', deletePost);
+
+// route to get comments for a post
+router.get('/getPostComments/:postId', getPostComments);
 
 // Route to get likes for a post
 router.get('/getPostLikes/:postId', getPostLikes);
@@ -15,13 +27,15 @@ router.get('/getPostLikes/:postId', getPostLikes);
 // Route to get dislikes for a post
 router.get('/getPostDislikes/:postId', getPostDislikes);
 
-// Route to get dislikes for a post
-router.get('/addLike/:postId', addLike);
+// Route to add likes for a post
+router.post('/addLike/:postId', addLike);
 
-// Route to get dislikes for a post
-router.get('/addDislike/:postId', addDislike);
+// Route to add dislikes for a post
+router.post('/addDislike/:postId', addDislike);
 
-// Route to get dislikes for a post
-router.get('/addComment/:postId', addComment);
+// Route to add comment for a post
+router.post('/addComment/:postId', addComment);
+
+router.get('/getPost/:postId', getPost);
 
 module.exports = router;

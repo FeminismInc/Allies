@@ -4,6 +4,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import { Button } from '@mui/material';
 import axios from "axios";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import { Settings } from 'react-native';
 
 const ProfileHeader = ({ username }) => {
     const [showWhiteBox, setShowWhiteBox] = useState(false);
@@ -60,7 +61,7 @@ const ProfileHeader = ({ username }) => {
         try {
             console.log(username);
             axios.get(`${uri}/users/following/${username}`).then(response => {
-                const usernames = response.data.accounts_followed.map(following => following.username);
+                const usernames = (response.data.accounts_followed || []).map(following.username);
                 setFollowingList(usernames);
                 console.log(response);
             });
@@ -87,10 +88,15 @@ const ProfileHeader = ({ username }) => {
                     <button className='following' onClick = {fetchMyFollowing}>
                         followers
                     </button>
-                    <button className="right-icon-button" onClick={handleIconButtonClick}>
-                        <div className="right-icon-wrapper">
+                    <button
+                        className='right-icon-button'
+                        onClick={handleIconButtonClick}
+                        aria-label='Settings'
+                    >
+                        <div className='right-icon-wrapper'>
                             <SettingsIcon className='right-icon' />
                         </div>
+                        
                     </button>
                 </div>
                 <button className='edit-bio-button' onClick={handleButtonClick}>

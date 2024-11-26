@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
-import IconButton from '@mui/material/IconButton';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import './profileheader.css';
 import CreatePostModal from '../../components/profile/CreatePostModal';
 
 
 const WithProfileEdit = (WrappedComponent) => {
     return function ProfileHeaderForCurrentUser(props) {
-        const { isCurrentUser } = props;
+        const { username,isCurrentUser } = props;
         const [bioText, setBioText] = useState("");
         const [showWhiteBox, setShowWhiteBox] = useState(false);
         const [showIconBox, setShowIconBox] = useState(false);
@@ -29,25 +27,33 @@ const WithProfileEdit = (WrappedComponent) => {
         }
         const handleSubmit = () => {
             console.log("submitted bio:", bioText); // im just logging the text rn im not sure what to do
+                                                    //TODO: create profile APIs for bio
             setShowWhiteBox(false);
         }
-
-
+        
+        if (!isCurrentUser) return null;
+        console.log("iscurrentuser:",isCurrentUser);
+        console.log("username :",username);
 
         return (
-            <div className="profile-header-container">
-                <div className='user-info-container'>
-                    <WrappedComponent {...props} />
+            <div className="currentuser-header-container">
                     {isCurrentUser && (
+                        <>
+                        <div className='header'>
+                        <WrappedComponent {...props} />
+                        <div className='currentuser-header-rightside'>
                         <button className="right-icon-button" onClick={handleIconButtonClick}>
                             <div className="right-icon-wrapper">
                                 <SettingsIcon className='right-icon' />
                             </div>
                         </button>
+                        </div>
+                        </div>
+                        </>
                     )}
-                </div>
+                
                 {isCurrentUser && (
-                    <div className='edit-bio-container'>
+                    <div className='currentuser-header-below'>
                         <button className='edit-bio-button' onClick={handleButtonClick}>
                             <h3>Edit Bio</h3>
                         </button>
@@ -58,6 +64,7 @@ const WithProfileEdit = (WrappedComponent) => {
                                 showModal={showModal}
                                 closeModal={closeModal}
                                 onPostCreated={() => console.log("Post created!")}
+                                username={username}
                             />
                       
                     </div>

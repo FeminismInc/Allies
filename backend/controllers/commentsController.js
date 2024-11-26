@@ -4,7 +4,7 @@ const DislikeModel = require('../models/Dislikes');
 // Add a reply to an existing comment
 exports.addComment = async (req, res) => {
     const { commentId } = req.params; 
-    const { author, text } = req.body; 
+    const { author, text, PostId } = req.body; 
 
     try {
 
@@ -16,10 +16,13 @@ exports.addComment = async (req, res) => {
         // Create a new reply as a comment
         const newReply = new CommentModel({
             author: author,
+            datetime: new Date(),
             text: text,
             likes: [], 
             dislikes: [], 
-            replies: [] 
+            replies: [], 
+            parentIsPost: true,
+            parentID: PostId,
         });
 
         // Save the reply to the database
@@ -55,32 +58,79 @@ exports.getComments = async (req, res) => {
     }
 };
 
-// Add a like to a comment
-exports.addLike = async (req, res) => {
-    const { commentId } = req.params; 
-    const { userId } = req.body; 
+// Get likes for a comment by ID
+exports.getCommentLikes = async (req, res) => {
+    const { commentId } = req.params;
+    try {
+        const comment = await CommentModel.findById(commentId);    
+        if (!comment) {
+            return res.status(404).json({ message: 'comment does not exist' });
+        }    
+        const entry = await LikeModel.findOne({ postId: commentId });   
+        //console.log("get comment likes: ", entry)
+        if (!entry) {
+            return res.status(200).json({ message: 'comment does not contain likes' });
+  
+        }
+        return res.status(200).json(entry);
+        // else {
+        //     console.log("comment likes ",entry);
+        //     res.status(200).json(entry);
+        // }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error fetching likes for comment' });
+    }
+};
+
+// Get dislikes for a comment by ID
+exports.getCommentDislikes = async (req, res) => {
+    const { commentId } = req.params;
 
     try {
-        // Check if the comment exists
+        // check if the comment even exists first 
+        const comment = await CommentModel.findById(commentId);    
+        //console.log("comment dislikes",comment);
+        if (!comment) {
+            return res.status(404).json({ message: 'comment does not exist' });
+        }    
+        const entry = await DislikeModel.findOne({ postId: commentId });  
+        //console.log("entry: ",entry)  ;
+        if (!entry) {
+            return res.status(200).json({ message: 'comment does not contain dislikes' });
+            
+        }
+        return res.status(200).json(entry);
+        
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error fetching dislikes for comment' });
+    }
+};
+
+exports.addLike = async (req, res) => {
+    const { commentId } = req.params;
+    const { username } = req.body; 
+
+    try {
         const comment = await CommentModel.findById(commentId);
         if (!comment) {
             return res.status(404).json({ message: 'Comment not found' });
         }
 
         // Check if the user already liked the comment
-        const likeEntry = await LikeModel.findOne({ comment: commentId });
-        if (likeEntry && likeEntry.accounts_that_liked.includes(userId)) {
-            return res.status(400).json({ message: 'You have already liked this comment' });
-        }
-
-        // Add userId to the likes
-        if (!likeEntry) {
-            await LikeModel.create({ comment: commentId, accounts_that_liked: [userId] });
+        const entry = await LikeModel.findOne({ postId: commentId });        
+        if (!entry) {
+            await LikeModel.create({ postId: commentId , accounts_that_liked: [username] });
         } else {
-            likeEntry.accounts_that_liked.push(userId);
-            await likeEntry.save();
+            if (entry.accounts_that_liked.includes(username)) {
+                entry.accounts_that_liked.splice(entry.accounts_that_liked.indexOf(username),1);
+            }
+            else {
+                entry.accounts_that_liked.push(username);
+            }
+            await entry.save();
         }
-
         res.status(200).json({ message: 'Comment liked successfully' });
     } catch (err) {
         console.error(err);
@@ -88,33 +138,33 @@ exports.addLike = async (req, res) => {
     }
 };
 
-// Add a dislike to a comment
+// Add a dislike to a Comment
 exports.addDislike = async (req, res) => {
-    const { commentId } = req.params; 
-    const { userId } = req.body; 
+    const { commentId } = req.params;
+    const { username } = req.body; 
 
     try {
-        // Check if the comment exists
+        
         const comment = await CommentModel.findById(commentId);
         if (!comment) {
             return res.status(404).json({ message: 'Comment not found' });
         }
 
         // Check if the user already disliked the comment
-        const dislikeEntry = await DislikeModel.findOne({ comment: commentId });
-        if (dislikeEntry && dislikeEntry.accounts_that_disliked.includes(userId)) {
-            return res.status(400).json({ message: 'You have already disliked this comment' });
-        }
-
-        // Add userId to the dislikes
-        if (!dislikeEntry) {
-            await DislikeModel.create({ comment: commentId, accounts_that_disliked: [userId] });
+        const entry = await DislikeModel.findOne({ postId: commentId });        
+        if (!entry) {
+            await DislikeModel.create({ postId: commentId, accounts_that_disliked: [username] });
         } else {
-            dislikeEntry.accounts_that_disliked.push(userId);
-            await dislikeEntry.save();
+            if (entry.accounts_that_disliked.includes(username)) {
+                entry.accounts_that_disliked.splice(entry.accounts_that_disliked.indexOf(username),1);
+            }
+            else {
+                entry.accounts_that_disliked.push(username);
+            }
+            await entry.save();
         }
 
-        res.status(200).json({ message: 'Comment disliked successfully' });
+        res.status(200).json({ message: 'comment disliked successfully' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error disliking comment' });

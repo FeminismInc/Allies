@@ -6,6 +6,7 @@ import ConversationTabs from './ConversationTabs';
 import CreateConversationModal from './CreateConversationModal';
 import './conversationList.css';
 
+
 const ConversationList = ({
     conversationIds,
     currentUsername,
@@ -44,11 +45,14 @@ const ConversationList = ({
                             key={conversation._id}
                             onClick={() => setCurrentConversation(conversation)}
                         >
+                            
                             <ConversationTabs
                                 conversation={conversation}
                                 currentUsername={currentUsername}
                                 isSelected={currentConversation?._id === conversation._id}
                             />
+                            
+
                         </div>
                     ))
                 ) : (<p>No recent messages</p>)}
