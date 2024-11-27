@@ -150,11 +150,11 @@ exports.createUser = async (req, res, next) => {
 // Get followers of a user
 exports.getFollowers = async (req, res, next) => {
   const { username } = req.params; 
-  console.log("username", username);
+  //console.log("username", username);
   try {
       const followers = await FollowersModel.findOne({ username }) // Wrap username in an object
           .populate('follower_accounts', 'username'); // Assuming follower_accounts is an array of ObjectIds
-          console.log("follower_accounts", followers );
+          //console.log("follower_accounts", followers );
       res.status(200).json(followers);
   } catch (err) {
       next(err);
@@ -168,7 +168,7 @@ exports.getFollowing = async (req, res, next) => {
   try {
       const following = await FollowingModel.findOne({ username }) // Wrap username in an object
           .populate('accounts_followed', 'username'); // Assuming accounts_followed is an array of ObjectIds
-          console.log("accounts_followed", following );
+          //console.log("accounts_followed", following );
           res.status(200).json(following);
   } catch (err) {
       next(err);
@@ -392,6 +392,42 @@ exports.getCurrentUserID = async(req, res, next) => {
       res.status(500).json({ message: 'Error getting current user ID' });
   }
 }
+
+exports.getBioByUsername  = async(req,res) => {
+  const {username} = req.params;
+  //console.log("getting bio  ");
+  try {
+    const user = await UserModel.findOne({ username });
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json(user.bio);
+  }catch (err) {
+    next(err);
+  }
+};
+
+exports.updateBioByUsername  = async(req,res) => {
+  const {username ,bioText} = req.body;
+  try {
+    const updatedBio = await UserModel.findOneAndUpdate(
+      { username }, 
+      { bio: bioText }, 
+      { new: true } 
+    );
+    //console.log(updatedBio);
+
+    if (!updatedBio) {
+      return res.status(404).json({ message: 'User not found or error updating bio' });
+    }
+
+    
+    res.status(200).json(updatedBio);
+  }catch (err) {
+    next(err);
+  }
+};
 
 exports.searchUsers = async (req, res) => {
   const { username } = req.body;

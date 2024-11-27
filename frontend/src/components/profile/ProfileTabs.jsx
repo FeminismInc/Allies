@@ -71,19 +71,7 @@ export default function ProfileTabs({ username }) {
 
           </div>
         );
-      case 'followers':
-        return (
-          <div>
-            <h3>Reposts</h3>
-            <ul>
-              {followers.map((follower, index) => (
-                <li key={index}>{follower}</li>
-              ))}
-            </ul>
-          </div>
-        );
-      default:
-        return null;
+     
     }
   };
 
@@ -103,14 +91,8 @@ export default function ProfileTabs({ username }) {
         >
           Media
         </button>
-        <button
-          className={activeTab === 'followers' ? 'active' : ''}
-          onClick={() => setActiveTab('followers')}
-        >
-          Reposts
-        </button>
+       
       </div>
-
       {/* Render the content based on the active tab */}
       <div className="tab-content">
         {renderTabContent()}

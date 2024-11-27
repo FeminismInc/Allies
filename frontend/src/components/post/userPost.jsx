@@ -24,6 +24,13 @@ export default function UserPost({ post, username }) {  // { post object, userna
 
 
 
+  useEffect(() => {
+    if (post) {
+      fetchLikesByPostID(post);
+      fetchDislikesByPostID(post);
+    }
+  }, [post])
+
   const handleLikeClick = () => {
     setShowLikeBox(!showLikeBox);
   };
@@ -59,8 +66,8 @@ export default function UserPost({ post, username }) {  // { post object, userna
   };
 
   useEffect(() => {
-    if (post.repost != null) {
-      //console.log("is a parent post");
+    if (post.repost !== null) {
+
       setIsAParent(true);
       fetchChildPostByRepostID(post);
     }
@@ -69,32 +76,35 @@ export default function UserPost({ post, username }) {  // { post object, userna
   const fetchLikesByPostID = async (post) => {
     try {
       const response = await axios.get(`${uri}/posts/getPostLikes/${post._id}`, {});
-      if (response.data.accounts_that_liked) {
-        console.log("response.data: ", response.data);
-        setLikes([...response.data]);
-      }
+      //console.log("response.data: ", response.data);
+      if (response.data)
+      setLikes([...response.data] );
+      
     } catch (error) {
       console.error('Error fetching posts:', error);
+      setLikes([]);
     }
   }
 
-  fetchLikesByPostID(post);
+  //fetchLikesByPostID(post);
   const fetchMyLikes = async () => {
     fetchLikesByPostID(post);
   }
 
   const fetchDislikesByPostID = async (post) => {
     try {
+      // either returns an empty array or accounts_that_disliked, otherwise error 
       const response = await axios.get(`${uri}/posts/getPostDislikes/${post._id}`, {});
-      if (response.data.accounts_that_disliked) {
+      if (response.data) {
         setDislikes([...response.data]);
       }
     } catch (error) {
       console.error('Error fetching posts:', error);
+      setDislikes([]);
     }
   }
 
-  fetchDislikesByPostID(post);
+  //fetchDislikesByPostID(post);
   const fetchMyDislikes = async () => {
     fetchDislikesByPostID(post);
   }

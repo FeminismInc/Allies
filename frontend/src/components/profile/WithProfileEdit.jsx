@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
 import './profileheader.css';
 import CreatePostModal from '../../components/profile/CreatePostModal';
-
+import axios from 'axios';
 
 const WithProfileEdit = (WrappedComponent) => {
     return function ProfileHeaderForCurrentUser(props) {
@@ -11,6 +11,7 @@ const WithProfileEdit = (WrappedComponent) => {
         const [showWhiteBox, setShowWhiteBox] = useState(false);
         const [showIconBox, setShowIconBox] = useState(false);
         const [showModal, setShowModal] = useState(false);
+        const uri = "http://localhost:5050/api";
 
         const openModal = () => setShowModal(true);
         const closeModal = () => setShowModal(false);
@@ -26,10 +27,19 @@ const WithProfileEdit = (WrappedComponent) => {
             setBioText(e.target.value);
         }
         const handleSubmit = () => {
-            console.log("submitted bio:", bioText); // im just logging the text rn im not sure what to do
-                                                    //TODO: create profile APIs for bio
-            setShowWhiteBox(false);
+            try {
+                axios.post(`${uri}/users/updateBio`,{username,bioText})
+                setShowWhiteBox(false);
+                console.log("submitted bio:", bioText);
+
+            } catch (error) {
+                console.error('Error fetching following:', error);
+            }
+
+           
+            
         }
+
         
         if (!isCurrentUser) return null;
         console.log("iscurrentuser:",isCurrentUser);
@@ -39,7 +49,7 @@ const WithProfileEdit = (WrappedComponent) => {
             <div className="currentuser-header-container">
                     {isCurrentUser && (
                         <>
-                        <div className='header'>
+                        <div className='currentuser-header-top'>
                         <WrappedComponent {...props} />
                         <div className='currentuser-header-rightside'>
                         <button className="right-icon-button" onClick={handleIconButtonClick}>
@@ -47,17 +57,10 @@ const WithProfileEdit = (WrappedComponent) => {
                                 <SettingsIcon className='right-icon' />
                             </div>
                         </button>
-                        </div>
-                        </div>
-                        </>
-                    )}
-                
-                {isCurrentUser && (
-                    <div className='currentuser-header-below'>
                         <button className='edit-bio-button' onClick={handleButtonClick}>
-                            <h3>Edit Bio</h3>
-                        </button>
-                            <button className='create-post-button' onClick={openModal} >
+                                    <h3>Edit Bio</h3>
+                         </button>
+                         <button className='create-post-button' onClick={openModal} >
                                 New Post
                             </button>
                             <CreatePostModal
@@ -66,6 +69,17 @@ const WithProfileEdit = (WrappedComponent) => {
                                 onPostCreated={() => console.log("Post created!")}
                                 username={username}
                             />
+                        </div>
+                        </div>
+                        </>
+                    )}
+                
+                {isCurrentUser && (
+                    <div className='currentuser-header-below'>
+                        {/* <button className='edit-bio-button' onClick={handleButtonClick}>
+                            <h3>Edit Bio</h3>
+                        </button> */}
+                            
                       
                     </div>
 

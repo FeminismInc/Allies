@@ -56,12 +56,7 @@ export default function Sidebar() {
             name: "Search",
             icon: <SearchIcon />
         },
-
-       {
-            path: "/notifications",
-            name: "Notifications",
-            icon:<NotificationsOutlinedIcon/>
-        },
+       
         {
             path: "/",
             name: "Logout",

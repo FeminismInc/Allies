@@ -1,7 +1,7 @@
 import axios from 'axios';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./commentComponent.css";
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+
 
 export default function CommentComponent({ comment, username }) {
   const uri = 'http://localhost:5050/api'

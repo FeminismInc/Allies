@@ -15,7 +15,9 @@ const {
     findUser,
     getConversationsByUsername,
     getCurrentUserID,
-    searchUsers
+    searchUsers,
+    getBioByUsername,
+    updateBioByUsername
  } = require('../controllers/userController');
 
 
@@ -39,6 +41,8 @@ router.get('/getConversations/:username',getConversationsByUsername );
 router.get('/getCurrentUserID',getCurrentUserID);
 
 router.post('/search', searchUsers);
+router.get('/getBio/:username',getBioByUsername);
+router.post('/updateBio',updateBioByUsername);
 
 module.exports = router;
 
