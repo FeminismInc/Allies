@@ -4,6 +4,7 @@ const DislikeModel = require('../models/Dislikes');
 const CommentModel = require('../models/Comments');
 const UserModel = require('../models/Users');
 const FollowingModel = require('../models/Following');
+const MediaModel = require('../models/Media');
 // Create a new post
 exports.createPost = async (req, res) => {
     const { text, media, hashtags } = req.body;
@@ -348,3 +349,38 @@ exports.getPost = async(req, res, next) => {
         next(err);
     }
 }
+
+exports.uploadMedia = async (req, res) => {
+    // Handle image upload, e.g., using AWS SDK
+    const { url } = req.body;// Assuming this contains media info from the frontend
+    try {
+        const newMedia = new MediaModel({
+            url: url,
+            tagged_accounts: [], // Set tagged_accounts to an empty array
+        });
+      await newMedia.save();
+      res.status(201).json(newMedia);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error uploading media' });
+    }
+  };
+
+  exports.getPostWithMedia = async (req, res) => {
+    try {
+        // Fetch the post by its ID
+        const post = await PostModel.findById(req.params.mediaId).populate('media'); // Populate media field with the media details
+
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+        const mediaUrls = post.media.map(media => media.url); // Extract URLs from the populated media objects
+
+        console.log(mediaUrls);
+        // Send the post along with the media object
+        res.status(200).json(mediaUrls);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error fetching post with media' });
+    }
+};

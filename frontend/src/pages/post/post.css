@@ -2,7 +2,13 @@
     height: 100px;
     font-size: 20pt;
 }
-
+.postMainContent {
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    padding-left: 400px; /*dont judge*/
+    padding-right: 400px; 
+}
 .postContainer{
     display: flex;
     flex-direction: column;
@@ -11,7 +17,6 @@
     flex-grow: 1;
     min-height: 100vh;
 }
-
 .postMainContent{
     display: flex;
     flex-direction: row;
