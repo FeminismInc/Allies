@@ -10,6 +10,9 @@
     "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
     "vitest": "^2.1.5"
   },
   "scripts": {

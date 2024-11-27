@@ -65,12 +65,14 @@ export default function UserPost({ post, username }) {  // { post object, userna
   const fetchLikesByPostID = async (post) => {
     try {
       const response = await axios.get(`${uri}/posts/getPostLikes/${post._id}`, {});
-      if (response.data.accounts_that_liked) {
-        console.log("response.data: ", response.data);
-        setLikes([...response.data]);
-      }
+      // if (response.data.accounts_that_liked) {
+      //   console.log("response.data: ", response.data);
+      //   setLikes([...response.data]);
+      // }
+      setLikes(response.data || []);
     } catch (error) {
       console.error('Error fetching posts:', error);
+      setLikes([]);
     }
   }
 
@@ -82,11 +84,12 @@ export default function UserPost({ post, username }) {  // { post object, userna
   const fetchDislikesByPostID = async (post) => {
     try {
       const response = await axios.get(`${uri}/posts/getPostDislikes/${post._id}`, {});
-      if (response.data.accounts_that_disliked) {
-        setDislikes([...response.data]);
-      }
+      //if (response.data.accounts_that_disliked) {
+        setDislikes([...response.data]||[]);
+      //}
     } catch (error) {
       console.error('Error fetching posts:', error);
+      setDislikes([]);
     }
   }
 

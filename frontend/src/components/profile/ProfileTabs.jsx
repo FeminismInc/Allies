@@ -17,9 +17,10 @@ export default function ProfileTabs({ username }) {
       console.log(username);
       const response = await axios.get(`${uri}/users/getPosts/${username}`, {
       });
-      setPosts(response.data);
+      setPosts(response.data|| []);
     } catch (error) {
       console.error('Error fetching posts:', error);
+      setPosts([]); // Ensure state is updated to prevent issues
     }
   }
 
@@ -66,7 +67,7 @@ export default function ProfileTabs({ username }) {
             <div className='media-container'>
               <div className="username-box">Lex_the_cat</div>
               <div><p> </p></div>
-              <img src={require('./IMG_4628.jpg')} width={350} height={350} />
+              <img src={'/placeholder.jpg'} width={350} height={350} />
             </div>
 
           </div>
