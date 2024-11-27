@@ -36,8 +36,7 @@ const WithProfileEdit = (WrappedComponent) => {
                 console.error('Error fetching following:', error);
             }
 
-             // im just logging the text rn im not sure what to do
-                                                    //TODO: create profile APIs for bio
+           
             
         }
 

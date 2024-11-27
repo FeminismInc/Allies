@@ -47,7 +47,6 @@ exports.deletePost = async (req, res) => {
         if (!post) {
             return res.status(404).json({ message: 'Post not found' });
         }
-
         
         if (post.author !== username) {
             return res.status(403).json({ message: 'You are not authorized to delete this post' });
@@ -61,11 +60,11 @@ exports.deletePost = async (req, res) => {
         res.status(500).json({ message: 'Error deleting post' });
     }
 };
-
+ 
 // Get likes for a post by ID
 exports.getPostLikes = async (req, res) => {
     const { postId } = req.params;
-    
+    //console.log("GetPostsLikes - PostId:",postId)
     try { 
         const post = await PostModel.findById(postId);
         if (!post) {
@@ -73,12 +72,13 @@ exports.getPostLikes = async (req, res) => {
         }
         // ensure post even exists here
         const entry = await LikeModel.findOne({ postId }); 
-        // console.log("entry:  ",entry);   
         if (!entry) {
-            //console.log("!entry:  ",entry);  
-            return res.status(200).json({ message: 'Post does not contain likes' });
+            
+            //console.log(postId," has not been found in LikeModel, therefore this post has no likes  "); 
+            return res.status(200).json([]);
         } else {
-            //console.log("else entry:  ",entry);  
+            //console.log(postId," has been found in LikeModel,\nReturning entry.accounts_that_liked: ", entry.accounts_that_liked); 
+
             res.status(200).json(entry.accounts_that_liked);
         }
     } catch (err) {
@@ -90,20 +90,22 @@ exports.getPostLikes = async (req, res) => {
 // Get dislikes for a post by ID
 exports.getPostDislikes = async (req, res) => {
     const { postId } = req.params;
-
+    //console.log("GetPostsDislikes - PostId:",postId)
     try {
         const post = await PostModel.findById(postId);
+        //console.log("post: ",post)
         if (!post) {
             return res.status(404).json({ message: 'Post not found' });
-            
         }
         const entry = await DislikeModel.findOne({ postId });        
         if (!entry) { 
-            //console.log("post does not contain dislikes-entry:  ",entry);  
-            return res.status(200).json({ message: 'Post does not contain dislikes' });
+            //console.log(postId," has not been found in DislikeModel  ");  
+            return res.status(200).json([]);
         }
-        //console.log(" post contains dislikes:  ",entry);  
+        //console.log(postId," has been found in DislikeModel,\nReturning entry.accounts_that_disliked: ", entry.accounts_that_disliked); 
+        //console.log(" has been found in DislikeModel  ",entry);  
         res.status(200).json(entry.accounts_that_disliked);
+
         
     } catch (err) {
         console.error(err);
@@ -145,6 +147,7 @@ exports.addLike = async (req, res) => {
 exports.addDislike = async (req, res) => {
     const { postId } = req.params;
     const { username } = req.body; 
+    console.log("adding dislike from: ",username);
 
     try {
         
@@ -226,6 +229,7 @@ exports.getPostComments = async (req, res, next) => {
         
         //console.log(post);
         console.log(post.comments);
+
         res.status(200).json(post.comments);
     } catch (err) {
         next(err);
@@ -298,7 +302,7 @@ exports.getFeedPosts = async (req, res) => {
     
     try {
         
-        console.log("feed user ",loggedInUsername);
+        //console.log("feed user ",loggedInUsername);
         // currently logged-in user's own posts
         const loggedInUser = await UserModel.findOne({ username: loggedInUsername }).select('posts');
         if (!loggedInUser) {
@@ -323,7 +327,7 @@ exports.getFeedPosts = async (req, res) => {
 
         res.status(200).json(posts);
     } catch (error) {
-        console.error('Error fetching feed posts:', error);
+        //console.error('Error fetching feed posts:', error);
         res.status(500).json({ message: 'Error fetching feed posts' });
     }
 };

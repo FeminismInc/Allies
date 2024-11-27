@@ -44,9 +44,11 @@ exports.getComments = async (req, res) => {
     const { commentId } = req.params; 
 
     try {
-        
         const comment = await CommentModel.findById(commentId).populate('replies'); 
+        console.log("getComments - CommentModel.findById(commentId).populate('replies'); ", comment)
         if (!comment) {
+            console.log("!comment");
+
             return res.status(404).json({ message: 'Comment not found' });
         }
 
