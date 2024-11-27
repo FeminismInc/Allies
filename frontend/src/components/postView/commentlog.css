@@ -1,11 +1,11 @@
-.comment-container  {
+.comments-container  {
     display: flex;
     flex-direction: column;
     gap: 20px;  /* Adds spacing between posts */
     margin-top: 10px;
   }
 
-.commentlog-container {
+.commentslog-container {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -13,7 +13,10 @@
     overflow-y: auto;
     overflow-x: hidden;
     height: 100%; 
-    align-items: center;
+    margin-left: 5px;
+    /* align-items: center; */
+    
+    /* align-content: flex-start; */
 
 
     
