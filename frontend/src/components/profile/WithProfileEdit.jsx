@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
 import './profileheader.css';
 import CreatePostModal from '../../components/profile/CreatePostModal';
 import { Switch } from '@mui/material';
-import axios from 'axios';
-
 import axios from 'axios';
 
 const WithProfileEdit = (WrappedComponent) => {
@@ -21,6 +20,22 @@ const WithProfileEdit = (WrappedComponent) => {
 
         const openModal = () => setShowModal(true);
         const closeModal = () => setShowModal(false);
+
+        useEffect(() => {
+            const fetchPrivacyStatus = async () => {
+                try {
+                    const response = await axios.get(`${uri}/users/getPrivacyStatus`);
+                    setChecked(response.data.public_boolean); // Set the state to the fetched public_boolean
+                } catch (error) {
+                    console.error("Error fetching privacy status:", error);
+                }
+            };
+
+            if (isCurrentUser) {
+                fetchPrivacyStatus(); // Fetch only if it's the current user
+            }
+        }, [isCurrentUser]);
+
 
         useEffect(() => {
             const fetchPrivacyStatus = async () => {
@@ -58,9 +73,6 @@ const WithProfileEdit = (WrappedComponent) => {
             } catch (error) {
                 console.error('Error fetching following:', error);
             }
-
-           
-            
         }
         
         const handleChange = async (event) => {
@@ -75,10 +87,7 @@ const WithProfileEdit = (WrappedComponent) => {
                 console.error("Error updating privacy status:", error);
             }
         };
-
-
-
-        
+         
         if (!isCurrentUser) return null;
         console.log("iscurrentuser:",isCurrentUser);
         console.log("username :",username);
@@ -137,6 +146,17 @@ const WithProfileEdit = (WrappedComponent) => {
                 </div>
                 <div className={`white-rounded-box ${showIconBox ? 'show' : ''}`}>
                     <h3>Settings</h3>
+                    <div className="switch-container">
+                        <label className="switch-label">
+                            Private Account?
+                        </label>
+                        <Switch
+                            id="settings-switch"
+                            checked={checked}
+                            onChange={handleChange}
+                            inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                    </div>
                     <div className="switch-container">
                         <label className="switch-label">
                             Private Account?
