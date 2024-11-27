@@ -9,6 +9,7 @@ const SearchResults = ({ username, handle, isFollowing: initialIsFollowing, isRe
 
     const [isFollowing, setIsFollowing] = useState(initialIsFollowing); 
     const [isRequested, setIsRequested] = useState(initialIsRequested);
+    const [profileImage, setProfileImage] = useState(null);
     const [publicBoolean, setPublicBoolean] = useState(null);// Track follow status
     const uri = "http://localhost:5050/api"; 
     // Base URI for your API
@@ -16,13 +17,14 @@ const SearchResults = ({ username, handle, isFollowing: initialIsFollowing, isRe
         // Fetch the public_boolean when the component is mounted
         const fetchPrivacyStatus = async () => {
             try {
-                const response = await axios.get(`${uri}/users/getPrivacyStatus`, { params: { username } });
+                const response = await axios.get(`${uri}/users/getPrivacyStatus/${username}`);
                 setPublicBoolean(response.data.public_boolean); // Set public_boolean
             } catch (error) {
                 console.error("Error fetching privacy status:", error);
             }
         };
         console.log(initialIsRequested);
+        fetchProfilePicture();
         fetchPrivacyStatus();
         setIsFollowing(initialIsFollowing);
         setIsRequested(initialIsRequested);
@@ -67,12 +69,25 @@ const SearchResults = ({ username, handle, isFollowing: initialIsFollowing, isRe
         }
     };
 
+    const fetchProfilePicture = async () => {
+        try {
+            const response = await axios.get(`${uri}/users/getProfilePicture/${username}`); // Adjust the endpoint as necessary
+            setProfileImage(response.data.profilePicture); // Update state with the retrieved profile picture
+        } catch (error) {
+            console.error('Error fetching profile picture:', error);
+        }
+    };
+
 
     return(
         <div className='result-container'>
             <div className='user-info'>
                 <div className='profile-pic'>
-                     <AccountCircleOutlinedIcon style={{ fontSize: '60px' }}/> 
+                     {profileImage ? (
+                            <img src={profileImage} alt="Profile" className="profile-picture2" />
+                        ) : (
+                            <AccountCircleOutlinedIcon style={{ fontSize: '60px' }} />
+                        )}
                 </div>
                 <div className='username'>
                 <Link to={`/profile/${username}`} className="username-link">

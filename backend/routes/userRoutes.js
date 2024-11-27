@@ -25,19 +25,19 @@ const {
     followRequests,
     saveRequestFollowing,
     removeRequestFollowing,
-    updatePrivacyStatus,
-    getPrivacyStatus,
-    requestFollowing,
-    acceptFollowing,
-    followRequests,
-    saveRequestFollowing,
-    removeRequestFollowing
+    updateProfilePicture,
+    getProfilePicture,
+    getProfilePictureByUsername,
+    getPrivacyStatusByUsername,
+    getRequested,
+    findUserById
  } = require('../controllers/userController');
 
 
 const router = express.Router();
 
 router.get('/findUser', findUser); // Route to get all users
+router.get('/findUserById/:userid',findUserById);
 router.post('/findUserbyEmail', findUserByEmail); // Route to find a user by email
 router.post('/form', createUser); // Route to create a new user
 router.get('/followers/:username', getFollowers); // Fetch followers of a user
@@ -59,22 +59,19 @@ router.get('/getBio/:username',getBioByUsername);
 router.post('/updateBio',updateBioByUsername);
 
 router.patch('/updatePrivacyStatus', updatePrivacyStatus);
+router.get('/getPrivacyStatus/:username', getPrivacyStatusByUsername);
 router.get('/getPrivacyStatus', getPrivacyStatus);
 
 router.post('/sendFollowRequest', requestFollowing);
 router.post('/saveFollowRequest',saveRequestFollowing);
 router.post('/acceptFollowRequest', acceptFollowing);
 router.post('/removeFollowRequest', removeRequestFollowing);
-router.get('/followRequests/:username', followRequests);
+router.get('/followRequests/:username', followRequests); //sent ones
+router.get('/getFollowRequests', getRequested);
 
-router.patch('/updatePrivacyStatus', updatePrivacyStatus);
-router.get('/getPrivacyStatus', getPrivacyStatus);
-
-router.post('/sendFollowRequest', requestFollowing);
-router.post('/saveFollowRequest',saveRequestFollowing);
-router.post('/acceptFollowRequest', acceptFollowing);
-router.post('/removeFollowRequest', removeRequestFollowing);
-router.get('/followRequests/:username', followRequests);
+router.post('/updateProfilePicture', updateProfilePicture);
+router.get('/getProfilePicture', getProfilePicture);
+router.get('/getProfilePicture/:username', getProfilePictureByUsername);
 
 module.exports = router;
 

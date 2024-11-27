@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import React, { useEffect, useState } from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import './profileheader.css';
 import CreatePostModal from '../../components/profile/CreatePostModal';
 import { Switch } from '@mui/material';
 import axios from 'axios';
+import RequestCard from '../follow/requestComp';
 
 const WithProfileEdit = (WrappedComponent) => {
     return function ProfileHeaderForCurrentUser(props) {
@@ -12,9 +13,11 @@ const WithProfileEdit = (WrappedComponent) => {
         const uri = 'http://localhost:5050/api'
 
         const { username,isCurrentUser } = props;
+        const [requested, setRequestedList] = useState([]);
         const [bioText, setBioText] = useState("");
         const [showWhiteBox, setShowWhiteBox] = useState(false);
         const [showIconBox, setShowIconBox] = useState(false);
+        const [showNotificationsBox, setShowNotificationsBox] = useState(false);
         const [showModal, setShowModal] = useState(false);
         const [checked, setChecked] = useState(true);
 
@@ -36,21 +39,21 @@ const WithProfileEdit = (WrappedComponent) => {
             }
         }, [isCurrentUser]);
 
-
         useEffect(() => {
-            const fetchPrivacyStatus = async () => {
+            const fetchRequestedAccounts = async () => {
                 try {
-                    const response = await axios.get(`${uri}/users/getPrivacyStatus`);
-                    setChecked(response.data.public_boolean); // Set the state to the fetched public_boolean
+                    const response = await axios.get(`${uri}/users/getFollowRequests`);
+                    console.log(response.data.requested)
+                    if (response.data.requested) {
+                        setRequestedList(response.data.requested); // Set the requested accounts
+                    }
                 } catch (error) {
-                    console.error("Error fetching privacy status:", error);
+                    console.error('Error fetching requested accounts:', error);
                 }
             };
-
-            if (isCurrentUser) {
-                fetchPrivacyStatus(); // Fetch only if it's the current user
-            }
-        }, [isCurrentUser]);
+    
+            fetchRequestedAccounts();
+        }, [username]);
 
         const handleButtonClick = () => {
             setShowWhiteBox(!showWhiteBox);
@@ -60,6 +63,10 @@ const WithProfileEdit = (WrappedComponent) => {
             setShowIconBox(!showIconBox);
             
         }
+
+        const handleNotificationsButtonClick = () => {
+            setShowNotificationsBox(!showNotificationsBox); // Toggle Notifications Box
+        };
 
         const handleTextChange = (e) => {
             setBioText(e.target.value);
@@ -99,6 +106,11 @@ const WithProfileEdit = (WrappedComponent) => {
                         <div className='currentuser-header-top'>
                         <WrappedComponent {...props} />
                         <div className='currentuser-header-rightside'>
+                        <button className="right-icon-button" onClick={handleNotificationsButtonClick}>
+                            <div className="right-icon-wrapper">
+                                <NotificationsIcon className="right-icon" />
+                            </div>
+                        </button>
                         <button className="right-icon-button" onClick={handleIconButtonClick}>
                             <div className="right-icon-wrapper">
                                 <SettingsIcon className='right-icon' />
@@ -148,18 +160,7 @@ const WithProfileEdit = (WrappedComponent) => {
                     <h3>Settings</h3>
                     <div className="switch-container">
                         <label className="switch-label">
-                            Private Account?
-                        </label>
-                        <Switch
-                            id="settings-switch"
-                            checked={checked}
-                            onChange={handleChange}
-                            inputProps={{ 'aria-label': 'controlled' }}
-                        />
-                    </div>
-                    <div className="switch-container">
-                        <label className="switch-label">
-                            Private Account?
+                            Public Account?
                         </label>
                         <Switch
                             id="settings-switch"
@@ -169,6 +170,27 @@ const WithProfileEdit = (WrappedComponent) => {
                         />
                     </div>
                     <button className='submit-button' onClick={() => setShowIconBox(false)}>Close</button>
+                </div>
+                <div className={`white-rounded-box ${showNotificationsBox ? 'show' : ''}`}>
+                    <h3>Notifications</h3>
+                    <div className="switch-container">
+                        <h3>Requested People</h3>
+                        <div className="following-container">
+                            {requested.length > 0 ? (
+                                requested.map((request, index) => {
+                                    console.log("Request:", request); // Log each individual request
+                                    return (
+                                        <div key={index} className="following">
+                                            <RequestCard userID={request} />
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <p>No requests found</p>
+                            )}
+                        </div>
+                    </div>
+                    <button className="submit-button" onClick={() => setShowNotificationsBox(false)}>Close</button>
                 </div>
             </div>
         );

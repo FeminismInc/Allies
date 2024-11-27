@@ -12,7 +12,8 @@ const PostSchema = new mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId
   }],
   media: [{
-    type: mongoose.SchemaTypes.ObjectId
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'media',
   }],
   likes: [{
     type: mongoose.SchemaTypes.ObjectId
