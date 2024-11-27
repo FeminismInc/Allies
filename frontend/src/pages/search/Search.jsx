@@ -16,17 +16,25 @@ export default function SearchPage() {
         if (query) {
             try {
                 const current_username = await axios.get(`${uri}/users/findUser`)
-                console.log(current_username.data.username)
                 const searchResponse = await axios.post(`${uri}/users/search`, { username: query });
                 const searchResults = searchResponse.data;
                 const followResponse = await axios.get(`${uri}/users/followers/${current_username.data.username}`);
-                console.log(followResponse.data.follower_accounts)
+                console.log(followResponse);
+                console.log(followResponse.data);
+                const followRequestResponse = await axios.get(`${uri}/users/followRequests/${current_username.data.username}`);
                 const updatedResults = await Promise.all(
                     searchResults.map(async user => {
-                        const isFollowing = followResponse.data.follower_accounts.some(follower =>
-                            follower._id === user._id
-                        );
-                        return { ...user, isFollowing };
+                        const isFollowing = followResponse.data.follower_accounts.some(follower =>{
+                            console.log(`Comparing requested ID: ${follower._id} with user ID: ${user._id}`);
+                            return follower._id === user._id;
+                        });
+                        console.log(followRequestResponse.data.requested_accounts);
+                        const isRequested = followRequestResponse.data.requested_accounts.some(requested => {
+                            console.log(`Comparing requested ID: ${requested} with user ID: ${user._id}`);
+                            return requested === user._id;
+                        });
+                        console.log(isRequested);
+                        return { ...user, isFollowing, isRequested };
                     })
                 );
                 console.log(updatedResults);
@@ -47,7 +55,7 @@ export default function SearchPage() {
                     <SearchBar setSearchQuery={setSearchQuery} fetchResults={fetchResults} />
                     <div className='landing'>
                         {results.map((result, index) => (
-                            <SearchResults key={index} username={result.username} handle={result.handle} isFollowing={result.isFollowing} />
+                            <SearchResults key={index} username={result.username} handle={result.handle} isFollowing={result.isFollowing} isRequested={result.isRequested}/>
                         ))}
                     </div>
                 </div>

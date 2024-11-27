@@ -15,7 +15,14 @@ const {
     findUser,
     getConversationsByUsername,
     getCurrentUserID,
-    searchUsers
+    searchUsers,
+    updatePrivacyStatus,
+    getPrivacyStatus,
+    requestFollowing,
+    acceptFollowing,
+    followRequests,
+    saveRequestFollowing,
+    removeRequestFollowing
  } = require('../controllers/userController');
 
 
@@ -39,6 +46,15 @@ router.get('/getConversations/:username',getConversationsByUsername );
 router.get('/getCurrentUserID',getCurrentUserID);
 
 router.post('/search', searchUsers);
+
+router.patch('/updatePrivacyStatus', updatePrivacyStatus);
+router.get('/getPrivacyStatus', getPrivacyStatus);
+
+router.post('/sendFollowRequest', requestFollowing);
+router.post('/saveFollowRequest',saveRequestFollowing);
+router.post('/acceptFollowRequest', acceptFollowing);
+router.post('/removeFollowRequest', removeRequestFollowing);
+router.get('/followRequests/:username', followRequests);
 
 module.exports = router;
 

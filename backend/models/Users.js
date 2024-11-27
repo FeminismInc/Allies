@@ -15,6 +15,8 @@ const UserSchema = new mongoose.Schema({
   blocked: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], 
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Followers' }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Following' }],
+  followRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  followRequestsSent: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   posts: [{ 
     type: mongoose.Schema.Types.ObjectId,
  }],
