@@ -17,7 +17,14 @@ const {
     getCurrentUserID,
     searchUsers,
     getBioByUsername,
-    updateBioByUsername
+    updateBioByUsername,
+    updatePrivacyStatus,
+    getPrivacyStatus,
+    requestFollowing,
+    acceptFollowing,
+    followRequests,
+    saveRequestFollowing,
+    removeRequestFollowing
  } = require('../controllers/userController');
 
 
@@ -43,6 +50,15 @@ router.get('/getCurrentUserID',getCurrentUserID);
 router.post('/search', searchUsers);
 router.get('/getBio/:username',getBioByUsername);
 router.post('/updateBio',updateBioByUsername);
+
+router.patch('/updatePrivacyStatus', updatePrivacyStatus);
+router.get('/getPrivacyStatus', getPrivacyStatus);
+
+router.post('/sendFollowRequest', requestFollowing);
+router.post('/saveFollowRequest',saveRequestFollowing);
+router.post('/acceptFollowRequest', acceptFollowing);
+router.post('/removeFollowRequest', removeRequestFollowing);
+router.get('/followRequests/:username', followRequests);
 
 module.exports = router;
 

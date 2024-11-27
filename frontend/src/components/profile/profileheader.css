@@ -202,6 +202,21 @@ body, html {
     border-color: #eaddff;
 }
 
+.switch-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px; /* Space between items */
+    margin-bottom: 16px; /* Space below the switch container */
+}
+
+.switch-label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 8px; /* Space between label and switch */
+    color: #333;
+}
+
 .submit-button {
     background-color: #eaddff;
     color: white;

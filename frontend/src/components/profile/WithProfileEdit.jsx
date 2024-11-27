@@ -1,20 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
 import './profileheader.css';
 import CreatePostModal from '../../components/profile/CreatePostModal';
+import { Switch } from '@mui/material';
+import axios from 'axios';
+
 import axios from 'axios';
 
 const WithProfileEdit = (WrappedComponent) => {
     return function ProfileHeaderForCurrentUser(props) {
+
+        const uri = 'http://localhost:5050/api'
+
         const { username,isCurrentUser } = props;
         const [bioText, setBioText] = useState("");
         const [showWhiteBox, setShowWhiteBox] = useState(false);
         const [showIconBox, setShowIconBox] = useState(false);
         const [showModal, setShowModal] = useState(false);
-        const uri = "http://localhost:5050/api";
+        const [checked, setChecked] = useState(true);
 
         const openModal = () => setShowModal(true);
         const closeModal = () => setShowModal(false);
+
+        useEffect(() => {
+            const fetchPrivacyStatus = async () => {
+                try {
+                    const response = await axios.get(`${uri}/users/getPrivacyStatus`);
+                    setChecked(response.data.public_boolean); // Set the state to the fetched public_boolean
+                } catch (error) {
+                    console.error("Error fetching privacy status:", error);
+                }
+            };
+
+            if (isCurrentUser) {
+                fetchPrivacyStatus(); // Fetch only if it's the current user
+            }
+        }, [isCurrentUser]);
+
         const handleButtonClick = () => {
             setShowWhiteBox(!showWhiteBox);
         };
@@ -40,6 +62,21 @@ const WithProfileEdit = (WrappedComponent) => {
            
             
         }
+        
+        const handleChange = async (event) => {
+            const newChecked = event.target.checked;
+            setChecked(newChecked);
+        
+            try {
+                // Update the privacy status by calling the API (no need to send public_boolean)
+                const response = await axios.patch(`${uri}/users/updatePrivacyStatus`);
+                console.log("Privacy status updated:", response.data);
+            } catch (error) {
+                console.error("Error updating privacy status:", error);
+            }
+        };
+
+
 
         
         if (!isCurrentUser) return null;
@@ -100,7 +137,17 @@ const WithProfileEdit = (WrappedComponent) => {
                 </div>
                 <div className={`white-rounded-box ${showIconBox ? 'show' : ''}`}>
                     <h3>Settings</h3>
-                    <p>blocked accounts, private or public, ...</p>
+                    <div className="switch-container">
+                        <label className="switch-label">
+                            Private Account?
+                        </label>
+                        <Switch
+                            id="settings-switch"
+                            checked={checked}
+                            onChange={handleChange}
+                            inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                    </div>
                     <button className='submit-button' onClick={() => setShowIconBox(false)}>Close</button>
                 </div>
             </div>

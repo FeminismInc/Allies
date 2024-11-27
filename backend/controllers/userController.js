@@ -138,6 +138,7 @@ exports.createUser = async (req, res, next) => {
       blocked: newBlocked._id,
       followers: newFollowers._id,
       following: newFollowing._id,
+      followRequests: [],
     });
 
     await newUser.save();
@@ -233,7 +234,7 @@ exports.removeFollowing = async (req, res, next) => {
 
       // if we're unfollowing someone, we update THEIR follower list and remove ourselves from it 
       const updateFollowers = await FollowersModel.findOneAndUpdate(
-        { username: userToUnfollow },
+        { username: userToUnfollow.username },
         { $pull: { follower_accounts: req.session.user_id } }, // Remove the user's ID
         { new: true } // To return the updated document
       );
@@ -250,6 +251,121 @@ exports.removeFollowing = async (req, res, next) => {
       res.status(200).json({ message: "Successfully unfollowed", username: req.session.username });
   } catch (err) {
       next(err);
+  }
+};
+
+exports.requestFollowing = async (req, res) => {
+  try {
+    const { username } = req.body; // Assuming followerId is the user sending the request and followedId is the user being followed
+    
+    const requestingFollowedUser = await UserModel.findOne({ username: username });
+    if (!requestingFollowedUser) {
+      return res.status(404).json({ message: 'User to follow not found' });
+    }
+
+    // Check if the user has already sent a follow request
+    if (requestingFollowedUser.followRequests.includes(req.session.user_id)) {
+      return res.status(400).json({ message: 'Follow request already sent' });
+    }
+
+    // Add the follower to the followRequests array
+    requestingFollowedUser.followRequests.push(req.session.user_id);
+    await requestingFollowedUser.save();
+
+    res.status(200).json({ message: 'Follow request sent successfully' });
+  } catch (error) {
+    console.error('Error sending follow request:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.saveRequestFollowing = async (req, res) => {
+  try {
+    const { username } = req.body; 
+
+    const user = await UserModel.findOne({ username: req.session.username });
+    const requestingFollowedUser = await UserModel.findOne({ username: username });
+
+    // Check if the user has already sent a follow request
+    if (user.followRequestsSent.includes(requestingFollowedUser._id)) {
+      return res.status(400).json({ message: 'Follow request already sent' });
+    }
+
+    // Add the follower to the followRequests array
+    user.followRequestsSent.push(requestingFollowedUser._id);
+    await user.save();
+
+    res.status(200).json({ message: 'Follow save request sent successfully' });
+  } catch (error) {
+    console.error('Error sending follow request:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.acceptFollowing = async (req, res) => {
+  try {
+    const { followId } = req.body; 
+    
+    const followUser = await UserModel.findById(followId);
+
+    const updateFollowers = await FollowersModel.findOneAndUpdate(
+      { username: followUser.username },
+      { $addToSet: { follower_accounts: req.session.user_id } },
+      { new: true } // To return the updated document
+    );
+    
+    const updateFollowing = await FollowingModel.findOneAndUpdate(
+      { username: req.session.username },
+      { $addToSet: { accounts_followed: followUser._id } },
+      { new: true }
+    );
+
+    followUser.followRequests.pull(followId);
+
+    res.status(200).json({ message: 'Follow accept successfully' });
+  } catch (error) {
+    console.error('Error sending follow request:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.removeRequestFollowing = async (req, res) => {
+  try {
+    const { username } = req.body; 
+
+    const user = await UserModel.findOne({ username: req.session.username });
+    const requestingFollowedUser = await UserModel.findOne({ username: username });
+    console.log(requestingFollowedUser._id);
+    console.log(req.session.user_id);
+    console.log(user._id);
+    user.followRequestsSent.pull(requestingFollowedUser._id);
+    requestingFollowedUser.followRequests.pull(req.session.user_id);
+    await user.save();
+    await requestingFollowedUser.save();
+
+    res.status(200).json({ message: 'Follow removed successfully' });
+  } catch (error) {
+    console.error('Error sending follow removal:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.followRequests = async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    // Find the user and only select the followRequests field (which will contain ObjectIds)
+    const user = await UserModel.findOne({ username }).select('followRequestsSent');
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Return the followRequests as an array of ObjectIds
+    res.json({ requested_accounts: user.followRequestsSent });
+  } catch (error) {
+    console.error("Error fetching follow requests:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -438,3 +554,54 @@ exports.searchUsers = async (req, res) => {
     res.status(500).send('Error searching users');
   }
 }
+
+exports.updatePrivacyStatus = async (req, res, next) => {
+
+  try {
+    // Find the user and update their public_boolean field
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { username: req.session.username }, // Find the user by username
+      [
+        { 
+          $set: { 
+            public_boolean: { $not: "$public_boolean" } // Invert the boolean
+          } 
+        }
+      ],
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "Privacy status updated successfully",
+      user: updatedUser,
+    });
+  } catch (err) {
+    next(err); // Pass the error to the error-handling middleware
+  }
+};
+
+exports.getPrivacyStatus = async (req, res, next) => {
+
+  try {
+    // Assuming the user is authenticated and their username is in the session
+    const username = req.session.username; // Get the username from the session or JWT
+  
+    // Find the user by their username
+    const user = await UserModel.findOne({ username });
+  
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+  
+    // Send the public_boolean status to the frontend
+    res.status(200).json({ public_boolean: user.public_boolean });
+  } catch (error) {
+    console.error("Error fetching privacy status:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+
+};
