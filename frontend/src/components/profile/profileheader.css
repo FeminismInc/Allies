@@ -82,6 +82,21 @@
     background-color: #eeebf1;
     margin-top: 15px;
 }
+button {
+    background: #5a3e8795;
+    color: rgb(255, 255, 255);
+    border: none;
+    padding: 10px 40px;
+    font-size: 25px;
+    cursor: pointer;
+    border-radius: 16px;
+    margin-bottom: 20px; 
+}
+
+button:hover {
+    background: #5a3e8795;
+}
+
 
 
 
@@ -92,7 +107,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: #eaddff;
+    background: #5a3e8795;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -101,7 +116,7 @@
 }
 
 .right-icon-button:active .right-icon-button-wrapper {
-    background-color: #c5aeea;
+    background-color: rgb(144, 102, 162);
 }
 
 
@@ -120,7 +135,8 @@
     font-size: 20px;
 }
 .create-post-button{
-    background-color: #eaddff;
+    background: #5a3e8795;
+    /* background: #5a3e8795; */
     border: none;
     border-radius: 10px;
     padding: 3px;
@@ -137,7 +153,7 @@
    
 }
 .edit-bio-button {
-    background-color: #eaddff;
+    background: #5a3e8795;
     border: none;
     border-radius: 10px;
     padding: 3px;
@@ -153,11 +169,11 @@
 
 
 .edit-bio-button:hover {
-    background-color: #d4c3ef;
+    background-color: rgb(144, 102, 162);
 }
 
 .edit-bio-button:active {
-    background-color: #c5aeea;
+    background-color: rgb(144, 102, 162);
 }
 
 body, html {
