@@ -36,7 +36,7 @@ export default function CommentLog({
 
     // render comments underneath a post
     return (
-        <div>
+        <div classname="commentlog-container">
             <div className="comments-container">
               {comments.length > 0 ? (
                 comments.map((comment, index) => (

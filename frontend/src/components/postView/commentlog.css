@@ -4,6 +4,20 @@
     gap: 20px;  /* Adds spacing between posts */
     margin-top: 10px;
   }
+
+.commentlog-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: space-between;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%; 
+    align-items: center;
+
+
+    
+} 
   
   
   /* Individual post container */

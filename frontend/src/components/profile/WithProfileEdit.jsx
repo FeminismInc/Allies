@@ -21,6 +21,7 @@ const WithProfileEdit = (WrappedComponent) => {
 
         const handleIconButtonClick = () => {
             setShowIconBox(!showIconBox);
+            
         }
 
         const handleTextChange = (e) => {
