@@ -1,7 +1,17 @@
-.post-interaction, .post-stats{
+.post-interaction{
+    display: flex;
+    justify-content: space-evenly;
+    gap: 2em;
+}
+
+.post-stats{
     display: flex;
     justify-content: center;
     gap: 2em;
+}
+
+.like-button:active, .dislike-button:active, .comment-button:active, .repost-button:active {
+  transform: translateY(4px);
 }
 
 .white-rounded-box {

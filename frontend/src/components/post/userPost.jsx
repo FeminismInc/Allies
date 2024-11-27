@@ -5,7 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import PostContent from './postContent';
 import RepostWrapper from './RepostWrapper';
-
+import { IconButton } from '@mui/material';
+import CommentIcon from '@mui/icons-material/Comment';
+import RepeatIcon from '@mui/icons-material/Repeat';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 
 const Repost = RepostWrapper(PostContent);
 export default function UserPost({ post, username }) {  // { post object, username of post we are viewing }
@@ -123,20 +127,20 @@ export default function UserPost({ post, username }) {  // { post object, userna
           <p onClick={handleDislikeClick}> {dislikes.length} dislikes</p>
         </div>
         <div className="post-interaction">
-          <button onClick={() => { likePost(post, username) }}>
-            Like
-          </button>
-          <button onClick={() => { dislikePost(post, username) }}>
-            Dislike
-          </button>
-          <button onClick={() => { handleCommentClick(post) }}>
-            Comment
-          </button>
+          <IconButton className="like-button" onClick={() => { likePost(post, username) }}>
+            <ThumbUpAltIcon/>
+          </IconButton>
+          <IconButton className="dislike-button" onClick={() => { dislikePost(post, username) }}>
+            <ThumbDownAltIcon/>
+          </IconButton>
+          <IconButton className="comment-button" onClick={() => { handleCommentClick(post) }}>
+            <CommentIcon/>
+          </IconButton>
           {/* if 'isRepost' == true, don't render this button */}
           {!isAParent && (
-            <button onClick={() => { handleRepostClick(post) }}>
-              Repost
-            </button>
+            <IconButton className="repost-button" onClick={() => { handleRepostClick(post) }}>
+             <RepeatIcon/>
+            </IconButton>
           )}
         </div>
       </div>
