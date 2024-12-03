@@ -1,7 +1,7 @@
 import axios from 'axios';
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./commentComponent.css";
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+
 
 export default function CommentComponent({ comment, username }) {
   const uri = 'http://localhost:5050/api'
@@ -9,7 +9,13 @@ export default function CommentComponent({ comment, username }) {
   const [dislikes, setDislikes] = useState([]);
   const [showLikeBox, setShowLikeBox] = useState(false);
   const [showDislikeBox, setShowDislikeBox] = useState(false);
-
+  
+  useEffect(() => {
+    if (comment) {
+      fetchLikesByCommentID(comment);
+      fetchDislikesByCommentID(comment);
+    }
+  }, [comment])
   const handleLikeClick = () => {
     setShowLikeBox(!showLikeBox);
   };
@@ -22,16 +28,16 @@ export default function CommentComponent({ comment, username }) {
     try {
       const response = await axios.get(`${uri}/comments/getCommentLikes/${comment._id}`, {});
 
-      if (response.data.accounts_that_liked) {
-        //console.log("response in comment component LIKES: ",response.data.accounts_that_liked);
-        setLikes([...response.data.accounts_that_liked]);
+      if (response.data) {
+        console.log("response in comment component LIKES: ",response.data);
+        setLikes([...response.data]);
       }
     } catch (error) {
       console.error('Error fetching comments:', error);
     }
   }
 
-  fetchLikesByCommentID(comment);
+  
   const fetchMyLikes = async () => {
     fetchLikesByCommentID(comment);
   }
@@ -40,16 +46,16 @@ export default function CommentComponent({ comment, username }) {
     try {
 
       const response = await axios.get(`${uri}/comments/getCommentDislikes/${comment._id}`, {});
-      if (response.data.accounts_that_disliked) {
+      if (response.data) {
         //console.log('dislikes: response in comment component DISLIKES: ',response.data.accounts_that_disliked)
-        setDislikes([...response.data.accounts_that_disliked]);
+        setDislikes([...response.data]);
       }
     } catch (error) {
       console.error('Error fetching comments:', error);
     }
   }
 
-  fetchDislikesByCommentID(comment);
+  
   const fetchMyDislikes = async () => {
     fetchDislikesByCommentID(comment);
   }

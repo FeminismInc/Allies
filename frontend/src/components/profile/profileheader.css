@@ -91,7 +91,7 @@
     right: 10px;
     width: 80px;
     height: 80px;
-    border-radius: 50%;
+    border-radius: 100%;
     background-color: #eaddff;
     display: flex;
     justify-content: center;
@@ -99,9 +99,22 @@
     z-index: 999;
     transition: background-color 0.3s ease;
 }
-
-.right-icon-button:active .right-icon-button-wrapper {
-    background-color: #c5aeea;
+.right-icon-wrapper:hover {
+    background-color: #c5aeea; /* Darker color */
+}
+.right-icon-button {
+    margin-top: 15px;
+    top: 20px;
+    right: 10px;
+    width: 80px;
+    height: 80px;
+    border-radius: 100%;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    transition: background-color 0.3s ease;
 }
 
 
@@ -202,6 +215,21 @@ body, html {
     border-color: #eaddff;
 }
 
+.switch-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px; /* Space between items */
+    margin-bottom: 16px; /* Space below the switch container */
+}
+
+.switch-label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 8px; /* Space between label and switch */
+    color: #333;
+}
+
 .submit-button {
     background-color: #eaddff;
     color: white;
@@ -233,4 +261,21 @@ body, html {
     opacity: 1;
 }
 
+.profile-picture {
+    width: 100px;
+    height: 100px; /* Let height adjust based on width */
+    border-radius: 50%; /* Round shape */  
+    border: 3px solid purple;
+    cursor: pointer;
+}
+.profile-upload:hover .profile-picture {
+    opacity: 0.8; /* Darkens the image on hover */
+}
+.profile-picture2 {
+    width: 60px;
+    height: 60px; /* Let height adjust based on width */
+    border-radius: 50%; /* Round shape */  
+    border: 3px solid purple;
+    cursor: pointer;
+}
 

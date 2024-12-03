@@ -59,7 +59,7 @@ export default function Home() {
                   </div>
                 ))
               ) : (
-                <p>No posts found.</p>
+                <p></p>
               )}
             </div>
             </div>

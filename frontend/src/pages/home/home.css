@@ -1,7 +1,8 @@
 .homeMainContent{
     display: flex;
   flex-direction: row;
-  margin-left: 250px;
+  margin-left: 150px;
+  justify-content: center;
 }
 
 .feed-container{

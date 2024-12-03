@@ -97,7 +97,7 @@ export default function PostViewPage(){
                 </div>
 
                 
-                    <div className="commentlog-container">
+                    
                         <Commentlog 
                             PostId = {post._id}
                             username = {username}
@@ -105,7 +105,7 @@ export default function PostViewPage(){
                             setMessage={setMessage}
                             send={send}
                             /> 
-                    </div>
+                 
                     
 
             </div>
