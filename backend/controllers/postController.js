@@ -323,7 +323,7 @@ exports.getFeedPosts = async (req, res) => {
         // const posts = await PostModel.find({ author: { $in: user.accounts_followed.username } })
         //     .sort({ datetime: -1 }); 
         const posts = await PostModel.find({ _id: { $in: allPostIds } }).sort({ datetime: -1 });
-        console.log("posts ", posts);
+        //console.log("posts ", posts);
 
 
         res.status(200).json(posts);
@@ -376,7 +376,7 @@ exports.uploadMedia = async (req, res) => {
         }
         const mediaUrls = post.media.map(media => media.url); // Extract URLs from the populated media objects
 
-        console.log(mediaUrls);
+        //console.log(mediaUrls);
         // Send the post along with the media object
         res.status(200).json(mediaUrls);
     } catch (err) {

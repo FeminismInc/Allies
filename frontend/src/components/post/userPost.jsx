@@ -26,10 +26,11 @@ export default function UserPost({ post, username }) {  // { post object, userna
 
   useEffect(() => {
     if (post) {
+      //console.log("Fetching likes and dislikes for:", post._id);
       fetchLikesByPostID(post);
       fetchDislikesByPostID(post);
     }
-  }, [post])
+  }, );
 
   const handleLikeClick = () => {
     setShowLikeBox(!showLikeBox);
@@ -76,7 +77,7 @@ export default function UserPost({ post, username }) {  // { post object, userna
   const fetchLikesByPostID = async (post) => {
     try {
       const response = await axios.get(`${uri}/posts/getPostLikes/${post._id}`, {});
-      //console.log("response.data: ", response.data);
+      //console.log("response.data(likes) : ", response.data);
       if (response.data)
       setLikes([...response.data] );
       
@@ -86,15 +87,12 @@ export default function UserPost({ post, username }) {  // { post object, userna
     }
   }
 
-  //fetchLikesByPostID(post);
-  const fetchMyLikes = async () => {
-    fetchLikesByPostID(post);
-  }
 
   const fetchDislikesByPostID = async (post) => {
     try {
       // either returns an empty array or accounts_that_disliked, otherwise error 
       const response = await axios.get(`${uri}/posts/getPostDislikes/${post._id}`, {});
+      //console.log("response.data(dislikes) : ", response.data);
       if (response.data) {
         setDislikes([...response.data]);
       }
@@ -104,10 +102,6 @@ export default function UserPost({ post, username }) {  // { post object, userna
     }
   }
 
-  //fetchDislikesByPostID(post);
-  const fetchMyDislikes = async () => {
-    fetchDislikesByPostID(post);
-  }
 
   const likePost = async (post, username) => {
     try {
@@ -137,13 +131,13 @@ export default function UserPost({ post, username }) {  // { post object, userna
           <p onClick={handleDislikeClick}> {dislikes.length} dislikes</p>
         </div>
         <div className="post-interaction">
-          <IconButton className="like-button" onClick={() => { likePost(post, username) }}>
+          <IconButton className="like-button" aria-label="Likes Icon Button" onClick={() => { likePost(post, username) }}>
             <ThumbUpAltIcon/>
           </IconButton>
-          <IconButton className="dislike-button" onClick={() => { dislikePost(post, username) }}>
+          <IconButton className="dislike-button" aria-label="Dislike Icon Button" onClick={() => { dislikePost(post, username) }}>
             <ThumbDownAltIcon/>
           </IconButton>
-          <IconButton className="comment-button" onClick={() => { handleCommentClick(post) }}>
+          <IconButton className="comment-button" aria-label="Comment Icon Button" onClick={() => { handleCommentClick(post) }}>
             <CommentIcon/>
           </IconButton>
           {/* if 'isRepost' == true, don't render this button */}
