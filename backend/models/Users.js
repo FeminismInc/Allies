@@ -12,9 +12,12 @@ const UserSchema = new mongoose.Schema({
   handle: String,
   bio: String,
   pronouns: String,
+  profile_picture: String,
   blocked: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], 
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Followers' }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Following' }],
+  followRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  followRequestsSent: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   posts: [{ 
     type: mongoose.Schema.Types.ObjectId,
  }],
@@ -26,9 +29,6 @@ const UserSchema = new mongoose.Schema({
     ref: 'convos',
  }],
   public_boolean: Boolean,
-  profile_picture: { 
-    type: mongoose.Schema.Types.ObjectId, 
-     } 
 
 
 },{ collection: 'UserDetail' });

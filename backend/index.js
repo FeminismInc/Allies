@@ -25,6 +25,8 @@ const io = new Server(server, { cors: {origin: "http://localhost:3000"}}); // 'h
 
 app.use(express.json());
 
+require('dotenv').config({ path: './.env' });
+
 app.use(cors({
   origin: 'http://localhost:3000', // Your frontend URL
   credentials: true
