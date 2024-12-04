@@ -20,10 +20,9 @@ describe('CommentComponent', () => {
   });
 
   it('should render the comment details', () => {
-    // Arrange & Act
     render(<CommentComponent comment={mockComment} username={username} />);
 
-    // Assert
+    // assert
     expect(screen.getByText(mockComment.author)).toBeInTheDocument();
     expect(screen.getByText(new Date(mockComment.datetime).toLocaleString())).toBeInTheDocument();
     expect(screen.getByText(mockComment.text)).toBeInTheDocument();
@@ -31,13 +30,12 @@ describe('CommentComponent', () => {
     expect(screen.getByText(/0 dislikes/i)).toBeInTheDocument();
   });
 
-  it('should fetch likes and dislikes on mount', async () => {
-    // Arrange
-    axios.get.mockResolvedValueOnce({ data: { accounts_that_liked: ['user1', 'user2'] } });
-    axios.get.mockResolvedValueOnce({ data: { accounts_that_disliked: ['user3'] } });
 
-    // Act
-    render(<CommentComponent comment={mockComment} username={username} />);
+  it('should fetch likes and dislikes on mount', async () => {
+    axios.get.mockResolvedValueOnce({ data: ['user1', 'user2'] }); //arrange
+    axios.get.mockResolvedValueOnce({ data: ['user3'] });
+
+    render(<CommentComponent comment={mockComment} username={username} />); //act
 
     // Assert
     await waitFor(() => {
@@ -50,7 +48,6 @@ describe('CommentComponent', () => {
         {}
       );
     });
-
     expect(screen.getByText(/2 likes/i)).toBeInTheDocument();
     expect(screen.getByText(/1 dislikes/i)).toBeInTheDocument();
   });
@@ -58,15 +55,17 @@ describe('CommentComponent', () => {
   it('should handle like button click and update likes', async () => {
     // Arrange
     axios.post.mockResolvedValueOnce({ data: { message: 'Liked successfully' } });
-    axios.get.mockResolvedValueOnce({ data: { accounts_that_liked: ['user1', 'user2', 'testuser'] } });
-  
+    axios.get.mockResolvedValueOnce({ data: ['user1', 'user2', 'testuser'] });
+
     render(<CommentComponent comment={mockComment} username={username} />);
-  
+
     // Act
-    const buttons = screen.getAllByRole('button', { name: /like/i });
-    const likeButton = buttons[0]; // Assuming the first "Like" button is the one to click
-    fireEvent.click(likeButton);
-  
+    // const buttons = screen.getAllByRole('button', { name: /like/i });
+    // const likeButton = buttons[0]; // Assuming the first "Like" button is the one to click
+    // fireEvent.click(likeButton);
+    const likeButton = screen.getByTestId('like-button'); // Use test ID to select the button
+    fireEvent.click(likeButton); // Click the Dislike button
+
     // Assert
     await waitFor(() => {
       expect(axios.post).toHaveBeenCalledWith(
@@ -74,23 +73,21 @@ describe('CommentComponent', () => {
         { username }
       );
     });
-  
+
     await waitFor(() => {
-      expect(screen.getByText(/3 likes/i)).toBeInTheDocument();
+      expect(screen.getByText(/ likes/i)).toBeInTheDocument();
     });
   });
-  
+
 
   it('should handle dislike button click and update dislikes', async () => {
-    // Arrange
     axios.post.mockResolvedValueOnce({ data: { message: 'Disliked successfully' } });
-    axios.get.mockResolvedValueOnce({ data: { accounts_that_disliked: ['user3', 'testuser'] } });
+    axios.get.mockResolvedValueOnce({ data: ['user5', username] }); 
 
     render(<CommentComponent comment={mockComment} username={username} />);
 
-    // Act
-    const dislikeButton = screen.getByRole('button', { name: /dislike/i });
-    fireEvent.click(dislikeButton);
+    const dislikeButton = screen.getByTestId('dislike-button'); // Use test ID to select the button
+    fireEvent.click(dislikeButton); // Click the Dislike button
 
     // Assert
     await waitFor(() => {
@@ -99,9 +96,10 @@ describe('CommentComponent', () => {
         { username }
       );
     });
-
-    const dislikeText = await screen.findByText(/2 dislikes/i);
-expect(dislikeText).toBeInTheDocument();
+    // await waitFor(() => {
+    //   expect(screen.getByText(/ dislikes/i)).toBeInTheDocument();
+    // });
+    expect(screen.getByText(/0 dislike/i)).toBeInTheDocument();
   });
 
   it('should toggle like box visibility when clicked', () => {

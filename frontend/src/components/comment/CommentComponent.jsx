@@ -27,7 +27,6 @@ export default function CommentComponent({ comment, username }) {
   const fetchLikesByCommentID = async (comment) => {
     try {
       const response = await axios.get(`${uri}/comments/getCommentLikes/${comment._id}`, {});
-
       if (response.data) {
         console.log("response in comment component LIKES: ",response.data);
         setLikes([...response.data]);
@@ -37,17 +36,11 @@ export default function CommentComponent({ comment, username }) {
     }
   }
 
-  
-  const fetchMyLikes = async () => {
-    fetchLikesByCommentID(comment);
-  }
-
   const fetchDislikesByCommentID = async (comment) => {
     try {
-
       const response = await axios.get(`${uri}/comments/getCommentDislikes/${comment._id}`, {});
       if (response.data) {
-        //console.log('dislikes: response in comment component DISLIKES: ',response.data.accounts_that_disliked)
+        console.log("response in comment component DISLIKES: ",response.data);
         setDislikes([...response.data]);
       }
     } catch (error) {
@@ -56,9 +49,24 @@ export default function CommentComponent({ comment, username }) {
   }
 
   
-  const fetchMyDislikes = async () => {
-    fetchDislikesByCommentID(comment);
-  }
+  
+
+  // const fetchDislikesByCommentID = async (comment) => {
+  //   try {
+
+  //     const response = await axios.get(`${uri}/comments/getCommentDislikes/${comment._id}`, {});
+  //     if (response.data) {
+  //       setDislikes([...response.data]);
+  //       //console.log('dislikes: response in comment component DISLIKES: ',response.data.accounts_that_disliked)
+        
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching comments:', error);
+  //   }
+  // }
+
+  
+  
 
   const likeComment = async (comment, username) => {
     try {
@@ -94,10 +102,17 @@ export default function CommentComponent({ comment, username }) {
                   <p onClick={handleDislikeClick}> {dislikes.length} dislikes</p>
                 </div>
                 <div className="comment-interaction">
-                  <button className="engage-button" onClick={() => { likeComment(comment, username) }}>
+                  <button className="engage-button-like" 
+                  onClick={() => { likeComment(comment, username) }}
+                  aria-label="like-button"
+                  data-testid="like-button">
                     Like
                   </button>
-                  <button className="engage-button" onClick={() => { dislikeComment(comment, username) }}>
+                  <button className="engage-button-dislike" 
+                    onClick={() => { dislikeComment(comment, username) }
+                    }
+                    aria-label="dislike-button"
+                    data-testid="dislike-button">
                     Dislike
                   </button>
                 </div>
