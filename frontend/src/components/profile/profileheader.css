@@ -294,4 +294,11 @@ body, html {
     border: 3px solid purple;
     cursor: pointer;
 }
-
+.profile-picture-smallIcon {
+    width: 35px;
+    height: 35px; /* Let height adjust based on width */
+    border-radius: 50%; /* Round shape */  
+    cursor: pointer;
+    border: 3px solid purple;
+    margin: 7px;
+}

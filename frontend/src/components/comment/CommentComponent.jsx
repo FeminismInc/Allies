@@ -100,7 +100,7 @@ export default function CommentComponent({ comment, username }) {
     <div>
       <div className="comment-header">
         {profileImage ? (
-          <img src={profileImage} alt="Comment" className="profile-picture-comments" />
+          <img src={profileImage} alt="Comment" className="profile-picture-smallIcon" />
         ) : (
           <AccountCircleOutlinedIcon className="profile-picture-comments" />
         )}
