@@ -5,8 +5,7 @@ import { Link } from 'react-router-dom';
 const UserCard = ({ username }) => {
     const [isFollowing, setIsFollowing] = useState(true);
     const uri = process.env.REACT_APP_URI; 
-    const [profileImage, setProfileImage] = useState(null);
-    const uri = "http://localhost:5050/api"; 
+    const [profileImage, setProfileImage] = useState(null); 
     useEffect(() => {
         setIsFollowing(true);
         fetchProfilePicture();

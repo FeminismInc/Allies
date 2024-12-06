@@ -7,8 +7,6 @@ const FollowerCard = ({ username }) => {
     const [isFollowing, setIsFollowing] = useState(true);
     const uri = process.env.REACT_APP_URI; 
     const [profileImage, setProfileImage] = useState(null);
-
-    const uri = "http://localhost:5050/api";
     useEffect(() => {
         setIsFollowing(true);
         fetchProfilePicture();
