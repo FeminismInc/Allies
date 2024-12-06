@@ -16,7 +16,7 @@ const ProfileHeader = ({ username }) => {
     const [profileImage, setProfileImage] = useState(null);
     const [bio, setBio] = useState('');
 
-    const uri = 'http://localhost:5050/api';
+    const uri = process.env.REACT_APP_URI;
 
     const [awsConfig, setAwsConfig] = useState(null);
 

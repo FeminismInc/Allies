@@ -3,7 +3,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import axios from 'axios';
 const FollowerCard = ({ username }) => {
     const [isFollowing, setIsFollowing] = useState(true);
-    const uri = "http://localhost:5050/api"; 
+    const uri = process.env.REACT_APP_URI; 
     useEffect(() => {
         setIsFollowing(true);
     }, [true]);

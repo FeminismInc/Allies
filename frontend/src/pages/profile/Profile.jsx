@@ -16,7 +16,7 @@ export default function Profile() {
   const { username: routeUsername } = useParams(); // gets the username from url params
   const [isCurrentUser, setIsCurrentUser] = useState('');
 
-  const uri = 'http://localhost:5050/api';
+  const uri = process.env.REACT_APP_URI;
 
 
   useEffect(() => {

@@ -10,7 +10,7 @@ import RequestCard from '../follow/requestComp';
 const WithProfileEdit = (WrappedComponent) => {
     return function ProfileHeaderForCurrentUser(props) {
 
-        const uri = 'http://localhost:5050/api'
+        const uri = process.env.REACT_APP_URI
 
         const { username,isCurrentUser } = props;
         const [requested, setRequestedList] = useState([]);

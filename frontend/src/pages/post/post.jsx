@@ -9,7 +9,7 @@ import AWS from 'aws-sdk';
 
 export default function PostPage() {
 
-    const uri = "http://localhost:5050/api";
+    const uri = process.env.REACT_APP_URI;
     const navigate = useNavigate();
 
     const [text, setText] = useState('')

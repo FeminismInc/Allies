@@ -13,7 +13,7 @@ import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 
 const Repost = RepostWrapper(PostContent);
 export default function UserPost({ post, username }) {  // { post object, username of post we are viewing }
-  const uri = 'http://localhost:5050/api';
+  const uri = process.env.REACT_APP_URI;
   const [likes, setLikes] = useState([]);
   const [dislikes, setDislikes] = useState([]);
   const [showLikeBox, setShowLikeBox] = useState(false);

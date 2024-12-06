@@ -11,7 +11,7 @@ const SearchResults = ({ username, handle, isFollowing: initialIsFollowing, isRe
     const [isRequested, setIsRequested] = useState(initialIsRequested);
     const [profileImage, setProfileImage] = useState(null);
     const [publicBoolean, setPublicBoolean] = useState(null);// Track follow status
-    const uri = "http://localhost:5050/api"; 
+    const uri = process.env.REACT_APP_URI; 
     // Base URI for your API
     useEffect(() => {
         // Fetch the public_boolean when the component is mounted

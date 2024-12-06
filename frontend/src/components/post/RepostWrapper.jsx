@@ -14,7 +14,7 @@ const RepostWrapper = (WrappedComponent) => {
         if (!isAParent) return null;
         //console.log('wrapper: post',post);
         //console.log('wrapper: childpost',childPost);
-        const uri = 'http://localhost:5050/api' // http://54.176.5.254:5050/api
+        const uri = process.env.REACT_APP_URI // http://54.176.5.254:5050/api
 
         const handleChildPostClick = () => {
            navigate(`/PostView` ,{ state: { post: childPost } });

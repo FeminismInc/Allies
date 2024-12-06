@@ -8,7 +8,7 @@ import axios from 'axios';
 
 export default function PostContent({ post, username, isAParent }) {
 
-  const uri = 'http://localhost:5050/api';
+  const uri = process.env.REACT_APP_URI;
 
   const [mediaUrl, setMediaUrl] = useState(null);
   const [profileImage, setProfileImage] = useState(null);

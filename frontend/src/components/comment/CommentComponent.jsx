@@ -4,7 +4,7 @@ import "./commentComponent.css";
 
 
 export default function CommentComponent({ comment, username }) {
-  const uri = 'http://localhost:5050/api'
+  const uri = process.env.REACT_APP_URI
   const [likes, setLikes] = useState([]);
   const [dislikes, setDislikes] = useState([]);
   const [showLikeBox, setShowLikeBox] = useState(false);
