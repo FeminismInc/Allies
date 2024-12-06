@@ -11,6 +11,11 @@
     align-items: center; 
     justify-content: center;
 }
+.comment-username{
+    color: #000000;
+    
+
+}
 
 .white-rounded-box {
     position: fixed;
@@ -31,4 +36,12 @@
 .white-rounded-box.show {
     opacity: 1; /* visible */
     transform: translate(-50%, -50%) scale(1); /* full size */
+}
+.profile-picture-comments {
+    width: 35px;
+    height: 35px; /* Let height adjust based on width */
+    border-radius: 50%; /* Round shape */  
+    border: 3px solid purple;
+    cursor: pointer;
+    margin: 10px;
 }
