@@ -34,7 +34,7 @@ export default function PostContent({ post, username, isAParent }) {
 
   const fetchProfilePicture = async () => {
     try {
-        const response = await axios.get(`${uri}/users/getProfilePicture/${post.author}`); // Adjust the endpoint as necessary
+        const response = await axios.get(`${uri}/users/getProfilePicture/${username}`); // Adjust the endpoint as necessary
         setProfileImage(response.data.profilePicture); // Update state with the retrieved profile picture
     } catch (error) {
         console.error('Error fetching profile picture:', error);

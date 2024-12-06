@@ -82,10 +82,6 @@ export default function LoginSignUp() {
         color= "#f194ff"
         onPress={postEmail}
       />                               
-        <h2><span>OR</span></h2>
-        {/* <LoginButton GotoHomePage={GoToHomePage}/>
-        <LoginButton GotoHomePage={GoToHomePage}/> 
-        <LoginButton GotoHomePage={GoToHomePage}/> */}
         <hr className = "separator"/>
           <h3>Don't have an Account? <span id="signUpButton">Sign up!</span></h3>
       </div>
