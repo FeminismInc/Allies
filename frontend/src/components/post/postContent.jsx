@@ -12,6 +12,7 @@ export default function PostContent({ post, username, isAParent }) {
 
   const [mediaUrl, setMediaUrl] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
+  
 
   useEffect(() => {
     const fetchPostWithMedia = async () => {
@@ -38,13 +39,14 @@ export default function PostContent({ post, username, isAParent }) {
         console.error('Error fetching profile picture:', error);
     }
 };
+  
 
   if (isAParent || !post) return null;
   return (
     <div className="postContent-container">
       <div className="post-header">
           {profileImage ? (
-            <img src={profileImage} alt="Profile" className="profile-picture" />
+            <img src={profileImage} alt="Profile" className="profile-picture-post"  />
                  ) : (
               <AccountCircleOutlinedIcon className="profile-picture" />
                 )}

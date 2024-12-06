@@ -32,7 +32,7 @@ export default function CommentLog({
     if (PostId) {
       fetchCommentsById();
     }
-  }, [PostId]);
+  }, [PostId,message]);
 
     // render comments underneath a post
     return (

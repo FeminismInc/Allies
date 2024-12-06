@@ -76,7 +76,7 @@ exports.getCommentLikes = async (req, res) => {
             return res.status(200).json([]);
   
         }
-        return res.status(200).json(entry);
+        return res.status(200).json(entry.accounts_that_liked);
         // else {
         //     console.log("comment likes ",entry);
         //     res.status(200).json(entry);
@@ -105,7 +105,7 @@ exports.getCommentDislikes = async (req, res) => {
             return res.status(200).json([]);
             
         }
-        return res.status(200).json(entry);
+        return res.status(200).json(entry.accounts_that_disliked);
         
     } catch (err) {
         console.error(err);
