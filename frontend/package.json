@@ -9,6 +9,7 @@
     "@mui/material": "^6.0.2",
     "aws-sdk": "^2.1692.0",
     "axios": "^1.7.7",
+    "bad-words": "^4.0.0",
     "dotenv": "^16.4.5",
     "gapi-script": "^1.2.0",
     "install": "^0.13.0",

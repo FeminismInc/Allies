@@ -3,6 +3,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import './postcontent.css'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Filter } from 'bad-words'
 
 
 
@@ -40,7 +41,7 @@ export default function PostContent({ post, username, isAParent }) {
     }
 };
   
-
+  const filter = new Filter()
   if (isAParent || !post) return null;
   return (
     <div className="postContent-container">
@@ -62,7 +63,7 @@ export default function PostContent({ post, username, isAParent }) {
         </div>
       </div>
       <div className="post-content">
-        <p>{post.text}</p>
+        <p>{filter.clean(post.text)}</p>
         {post.media && post.media.length > 0 && mediaUrl && (
           <div className="post-media-container">
             <img 

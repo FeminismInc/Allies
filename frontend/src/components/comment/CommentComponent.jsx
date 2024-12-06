@@ -6,6 +6,7 @@ import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import { IconButton } from '@mui/material';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Link } from 'react-router-dom';
+import { Filter } from 'bad-words'
 
 export default function CommentComponent({ comment, username }) {
   const uri = process.env.REACT_APP_URI
@@ -95,6 +96,7 @@ export default function CommentComponent({ comment, username }) {
     }
   }
   //dislikes and likes are continuously being fetched
+  const filter = new Filter();
 
   return (
     <div>
@@ -121,7 +123,7 @@ export default function CommentComponent({ comment, username }) {
         
       </div>
       <div className="comment-content">
-          <p>{comment.text}</p>
+          <p>{filter.clean(comment.text)}</p>
         </div>
         <div>
             <div className="comment-stats">

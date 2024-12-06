@@ -9,7 +9,6 @@ const RequestCard = ({ userID }) => {
         const fetchUserDetails = async () => {
             try {
                 const response = await axios.get(`${uri}/users/findUserById/${userID}`);
-                console.log("DJKAHSDKAJWDHAKLSJDLAWKDJAW");
                 console.log(response.data.username);
                 setUsername(response.data.username);  // Assuming response contains { username: 'someUsername' }
                 setIsRequested(true);  // Set to true after fetching user data

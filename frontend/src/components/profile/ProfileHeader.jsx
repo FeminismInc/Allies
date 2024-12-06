@@ -189,10 +189,10 @@ const ProfileHeader = ({ username }) => {
                     <div className="header-username">
                         <h1>{username}</h1>
                     </div>
-                    <button className='followers' onClick = {handleFollowingListClick}>
+                    <button className='followers-button' onClick = {handleFollowingListClick}>
                        {following.length} following
                     </button>
-                    <button className='following' onClick = {handleFollowerListClick}>
+                    <button className='following-button' onClick = {handleFollowerListClick}>
                         {followers.length} followers
                     </button>
                     
