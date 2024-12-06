@@ -7,6 +7,7 @@ import { Switch } from '@mui/material';
 import axios from 'axios';
 import RequestCard from '../follow/requestComp';
 
+
 const WithProfileEdit = (WrappedComponent) => {
     return function ProfileHeaderForCurrentUser(props) {
 
