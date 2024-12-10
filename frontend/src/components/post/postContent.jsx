@@ -3,15 +3,17 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import './postcontent.css'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Filter } from 'bad-words'
 
 
 
 export default function PostContent({ post, username, isAParent }) {
 
-  const uri = 'http://localhost:5050/api';
+  const uri = process.env.REACT_APP_URI;
 
   const [mediaUrl, setMediaUrl] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
+  
 
   useEffect(() => {
     const fetchPostWithMedia = async () => {
@@ -32,19 +34,20 @@ export default function PostContent({ post, username, isAParent }) {
 
   const fetchProfilePicture = async () => {
     try {
-        const response = await axios.get(`${uri}/users/getProfilePicture/${post.author}`); // Adjust the endpoint as necessary
+        const response = await axios.get(`${uri}/users/getProfilePicture/${username}`); // Adjust the endpoint as necessary
         setProfileImage(response.data.profilePicture); // Update state with the retrieved profile picture
     } catch (error) {
         console.error('Error fetching profile picture:', error);
     }
 };
-
+  
+  const filter = new Filter()
   if (isAParent || !post) return null;
   return (
     <div className="postContent-container">
       <div className="post-header">
           {profileImage ? (
-            <img src={profileImage} alt="Profile" className="profile-picture" />
+            <img src={profileImage} alt="Profile" className="profile-picture-post"  />
                  ) : (
               <AccountCircleOutlinedIcon className="profile-picture" />
                 )}
@@ -60,7 +63,7 @@ export default function PostContent({ post, username, isAParent }) {
         </div>
       </div>
       <div className="post-content">
-        <p>{post.text}</p>
+        <p>{filter.clean(post.text)}</p>
         {post.media && post.media.length > 0 && mediaUrl && (
           <div className="post-media-container">
             <img 

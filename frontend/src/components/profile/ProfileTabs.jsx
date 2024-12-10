@@ -6,7 +6,7 @@ import CachedIcon from '@mui/icons-material/Cached';
 
 export default function ProfileTabs({ username }) {
 
-  const uri = 'http://localhost:5050/api' // http://54.176.5.254:5050/api
+  const uri = process.env.REACT_APP_URI // http://54.176.5.254:5050/api
   const [activeTab, setActiveTab] = useState('posts');
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
@@ -60,17 +60,6 @@ export default function ProfileTabs({ username }) {
             
           </div>
         );
-      case 'media':
-        return (
-          <div>
-            <div className='media-container'>
-              <div className="username-box">Lex_the_cat</div>
-              <div><p> </p></div>
-              <img src={require('./IMG_4628.jpg')} width={350} height={350} />
-            </div>
-
-          </div>
-        );
      
     }
   };
@@ -84,12 +73,6 @@ export default function ProfileTabs({ username }) {
           onClick={() => setActiveTab('posts')}
         >
           Posts
-        </button>
-        <button
-          className={activeTab === 'media' ? 'active' : ''}
-          onClick={() => setActiveTab('media')}
-        >
-          Media
         </button>
        
       </div>

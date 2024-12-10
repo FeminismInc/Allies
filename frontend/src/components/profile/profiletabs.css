@@ -55,6 +55,7 @@
   
   /* Hover effect for all buttons */
   .tabs button:hover {
+    background-color: #fff;
     color: #614c83;                 /* Change text color on hover */
   }
   

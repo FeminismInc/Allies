@@ -10,12 +10,10 @@
     flex-direction: column;
     width: 100%;
     justify-content: space-between;
-    overflow-y: auto;
-    overflow-x: hidden;
     height: 100%; 
     margin-left: 5px;
     /* align-items: center; */
-    
+  
     /* align-content: flex-start; */
 
 
@@ -27,9 +25,9 @@
   .comment {
     display: flex;
     flex-direction: column;
-    background-color: #fff;
+    background-color: #ffffffc5;
     border: 1px solid #e6ecf0;
-    border-radius: 8px;
+    border-radius: 15px;
     padding: 15px;
     width: 100%;
     max-width: 800px;

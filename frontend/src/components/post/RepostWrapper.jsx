@@ -9,12 +9,12 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 // in userPost, if isRepost is true, on
 const RepostWrapper = (WrappedComponent) => {
     return function Repost(props) {
-        const { post,username,isAParent,childPost } = props;
+        const { post,username,isAParent,childPost,profileImage } = props;
         const navigate = useNavigate();
         if (!isAParent) return null;
         //console.log('wrapper: post',post);
         //console.log('wrapper: childpost',childPost);
-        const uri = 'http://localhost:5050/api' // http://54.176.5.254:5050/api
+        const uri = process.env.REACT_APP_URI // http://54.176.5.254:5050/api
 
         const handleChildPostClick = () => {
            navigate(`/PostView` ,{ state: { post: childPost } });
@@ -25,7 +25,11 @@ const RepostWrapper = (WrappedComponent) => {
             <div className='repost-container'>
                 {/* if we have time, should probably make the post header into a component */}
                 <div className="repost-header">
-                    <AccountCircleOutlinedIcon className="profile-picture" />
+                {profileImage ? (
+            <img src={profileImage} alt="Profile" className="profile-picture-reposter" />
+                 ) : (
+              <AccountCircleOutlinedIcon className="profile-picture" />
+                )}
                     <div className='repost-info'>
                     <Link to={`/profile/${username}`} className="username-link">
                         <span className="repost-username">{username}</span>    

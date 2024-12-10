@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+
 const FollowerCard = ({ username }) => {
     const [isFollowing, setIsFollowing] = useState(true);
-    const uri = "http://localhost:5050/api"; 
+    const uri = process.env.REACT_APP_URI; 
+    const [profileImage, setProfileImage] = useState(null);
     useEffect(() => {
         setIsFollowing(true);
+        fetchProfilePicture();
     }, [true]);
     const handleFollowClick = async () => {
         try {
@@ -22,18 +26,34 @@ const FollowerCard = ({ username }) => {
             console.error("Error updating follow status:", error);
         }
     };
+    const fetchProfilePicture = async () => {
+        try {
+            const response = await axios.get(`${uri}/users/getProfilePicture/${username}`); // Adjust the endpoint as necessary
+            setProfileImage(response.data.profilePicture); // Update state with the retrieved profile picture
+        } catch (error) {
+            console.error('Error fetching profile picture:', error);
+        }
+    };
     return (
         <div className="followers">
-        <div className="followers-header">
-            <AccountCircleOutlinedIcon className="profile-picture" />
-            <div className="followers-info">
-                <span className="username">{username}</span>
+            <Link to={`/profile/${username}`} className="username-link">
+            <div className="followers-header">
+                {profileImage ? (
+                    <img src={profileImage} alt="Profile" className="profile-picture-smallIcon" />
+                ) : (
+                    <AccountCircleOutlinedIcon className="profile-picture-icon" />
+                )}
+                <div className="followers-info">
+                
+            <span className="username">{username}</span>
+         
+                </div>
             </div>
+            </Link>
+            <button onClick={handleFollowClick}>
+                {isFollowing ? "Block" : "UnBlock"}
+            </button>
         </div>
-        <button onClick={handleFollowClick}>
-            {isFollowing ? "Block" : "UnBlock"}
-        </button>
-    </div>
     );
 };
 export default FollowerCard;

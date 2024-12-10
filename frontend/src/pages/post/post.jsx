@@ -9,7 +9,7 @@ import AWS from 'aws-sdk';
 
 export default function PostPage() {
 
-    const uri = "http://localhost:5050/api";
+    const uri = process.env.REACT_APP_URI;
     const navigate = useNavigate();
 
     const [text, setText] = useState('')
@@ -77,26 +77,6 @@ export default function PostPage() {
             });
         }
     };
-    
-
-    const submit = async (e) => {
-        console.log("entered submit");
-        e.preventDefault();
-        try {
-            // can add future if statement for media/hashtag/text stuff
-            console.log("trying");
-            const post = await axios.post(`${uri}/posts/createPost`, { //create new following object
-                text: text,
-            })
-            navigate(`/profile/${username}`)
-            // use $push to update a userDetail posts could send author ID rather than just author name and add it to user upon post creation
-
-        }
-        catch (e) {
-            console.log('Something went wrong creating a post')
-        }
-
-    }
 
     const submitPost = async () => {
         try {
@@ -111,6 +91,7 @@ export default function PostPage() {
             // Reset state after submission
             setTextPic("");
             setMediaUrl("");
+            navigate(`/profile/${username}`)
         } catch (error) {
             console.error("Error creating post:", error);
         }
@@ -122,11 +103,6 @@ export default function PostPage() {
             <div className="sidebarContainer">
                 <Sidebar />
             </div>
-                <div className="postContainer">
-                    <h1>What's on your mind? </h1>
-                    <input type="text" value={text} onChange={(e) => { setText(e.target.value) }} name="postText" id="postText"></input>
-                    <Button title="Submit" onPress={submit} color="#bfa1f0" id="submitButton" />
-                </div>
                 <div className="postContainer">
                     <h1>What's on your mind with a picture? </h1>
                     <input

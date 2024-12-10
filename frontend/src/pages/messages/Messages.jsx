@@ -8,7 +8,7 @@ import MessageLog from '../../components/messages/Messagelog';
 import { useLocation } from 'react-router-dom';
 
 export default function MessagesPage() {
-    const uri = 'http://localhost:5050/api';
+    const uri = process.env.REACT_APP_URI;
     const socket = io("http://localhost:5050"); // Initialize socket connection http://54.176.5.254:5050/api
     
     const location = useLocation();
