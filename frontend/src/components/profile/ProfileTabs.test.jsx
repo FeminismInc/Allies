@@ -1,5 +1,4 @@
 
-
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ProfileTabs from './ProfileTabs';
 import UserPost from '../../components/post/userPost';
@@ -7,6 +6,8 @@ import PostContent from '../../components/post/postContent';
 import axios from 'axios';
 import { MemoryRouter } from 'react-router-dom';
 import { it, vi, describe, beforeEach, expect } from 'vitest';
+
+//all pass
 
 // Mock axios and child components
 vi.mock('axios');

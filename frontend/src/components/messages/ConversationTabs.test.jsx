@@ -22,7 +22,7 @@ describe("ConversationTabs Component", () => {
         expect(userElements[0]).toHaveTextContent("otherUser1");
         expect(userElements[1]).toHaveTextContent("otherUser2");
     });
-
+    
     it("should add 'selected' class if isSelected is true", () => {
         render(
             <ConversationTabs

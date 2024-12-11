@@ -65,12 +65,12 @@ export default function Sidebar() {
 
     ]
     return (
-           <div style={{width: isOpen ? "240px" : "100px"}} className="sidebar">
+           <div style={{width: isOpen ? "240px" : "100px"}} aria-label="sidebar" className="sidebar">
            
                <div className="top_section">
                    <h1 style={{display: isOpen ? "block" : "none"}} className="logo">Allies</h1>
                    <div style={{marginLeft: isOpen ? "75px" : "5px"}} className="bars">
-                       <FaBars onClick={toggle}/>
+                       <FaBars aria-label="bars" onClick={toggle}/>
                    </div>
                </div>
                {/* <div className="searchbar">

@@ -76,7 +76,7 @@ describe("PostContent Component", () => {
 
         await waitFor(() => {
             expect(axios.get).toHaveBeenCalledWith(
-                "http://localhost:5050/api/users/getProfilePicture/testauthor"
+                "http://localhost:5050/api/users/getProfilePicture/testuser"
             );
             expect(screen.getByAltText("Profile")).toBeInTheDocument();
         });

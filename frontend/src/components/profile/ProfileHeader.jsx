@@ -38,6 +38,7 @@ const ProfileHeader = ({ username }) => {
             }
         };
         fetchProfilePicture();
+        fetchBio(username); //for unit resting purposes
         fetchAwsConfig();
     }, []);
     const s3 = new AWS.S3();
@@ -123,19 +124,28 @@ const ProfileHeader = ({ username }) => {
         // setShowFollowing(!showFollowing)
     };
 
+    // const fetchBio = async (username) => {
+    //     try {
+    //         console.log(username);
+    //         axios.get(`${uri}/users/getBio/${username}`).then(response => {
+    //             //console.log("response: ", response);
+    //             setBio(response.data);
+                
+    //         })
+    //       } catch (error) {
+    //         console.error('Error fetching following:', error);
+    //     }
+    //     // setShowFollowing(!showFollowing)
+    // };
     const fetchBio = async (username) => {
         try {
-            console.log(username);
-            axios.get(`${uri}/users/getBio/${username}`).then(response => {
-                console.log("response: ", response);
-                setBio(response.data);
-                
-            });
-          } catch (error) {
-            console.error('Error fetching following:', error);
+            const response = await axios.get(`${uri}/users/getBio/${username}`);
+            setBio(response.data);
+        } catch (error) {
+            console.error('Error fetching bio:', error);
         }
-        // setShowFollowing(!showFollowing)
     };
+    
 
     // const fetchBio = async (username) => {
     //     try {

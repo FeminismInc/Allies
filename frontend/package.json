@@ -30,7 +30,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "vitest --environment jsdom",
+    "test": "vitest --environment jsdom ",
+    "test:components": "vitest run --silent src/components",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

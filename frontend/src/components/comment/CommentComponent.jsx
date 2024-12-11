@@ -130,12 +130,13 @@ export default function CommentComponent({ comment, username }) {
             </div>
             <div className="comment-interaction">
               <IconButton
+                aria-label='thumb up'
                 className={`engage-button ${userLiked ? 'liked' : ''}`}
                 onClick={() => { likeComment(comment, username) }}
               >
                 <ThumbUpAltIcon color={userLiked ? 'primary' : 'inherit'} />
               </IconButton>
-              <IconButton className={`engage-button ${userDisliked ? 'disliked' : ''}`} onClick={() => { dislikeComment(comment, username) }}>
+              <IconButton aria-label='thumb down' className={`engage-button ${userDisliked ? 'disliked' : ''}`} onClick={() => { dislikeComment(comment, username) }}>
                 <ThumbDownAltIcon color={userDisliked ? 'primary' : 'inherit'} />
               </IconButton>
             </div>

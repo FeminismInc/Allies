@@ -1,107 +1,160 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import SearchResults from './SearchResults';
 import axios from 'axios';
-import { MemoryRouter } from 'react-router-dom';
-import { it, describe, expect, vi, beforeEach } from 'vitest';
+import SearchResults from './SearchResults';
+import { BrowserRouter } from 'react-router-dom';
+import { vi } from 'vitest';
 
-// Mock axios
 vi.mock('axios');
 
 describe('SearchResults Component', () => {
-  const username = 'testuser';
-  const handle = 'testhandle';
+    const mockUsername = 'testuser';
+    const mockHandle = 'testhandle';
+    const mockProfilePicture = 'https://mock-url.com/image.jpg';
+    const mockUri = process.env.REACT_APP_URI;
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('should render user information and follow button', () => {
-    // Arrange & Act
-    render(
-      <MemoryRouter>
-        <SearchResults username={username} handle={handle} isFollowing={false} />
-      </MemoryRouter>
-    );
-
-    // Assert
-    expect(screen.getByText(username)).toBeInTheDocument();
-    expect(screen.getByText(`@${handle}`)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /follow/i })).toBeInTheDocument();
-  });
-
-  it('should display "Following" if the user is initially following', () => {
-    // Arrange & Act
-    render(
-      <MemoryRouter>
-        <SearchResults username={username} handle={handle} isFollowing={true} />
-      </MemoryRouter>
-    );
-
-    // Assert
-    expect(screen.getByRole('button', { name: /following/i })).toBeInTheDocument();
-  });
-
-  it('should call API and update state when "Follow" button is clicked', async () => {
-    // Arrange
-    axios.post.mockResolvedValueOnce({ data: { message: 'Followed successfully' } });
-
-    render(
-      <MemoryRouter>
-        <SearchResults username={username} handle={handle} isFollowing={false} />
-      </MemoryRouter>
-    );
-
-    // Act
-    const followButton = screen.getByRole('button', { name: /follow/i });
-    fireEvent.click(followButton);
-
-    // Assert
-    await waitFor(() => {
-      expect(axios.post).toHaveBeenCalledWith(`http://localhost:5050/api/users/addFollower`, { username });
-      expect(screen.getByRole('button', { name: /following/i })).toBeInTheDocument();
+    beforeEach(() => {
+        axios.get.mockReset();
+        axios.post.mockReset();
     });
-  });
 
-  it('should call API and update state when "Following" button is clicked', async () => {
-    // Arrange
-    axios.post.mockResolvedValueOnce({ data: { message: 'Unfollowed successfully' } });
+    const renderComponent = (initialIsFollowing = false, initialIsRequested = false, publicBoolean = true) => {
+        axios.get
+            .mockResolvedValueOnce({ data: { profilePicture: mockProfilePicture } }) // Mock profile picture response
+            .mockResolvedValueOnce({ data: { public_boolean: publicBoolean } }); // Mock publicBoolean response
 
-    render(
-      <MemoryRouter>
-        <SearchResults username={username} handle={handle} isFollowing={true} />
-      </MemoryRouter>
-    );
+        render(
+            <BrowserRouter>
+                <SearchResults
+                    username={mockUsername}
+                    handle={mockHandle}
+                    isFollowing={initialIsFollowing}
+                    isRequested={initialIsRequested}
+                />
+            </BrowserRouter>
+        );
+    };
 
-    // Act
-    const followButton = screen.getByRole('button', { name: /following/i });
-    fireEvent.click(followButton);
+    it('renders the username and handle correctly', async () => {
+        renderComponent();
 
-    // Assert
-    await waitFor(() => {
-      expect(axios.post).toHaveBeenCalledWith(`http://localhost:5050/api/users/removeFollowing`, { username });
-      expect(screen.getByRole('button', { name: /follow/i })).toBeInTheDocument();
+        expect(screen.getByText(mockUsername)).toBeInTheDocument();
+        expect(screen.getByText(`@${mockHandle}`)).toBeInTheDocument();
     });
-  });
 
-  it('should handle API errors gracefully', async () => {
-    // Arrange
-    axios.post.mockRejectedValueOnce(new Error('Failed to follow'));
+    it('fetches and displays the profile picture', async () => {
+        renderComponent();
 
-    render(
-      <MemoryRouter>
-        <SearchResults username={username} handle={handle} isFollowing={false} />
-      </MemoryRouter>
-    );
-
-    // Act
-    const followButton = screen.getByRole('button', { name: /follow/i });
-    fireEvent.click(followButton);
-
-    // Assert
-    await waitFor(() => {
-      expect(axios.post).toHaveBeenCalledWith(`http://localhost:5050/api/users/addFollower`, { username });
-      // Ensure the button state doesn't change
-      expect(screen.getByRole('button', { name: /follow/i })).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByAltText('Profile')).toHaveAttribute('src', mockProfilePicture);
+        });
     });
-  });
+
+    it('shows "Follow" for a non-following user with public profile', async () => {
+        renderComponent(false, false, true);
+
+        await waitFor(() => {
+            expect(screen.getByText('Follow')).toBeInTheDocument();
+        });
+    });
+
+    it('shows "Requested" for a non-following user with private profile and a sent request', async () => {
+        renderComponent(false, true, false);
+
+        await waitFor(() => {
+            expect(screen.getByText('Requested')).toBeInTheDocument();
+        });
+    });
+
+    it('shows "Following" for a following user', async () => {
+        renderComponent(true);
+
+        await waitFor(() => {
+            expect(screen.getByText('Following')).toBeInTheDocument();
+        });
+    });
+
+    it('handles follow and unfollow button clicks for public user', async () => {
+        renderComponent(false, false, true);
+
+        const followButton = await screen.findByText('Follow');
+
+        // Mock follow API response
+        axios.post.mockResolvedValueOnce({ data: { success: true } });
+
+        fireEvent.click(followButton);
+
+        await waitFor(() => {
+            expect(axios.post).toHaveBeenCalledWith(`${mockUri}/users/addFollower`, { username: mockUsername });
+            expect(screen.getByText('Following')).toBeInTheDocument();
+        });
+
+        // Mock unfollow API response
+        axios.post.mockResolvedValueOnce({ data: { success: true } });
+
+        fireEvent.click(screen.getByText('Following'));
+
+        await waitFor(() => {
+            expect(axios.post).toHaveBeenCalledWith(`${mockUri}/users/removeFollowing`, { username: mockUsername });
+            expect(screen.getByText('Follow')).toBeInTheDocument();
+        });
+    });
+
+    it('handles follow request button clicks for private user', async () => {
+        renderComponent(false, false, false);
+
+        const followButton = await screen.findByText('Follow');
+
+        // Mock follow request API response
+        axios.post.mockResolvedValueOnce({ data: { success: true } });
+
+        fireEvent.click(followButton);
+
+        await waitFor(() => {
+            expect(axios.post).toHaveBeenCalledWith(`${mockUri}/users/sendFollowRequest`, { username: mockUsername });
+            expect(screen.getByText('Requested')).toBeInTheDocument();
+        });
+
+        // Mock remove follow request API response
+        axios.post.mockResolvedValueOnce({ data: { success: true } });
+
+        fireEvent.click(screen.getByText('Requested'));
+
+        await waitFor(() => {
+            expect(axios.post).toHaveBeenCalledWith(`${mockUri}/users/removeFollowRequest`, { username: mockUsername });
+            expect(screen.getByText('Follow')).toBeInTheDocument();
+        });
+    });
+
+    it('shows "Loading..." while fetching public status', async () => {
+        renderComponent();
+
+        expect(screen.getByText('Loading...')).toBeInTheDocument();
+
+        await waitFor(() => {
+            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+        });
+    });
+
+    it('displays fallback icon if no profile picture is available', async () => {
+        axios.get
+            .mockResolvedValueOnce({ data: { profilePicture: null } })
+            .mockResolvedValueOnce({ data: { public_boolean: true } });
+
+        renderComponent();
+
+        await waitFor(() => {
+            expect(screen.getByTestId('AccountCircleOutlinedIcon')).toBeInTheDocument();
+        });
+    });
+
+    it('handles errors gracefully', async () => {
+        axios.get.mockRejectedValue(new Error('Failed to fetch profile picture'));
+        axios.get.mockRejectedValueOnce(new Error('Failed to fetch privacy status'));
+
+        renderComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText('Follow')).toBeInTheDocument(); // Defaults to public profile behavior
+        });
+    });
 });

@@ -92,6 +92,7 @@ export default function UserPost({ post, username }) {  // { post object, userna
       if (response.data)
       setLikes([...response.data] );
       setUserLiked(response.data.includes(username));
+      console.log(likes);
       
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -100,20 +101,35 @@ export default function UserPost({ post, username }) {  // { post object, userna
   }
 
 
+  // const fetchDislikesByPostID = async (post) => {
+  //   try {
+  //     // either returns an empty array or accounts_that_disliked, otherwise error 
+  //     const response = await axios.get(`${uri}/posts/getPostDislikes/${post._id}`, {});
+  //     //console.log("response.data(dislikes) : ", response.data);
+  //     if (response.data) {
+  //       setDislikes([...response.data]);
+  //       setUserDisliked(response.data.includes(username)); 
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching posts:', error);
+  //     setDislikes([]);
+  //   }
+  // }
   const fetchDislikesByPostID = async (post) => {
     try {
-      // either returns an empty array or accounts_that_disliked, otherwise error 
-      const response = await axios.get(`${uri}/posts/getPostDislikes/${post._id}`, {});
-      //console.log("response.data(dislikes) : ", response.data);
-      if (response.data) {
+      const response = await axios.get(`${uri}/posts/getPostDislikes/${post._id}`);
+      if (Array.isArray(response.data)) {
         setDislikes([...response.data]);
-        setUserDisliked(response.data.includes(username)); 
+        setUserDisliked(response.data.includes(username));
+      } else {
+        setDislikes([]);
       }
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error("Error fetching posts:", error);
       setDislikes([]);
     }
-  }
+  };
+  
 
 
   const likePost = async (post, username) => {
@@ -144,10 +160,10 @@ export default function UserPost({ post, username }) {  // { post object, userna
           <p onClick={handleDislikeClick}> {dislikes.length} dislikes</p>
         </div>
         <div className="post-interaction">
-          <IconButton className={`like-button ${userLiked ? 'liked' : ''}`} onClick={() => { likePost(post, username) }}>
+          <IconButton data-testid="like-button" aria-label="Like Icon Button" className={`like-button ${userLiked ? 'liked' : ''}`} onClick={() => { likePost(post, username) }}>
             <ThumbUpAltIcon color={userLiked ? 'primary' : 'inherit'}/>
           </IconButton>
-          <IconButton className={`dislike-button ${userLiked ? 'disliked' : ''}`} onClick={() => { dislikePost(post, username) }}>
+          <IconButton aria-label="Dislike Icon Button" data-testid="dislike-button" className={`dislike-button ${userLiked ? 'disliked' : ''}`} onClick={() => { dislikePost(post, username) }}>
             <ThumbDownAltIcon color={userDisliked ? 'primary' : 'inherit'}/>
           </IconButton>
           <IconButton className="comment-button" aria-label="Comment Icon Button" onClick={() => { handleCommentClick(post) }}>

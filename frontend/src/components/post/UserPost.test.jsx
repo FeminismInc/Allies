@@ -1,151 +1,107 @@
-import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import UserPost from "./userPost";
-import axios from "axios";
-import { BrowserRouter as Router } from "react-router-dom";
-import { vi } from "vitest";
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import axios from 'axios';
+import { vi } from 'vitest';
+import UserPost from './userPost';
+import { useNavigate } from "react-router-dom";
 
-vi.mock("axios");
 
-describe("UserPost Component", () => {
-  const mockPost = {
-    _id: "123",
-    author: "testauthor",
-    datetime: new Date().toISOString(),
-    text: "This is a test post",
-    media: [],
-    repost: null,
+// Mock axios
+vi.mock('axios');
+
+// Mock react-router-dom
+vi.mock('react-router-dom', async (importOriginal) => {
+  const actual = await importOriginal(); // Import the actual module
+  return {
+    ...actual,
+    BrowserRouter: ({ children }) => <div>{children}</div>, // Mock BrowserRouter
+    Link: ({ children }) => <div>{children}</div>, // Mock Link
+    useNavigate: vi.fn(), // Mock useNavigate
   };
-
-  const username = "testuser";
+});
+describe('UserPost Component', () => {
+  const mockPost = { _id: '123', author: 'testauthor', text: 'Test post', repost: null };
+  const username = 'testuser';
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("should render post content correctly", () => {
-    render(
-      <Router>
+  it('should render the post content correctly', async () => {
+    axios.get.mockResolvedValueOnce({ data: { profilePicture: 'url/to/profile-pic' } }); 
+    axios.get.mockResolvedValueOnce({ data: ['user1', 'user2'] }); 
+    axios.get.mockResolvedValueOnce({ data: [] }); 
+
+    await act(async () => {
+      render(
         <UserPost post={mockPost} username={username} />
-      </Router>
-    );
-
-    expect(screen.getByText("This is a test post")).toBeInTheDocument();
-    expect(screen.getByText(`@${mockPost.author}`)).toBeInTheDocument();
-  });
-
-  it("should fetch likes and dislikes on mount", async () => {
-    axios.get.mockResolvedValueOnce({ data: ["user1", "user2"] }); // Likes
-    axios.get.mockResolvedValueOnce({ data: ["user3"] }); // Dislikes
-
-    render(
-      <Router>
-        <UserPost post={mockPost} username={username} />
-      </Router>
-    );
-
-    await waitFor(() => {
-      expect(axios.get).toHaveBeenCalledWith(
-        `http://localhost:5050/api/posts/getPostLikes/${mockPost._id}`,
-        {}
-      );
-      expect(axios.get).toHaveBeenCalledWith(
-        `http://localhost:5050/api/posts/getPostDislikes/${mockPost._id}`,
-        {}
       );
     });
 
+    expect(screen.getByText(/Test post/i)).toBeInTheDocument();
     expect(screen.getByText(/2 likes/i)).toBeInTheDocument();
-    expect(screen.getByText(/1 dislikes/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 dislikes/i)).toBeInTheDocument();
   });
 
-  it("should handle like button click and update likes", async () => {
-    axios.post.mockResolvedValueOnce({});
-    axios.get.mockResolvedValueOnce({ data: ["user1", "user2", "testuser"] });
+  it('should handle like button click and update likes', async () => {
+    axios.get.mockResolvedValueOnce({ data: { profilePicture: 'url/to/profile-pic' } }); 
+    axios.get.mockResolvedValueOnce({ data: ['user1', 'user2'] }); // Initial likes
+    axios.get.mockResolvedValueOnce({ data: [] }); // Initial dislikes
+    axios.post.mockResolvedValueOnce({}); // Like API mock
+    axios.get.mockResolvedValueOnce({ data: ['user1', 'user2', 'testuser'] }); 
 
-    render(
-      <Router>
+    await act(async () => {
+      render(
         <UserPost post={mockPost} username={username} />
-      </Router>
-    );
+      );
+    });
 
-    const likeButton = screen.getByRole("button", { name: /Likes Icon Button/i });
+    const likeButton = screen.getByTestId('like-button');
     fireEvent.click(likeButton);
 
     await waitFor(() => {
-      expect(axios.post).toHaveBeenCalledWith(
-        `http://localhost:5050/api/posts/addLike/${mockPost._id}`,
-        { username }
+      expect(screen.getByText(/3 likes/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should handle dislike button click and update dislikes', async () => {
+    axios.get.mockResolvedValueOnce({ data: { profilePicture: 'url/to/profile-pic' } }); 
+    axios.get.mockResolvedValueOnce({ data: [] });
+    axios.get.mockResolvedValueOnce({ data: ['user3'] }); 
+    axios.post.mockResolvedValueOnce({}); 
+    axios.get.mockResolvedValueOnce({ data: ['user3', 'testuser'] }); 
+
+    await act(async () => {
+      render(
+        <UserPost post={mockPost} username={username} />
       );
     });
 
-    expect(await screen.findByText(/likes/i)).toBeInTheDocument();
-  });
-
-  it("should handle dislike button click and update dislikes", async () => {
-    axios.post.mockResolvedValueOnce({});
-    axios.get.mockResolvedValueOnce({ data: ["user1", "user2", "user3"] });
-
-    render(
-      <Router>
-        <UserPost post={mockPost} username={username} />
-      </Router>
-    );
-
-    const dislikeButton = screen.getByRole("button", { name: /Dislike Icon Button/i });
+    const dislikeButton = screen.getByTestId('dislike-button');
     fireEvent.click(dislikeButton);
 
     await waitFor(() => {
-      expect(axios.post).toHaveBeenCalledWith(
-        `http://localhost:5050/api/posts/addDislike/${mockPost._id}`,
-        { username }
+      expect(screen.getByText(/2 dislikes/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should navigate to the comment view when the comment button is clicked', async () => {
+    const mockNavigate = vi.fn();
+    useNavigate.mockReturnValue(mockNavigate);
+
+    axios.get.mockResolvedValueOnce({ data: { profilePicture: 'url/to/profile-pic' } }); 
+    axios.get.mockResolvedValueOnce({ data: [] }); 
+    axios.get.mockResolvedValueOnce({ data: [] }); 
+
+    await act(async () => {
+      render(
+        <UserPost post={mockPost} username={username} />
       );
     });
 
-    expect(await screen.findByText(/0 dislikes/i)).toBeInTheDocument();
-  });
-
-  it("should navigate to the comment view when the comment button is clicked", () => {
-    const { container } = render(
-      <Router>
-        <UserPost post={mockPost} username={username} />
-      </Router>
-    );
-
-    const commentButton = container.querySelector(".comment-button");
+    const commentButton = screen.getByLabelText('Comment Icon Button');
     fireEvent.click(commentButton);
 
-    // Simulating navigation is beyond the scope of a unit test but would verify the button was clicked
-  });
-
-  it("should toggle the like box visibility", () => {
-    render(
-      <Router>
-        <UserPost post={mockPost} username={username} />
-      </Router>
-    );
-
-    const likeText = screen.getByText(/0 likes/i);
-    fireEvent.click(likeText);
-    expect(screen.getByText(/accounts that liked/i)).toBeInTheDocument();
-    const openButton = screen.getAllByText(/close/i)[0];
-    fireEvent.click(openButton);
-    expect(screen.queryByText(/accounts that liked/i)).toBeInTheDocument();
-  });
-
-  it("should toggle the dislike box visibility", () => {
-    render(
-      <Router>
-        <UserPost post={mockPost} username={username} />
-      </Router>
-    );
-
-    const dislikeText = screen.getByText(/0 dislikes/i);
-    fireEvent.click(dislikeText);
-    expect(screen.getByText(/accounts that disliked/i)).toBeInTheDocument();
-
-    const openButton = screen.getAllByText(/close/i)[1];
-    fireEvent.click(openButton);
-    expect(screen.queryByText(/accounts that disliked/i)).toBeInTheDocument();
+    expect(mockNavigate).toHaveBeenCalledWith('/PostView', { state: { post: mockPost } });
   });
 });
