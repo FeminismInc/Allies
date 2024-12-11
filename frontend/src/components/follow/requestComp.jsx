@@ -4,12 +4,11 @@ import axios from 'axios';
 const RequestCard = ({ userID }) => {
     const [isRequested, setIsRequested] = useState(true);
     const [username, setUsername] = useState('');
-    const uri = "http://localhost:5050/api";
+    const uri = process.env.REACT_APP_URI;
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
                 const response = await axios.get(`${uri}/users/findUserById/${userID}`);
-                console.log("DJKAHSDKAJWDHAKLSJDLAWKDJAW");
                 console.log(response.data.username);
                 setUsername(response.data.username);  // Assuming response contains { username: 'someUsername' }
                 setIsRequested(true);  // Set to true after fetching user data

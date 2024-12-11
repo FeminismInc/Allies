@@ -22,3 +22,12 @@
     flex-direction: row;
     height:auto;
 }
+
+
+#submitbutton:hover {
+    background-color: #5c205c; /* Darker shade on hover */
+}
+
+#submitbutton:active {
+    background-color: #411641; /* Even darker shade when pressed */
+}

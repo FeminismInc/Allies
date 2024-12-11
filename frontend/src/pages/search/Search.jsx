@@ -10,7 +10,7 @@ export default function SearchPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [results, setResults] = useState([]);
 
-    const uri = "http://localhost:5050/api";
+    const uri = process.env.REACT_APP_URI;
 
     const fetchResults = async (query) => {
         if (query) {

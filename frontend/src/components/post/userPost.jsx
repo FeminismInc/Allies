@@ -13,7 +13,7 @@ import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 
 const Repost = RepostWrapper(PostContent);
 export default function UserPost({ post, username }) {  // { post object, username of post we are viewing }
-  const uri = 'http://localhost:5050/api';
+  const uri = process.env.REACT_APP_URI;
   const [likes, setLikes] = useState([]);
   const [dislikes, setDislikes] = useState([]);
   const [showLikeBox, setShowLikeBox] = useState(false);
@@ -21,16 +21,27 @@ export default function UserPost({ post, username }) {  // { post object, userna
   const [isAParent, setIsAParent] = useState(false);
   const [childPost, setChildPosts] = useState('');
   const navigate = useNavigate();
+  const [userLiked, setUserLiked] = useState(false);
+  const [userDisliked, setUserDisliked] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
 
 
 
   useEffect(() => {
     if (post) {
-      //console.log("Fetching likes and dislikes for:", post._id);
+      fetchProfilePicture();
       fetchLikesByPostID(post);
       fetchDislikesByPostID(post);
     }
-  }, );
+  }, [post])
+  const fetchProfilePicture = async () => {
+    try {
+        const response = await axios.get(`${uri}/users/getProfilePicture/${post.author}`); // Adjust the endpoint as necessary
+        setProfileImage(response.data.profilePicture); // Update state with the retrieved profile picture
+    } catch (error) {
+        console.error('Error fetching profile picture:', error);
+    }
+};
 
   const handleLikeClick = () => {
     setShowLikeBox(!showLikeBox);
@@ -80,6 +91,7 @@ export default function UserPost({ post, username }) {  // { post object, userna
       //console.log("response.data(likes) : ", response.data);
       if (response.data)
       setLikes([...response.data] );
+      setUserLiked(response.data.includes(username));
       
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -95,6 +107,7 @@ export default function UserPost({ post, username }) {  // { post object, userna
       //console.log("response.data(dislikes) : ", response.data);
       if (response.data) {
         setDislikes([...response.data]);
+        setUserDisliked(response.data.includes(username)); 
       }
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -124,18 +137,18 @@ export default function UserPost({ post, username }) {  // { post object, userna
   return (
     <div>
       <div className="posts-container">
-        <PostContent post={post} username={username} isAParent={isAParent} />
-        <Repost post={post} username={username} isAParent={isAParent} childPost={childPost} />
+        <PostContent post={post} username={username} isAParent={isAParent} profileImage={profileImage} />
+        <Repost post={post} username={username} isAParent={isAParent} childPost={childPost} profileImage={profileImage} />
         <div className="post-stats">
           <p onClick={handleLikeClick}> {likes.length} likes</p>
           <p onClick={handleDislikeClick}> {dislikes.length} dislikes</p>
         </div>
         <div className="post-interaction">
-          <IconButton className="like-button" aria-label="Likes Icon Button" onClick={() => { likePost(post, username) }}>
-            <ThumbUpAltIcon/>
+          <IconButton className={`like-button ${userLiked ? 'liked' : ''}`} onClick={() => { likePost(post, username) }}>
+            <ThumbUpAltIcon color={userLiked ? 'primary' : 'inherit'}/>
           </IconButton>
-          <IconButton className="dislike-button" aria-label="Dislike Icon Button" onClick={() => { dislikePost(post, username) }}>
-            <ThumbDownAltIcon/>
+          <IconButton className={`dislike-button ${userLiked ? 'disliked' : ''}`} onClick={() => { dislikePost(post, username) }}>
+            <ThumbDownAltIcon color={userDisliked ? 'primary' : 'inherit'}/>
           </IconButton>
           <IconButton className="comment-button" aria-label="Comment Icon Button" onClick={() => { handleCommentClick(post) }}>
             <CommentIcon/>

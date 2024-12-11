@@ -43,7 +43,7 @@ button.childPost:hover {
 }
 .repost-username{
     color: rgba(0, 0, 0, 0.9);
-    font-size: 25px;
+    font-size: 15px;
     font-weight: bolder;
 
 }
@@ -56,3 +56,11 @@ button.childPost:hover {
     color: #657786;
     font-size: 10px;
   }
+  .profile-picture-reposter {
+    width: 30px;
+    height: 30px; /* Let height adjust based on width */
+    border-radius: 50%; /* Round shape */  
+    border: 3px solid purple;
+    cursor: pointer;
+    margin-right: 10px
+}

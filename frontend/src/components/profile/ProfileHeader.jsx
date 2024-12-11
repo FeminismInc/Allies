@@ -16,7 +16,7 @@ const ProfileHeader = ({ username }) => {
     const [profileImage, setProfileImage] = useState(null);
     const [bio, setBio] = useState('');
 
-    const uri = 'http://localhost:5050/api';
+    const uri = process.env.REACT_APP_URI;
 
     const [awsConfig, setAwsConfig] = useState(null);
 
@@ -44,7 +44,7 @@ const ProfileHeader = ({ username }) => {
 
     const fetchProfilePicture = async () => {
         try {
-            const response = await axios.get(`${uri}/users/getProfilePicture`); // Adjust the endpoint as necessary
+            const response = await axios.get(`${uri}/users/getProfilePicture/${username}`); // Adjust the endpoint as necessary
             setProfileImage(response.data.profilePicture); // Update state with the retrieved profile picture
         } catch (error) {
             console.error('Error fetching profile picture:', error);
@@ -189,10 +189,10 @@ const ProfileHeader = ({ username }) => {
                     <div className="header-username">
                         <h1>{username}</h1>
                     </div>
-                    <button className='followers' onClick = {handleFollowingListClick}>
+                    <button className='followers-button' onClick = {handleFollowingListClick}>
                        {following.length} following
                     </button>
-                    <button className='following' onClick = {handleFollowerListClick}>
+                    <button className='following-button' onClick = {handleFollowerListClick}>
                         {followers.length} followers
                     </button>
                     
