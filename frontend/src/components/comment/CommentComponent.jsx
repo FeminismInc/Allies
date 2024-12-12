@@ -50,13 +50,13 @@ export default function CommentComponent({ comment, username }) {
   const fetchLikesByCommentID = async (comment) => {
     try {
       const response = await axios.get(`${uri}/comments/getCommentLikes/${comment._id}`, {});
-      if (response.data) {
-        console.log("response in comment component LIKES: ", response.data);
+      if (Array.isArray(response.data)) {
         setLikes([...response.data]);
         setUserLiked(response.data.includes(username));
       }
     } catch (error) {
       console.error('Error fetching comments:', error);
+      setLikes([]);
     }
   }
 
@@ -64,13 +64,14 @@ export default function CommentComponent({ comment, username }) {
   const fetchDislikesByCommentID = async (comment) => {
     try {
       const response = await axios.get(`${uri}/comments/getCommentDislikes/${comment._id}`, {});
-      if (response.data) {
+      if (Array.isArray(response.data)) {
         console.log("response in comment component DISLIKES: ",response.data);
         setDislikes([...response.data]);
-        setUserDisliked(response.data.includes(username)); //should check 
+        setUserDisliked(response.data.includes(username)); 
       }
     } catch (error) {
       console.error('Error fetching comments:', error);
+      setDislikes([]);
     }
   }
 
@@ -130,19 +131,19 @@ export default function CommentComponent({ comment, username }) {
             </div>
             <div className="comment-interaction">
               <IconButton
-                aria-label='thumb up'
+                data-testid="likes-button"
                 className={`engage-button ${userLiked ? 'liked' : ''}`}
                 onClick={() => { likeComment(comment, username) }}
               >
                 <ThumbUpAltIcon color={userLiked ? 'primary' : 'inherit'} />
               </IconButton>
-              <IconButton aria-label='thumb down' className={`engage-button ${userDisliked ? 'disliked' : ''}`} onClick={() => { dislikeComment(comment, username) }}>
+              <IconButton 
+                  data-testid="dislike-button"
+                  className={`engage-button ${userDisliked ? 'disliked' : ''}`} onClick={() => { dislikeComment(comment, username) }}>
                 <ThumbDownAltIcon color={userDisliked ? 'primary' : 'inherit'} />
               </IconButton>
             </div>
           </div>
-
-
 
       <div className={`white-rounded-box ${showLikeBox ? 'show' : ''}`}>
         <h3>Accounts that liked</h3>

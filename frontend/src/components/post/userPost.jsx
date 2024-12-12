@@ -89,10 +89,10 @@ export default function UserPost({ post, username }) {  // { post object, userna
     try {
       const response = await axios.get(`${uri}/posts/getPostLikes/${post._id}`, {});
       //console.log("response.data(likes) : ", response.data);
-      if (response.data)
+      if (Array.isArray(response.data))
       setLikes([...response.data] );
       setUserLiked(response.data.includes(username));
-      console.log(likes);
+      //console.log(likes);
       
     } catch (error) {
       console.error('Error fetching posts:', error);

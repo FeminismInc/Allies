@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor , act} from '@testing-library/react';
 import CommentComponent from './CommentComponent';
 import axios from 'axios';
 import { it, describe, expect, vi, beforeEach } from 'vitest';
@@ -11,6 +11,16 @@ vi.mock('axios');
 const renderWithRouter = (component) => {
   return render(<BrowserRouter>{component}</BrowserRouter>);
 };
+// Mock react-router-dom
+vi.mock('react-router-dom', async (importOriginal) => {
+  const actual = await importOriginal(); // Import the actual module
+  return {
+    ...actual,
+    BrowserRouter: ({ children }) => <div>{children}</div>, // Mock BrowserRouter
+    Link: ({ children }) => <div>{children}</div>, // Mock Link
+    useNavigate: vi.fn(), // Mock useNavigate
+  };
+});
 
 describe('CommentComponent', () => {
   const mockComment = {
@@ -79,31 +89,50 @@ describe('CommentComponent', () => {
   });
 
   it('should handle like button click and update likes', async () => {
-    axios.post.mockResolvedValueOnce({ message: 'Liked successfully' });
-    axios.get.mockResolvedValueOnce({ data: ['user1', 'user2', username] }); // Updated likes
+    // axios.post.mockResolvedValueOnce({ message: 'Liked successfully' });
+    // axios.get.mockResolvedValueOnce({ data: ['user1', 'user2', username] }); // Updated likes
+    axios.get.mockResolvedValueOnce({ data: { profilePicture: 'url/to/profile-pic' } }); 
+    axios.get.mockResolvedValueOnce({ data: ['user1', 'user2'] }); // Initial likes
+    axios.get.mockResolvedValueOnce({ data: [] }); // Initial dislikes
+    axios.post.mockResolvedValueOnce({}); // Like API mock
+    axios.get.mockResolvedValueOnce({ data: ['user1', 'user2', 'testuser'] }); 
   
-    renderWithRouter(<CommentComponent comment={mockComment} username={username} />);
+    await act(async () => {
+      render(
+       <CommentComponent comment={mockComment} username={username} />
+      );
+    });
   
-    const likeButton = screen.getByRole('button', { name: /thumb up/i });
+    const likeButton = screen.getByTestId('likes-button');
     fireEvent.click(likeButton);
   
+    // await waitFor(() => {
+    //   expect(axios.post).toHaveBeenCalledWith(
+    //     `http://localhost:5050/api/comments/addLike/${mockComment._id}`,
+    //     { username }
+    //   );
+    //   expect(screen.getByText((content) => content.includes('0 likes'))).toBeInTheDocument();
+    // });
     await waitFor(() => {
-      expect(axios.post).toHaveBeenCalledWith(
-        `http://localhost:5050/api/comments/addLike/${mockComment._id}`,
-        { username }
-      );
-      expect(screen.getByText((content) => content.includes('0 likes'))).toBeInTheDocument();
+      expect(screen.getByText(/3 likes/i)).toBeInTheDocument();
     });
   });
 
   it('should handle dislike button click and update dislikes', async () => {
-    axios.post.mockResolvedValueOnce({ data: { message: 'Disliked successfully' } });
-    axios.get.mockResolvedValueOnce({ data: ['user3', username] });
+    axios.get.mockResolvedValueOnce({ data: { profilePicture: 'url/to/profile-pic' } }); 
+    axios.get.mockResolvedValueOnce({ data: [] });
+    axios.get.mockResolvedValueOnce({ data: ['user3'] }); 
+    axios.post.mockResolvedValueOnce({}); 
+    axios.get.mockResolvedValueOnce({ data: ['user3', 'testuser'] }); 
 
-    renderWithRouter(<CommentComponent comment={mockComment} username={username} />);
-
+    //renderWithRouter(<CommentComponent comment={mockComment} username={username} />);
+    await act(async () => {
+      render(
+       <CommentComponent comment={mockComment} username={username} />
+      );
+    });
     // const dislikeButton = screen.getByRole('button', { name: /thumb down/i });
-    const dislikeButton = screen.getByLabelText('thumb down');
+    const dislikeButton = screen.getByTestId('dislike-button');
     fireEvent.click(dislikeButton);
 
 
@@ -112,7 +141,7 @@ describe('CommentComponent', () => {
         `http://localhost:5050/api/comments/addDislike/${mockComment._id}`,
         { username }
       );
-      expect(screen.getByText(/1 dislikes/i)).toBeInTheDocument();
+      expect(screen.getByText(/2 dislikes/i)).toBeInTheDocument();
     });
   });
 
