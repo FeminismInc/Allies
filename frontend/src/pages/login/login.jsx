@@ -10,7 +10,7 @@ import axios from 'axios';
 
 const clientID = "989398909621-2iju5rvgm8n9cbj22oc44e6hmnl7ht40.apps.googleusercontent.com";
 
-const uri = 'http://localhost:5050/api'; //http://54.176.5.254:5050/api
+const uri = process.env.REACT_APP_URI; //http://54.176.5.254:5050/api
 
 export default function LoginSignUp() {
 
@@ -82,10 +82,6 @@ export default function LoginSignUp() {
         color= "#f194ff"
         onPress={postEmail}
       />                               
-        <h2><span>OR</span></h2>
-        {/* <LoginButton GotoHomePage={GoToHomePage}/>
-        <LoginButton GotoHomePage={GoToHomePage}/> 
-        <LoginButton GotoHomePage={GoToHomePage}/> */}
         <hr className = "separator"/>
           <h3>Don't have an Account? <span id="signUpButton">Sign up!</span></h3>
       </div>

@@ -14,7 +14,7 @@ export default function CommentLog({
     send
   }) {
 
-    const uri = 'http://localhost:5050/api' // http://54.176.5.254:5050/api
+    const uri = process.env.REACT_APP_URI // http://54.176.5.254:5050/api
     const [comments, setComments] = useState([]);
 
   
@@ -32,11 +32,11 @@ export default function CommentLog({
     if (PostId) {
       fetchCommentsById();
     }
-  }, [PostId]);
+  }, [PostId,message]);
 
     // render comments underneath a post
     return (
-        <div>
+          <div className="commentslog-container">
             <div className="comments-container">
               {comments.length > 0 ? (
                 comments.map((comment, index) => (
@@ -51,7 +51,7 @@ export default function CommentLog({
                 <p>No comments found.</p>
               )}
             </div>
-
+            
             <div className="comment-input-container">
                 <input
                     type="text"

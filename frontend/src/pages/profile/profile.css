@@ -31,6 +31,9 @@
   .profile-tabs{
     display: flex;
     flex-direction: column;
+    margin-left: 55px;
+    background-color: white;
+    width: 90%;
 
 
 

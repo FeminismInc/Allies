@@ -11,7 +11,7 @@ import { useLocation } from 'react-router-dom';
 
 export default function PostViewPage(){
 
-    const uri = "http://localhost:5050/api";
+    const uri = process.env.REACT_APP_URI;
     const [username, setUsername] = useState('');
     const [message, setMessage] = useState('');
     //const [post, setPost] = useState('');
@@ -97,7 +97,7 @@ export default function PostViewPage(){
                 </div>
 
                 
-                    <div className="commentlog-container">
+                    
                         <Commentlog 
                             PostId = {post._id}
                             username = {username}
@@ -105,7 +105,7 @@ export default function PostViewPage(){
                             setMessage={setMessage}
                             send={send}
                             /> 
-                    </div>
+                 
                     
 
             </div>

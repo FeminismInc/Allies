@@ -5,7 +5,7 @@ import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const CreatePostModal = ({ showModal, closeModal, onPostCreated,username }) => {
-    const uri = "http://localhost:5050/api";
+    const uri = process.env.REACT_APP_URI;
     const navigate = useNavigate();
 
     const [text, setText] = useState('');

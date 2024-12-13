@@ -7,7 +7,7 @@ import UserPost from "../../components/post/userPost";
 
 export default function Home() {
     const [feedPosts, setFeedPosts] = useState([]);
-    const uri = 'http://localhost:5050/api'; // http://54.176.5.254:5050/api
+    const uri = process.env.REACT_APP_URI; // http://54.176.5.254:5050/api
     const [username, setUsername] = useState('');
   
 
@@ -59,7 +59,7 @@ export default function Home() {
                   </div>
                 ))
               ) : (
-                <p>No posts found.</p>
+                <p></p>
               )}
             </div>
             </div>

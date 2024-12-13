@@ -6,7 +6,7 @@ import CachedIcon from '@mui/icons-material/Cached';
 
 export default function ProfileTabs({ username }) {
 
-  const uri = 'http://localhost:5050/api' // http://54.176.5.254:5050/api
+  const uri = process.env.REACT_APP_URI // http://54.176.5.254:5050/api
   const [activeTab, setActiveTab] = useState('posts');
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
@@ -60,30 +60,7 @@ export default function ProfileTabs({ username }) {
             
           </div>
         );
-      case 'media':
-        return (
-          <div>
-            <div className='media-container'>
-              <div className="username-box">Lex_the_cat</div>
-              <div><p> </p></div>
-              <img src={require('./IMG_4628.jpg')} width={350} height={350} />
-            </div>
-
-          </div>
-        );
-      case 'followers':
-        return (
-          <div>
-            <h3>Reposts</h3>
-            <ul>
-              {followers.map((follower, index) => (
-                <li key={index}>{follower}</li>
-              ))}
-            </ul>
-          </div>
-        );
-      default:
-        return null;
+     
     }
   };
 
@@ -97,20 +74,8 @@ export default function ProfileTabs({ username }) {
         >
           Posts
         </button>
-        <button
-          className={activeTab === 'media' ? 'active' : ''}
-          onClick={() => setActiveTab('media')}
-        >
-          Media
-        </button>
-        <button
-          className={activeTab === 'followers' ? 'active' : ''}
-          onClick={() => setActiveTab('followers')}
-        >
-          Reposts
-        </button>
+       
       </div>
-
       {/* Render the content based on the active tab */}
       <div className="tab-content">
         {renderTabContent()}

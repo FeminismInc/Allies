@@ -12,22 +12,43 @@
 .currentuser-header-container{
     display: flex;
     flex-direction: column;
-    align-items: center; 
+
+
+}
+.currentuser-header-top{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+.otheruser-header-top{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
 }
 
 .otheruser-header-container {
     display: flex;
-    flex-direction: row;
-    align-items: center; 
+    flex-direction: column;
+    
+    /* align-items: center;  */
 }
 .otheruser-header-rightside{
-    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    margin-top: 44px;
+    
+
+    
+    
 }
 
 .currentuser-header-rightside {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-self: start;
     
 }
 
@@ -46,32 +67,70 @@
     padding-right: 10px;
 }
 
-.following, .followers, .message{
+.profile-bio{
+    margin-top: 20px;
+   margin-left: 50px;
+   margin-bottom: 20px;
+   font-size: 20px;
+   /* padding-right: 20px; */
+   width: 80%;
+    
+}
+
+.following, .followers, .message-button{
     color: black;
     background-color: #eeebf1;
     margin-top: 15px;
 }
 
+.following-button, .followers-button, .message-button{
+    color: black;
+    background-color: #5a3e8795;
+    margin-top: 15px;
+}
+button {
+    background-color: #5a3e8795;
+    color: rgb(255, 255, 255);
+    border: none;
+    padding: 10px 30px;
+    font-size: 25px;
+    cursor: pointer;
+    border-radius: 16px;
+    margin-bottom: 20px; 
+}
+ button:hover{
+    background-color: rgb(144, 102, 162);
+ }
+
+.right-icon-button {
+    background-color: #5a3e8795; /* Initial background color */
+    border: none;
+    padding: 10px; /* Adjust padding as needed */
+    cursor: pointer;
+    border-radius: 50%; /* Makes the button circular */
+    width: 80px; /* Ensures the button has equal width and height */
+    height: 80px;
+    display: flex; /* Centers the icon inside the circle */
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.right-icon-button:hover {
+    background-color: rgb(144, 102, 162); /* Darker shade on hover */
+}
+
+.right-icon-button:active {
+    background-color: rgb(144, 102, 162); /* Even darker shade when clicked */
+}
 
 
 .right-icon-wrapper {
-    margin-top: 15px;
-    top: 20px;
-    right: 10px;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: #eaddff;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999;
-    transition: background-color 0.3s ease;
 }
 
-.right-icon-button:active .right-icon-button-wrapper {
-    background-color: #c5aeea;
-}
 
 
 .right-icon {
@@ -86,10 +145,11 @@
     padding: 10px;
     color: black;
     text-align: center;
-    font-size: 40px;
+    font-size: 20px;
 }
 .create-post-button{
-    background-color: #eaddff;
+    background: #5a3e8795;
+    /* background: #5a3e8795; */
     border: none;
     border-radius: 10px;
     padding: 3px;
@@ -99,12 +159,24 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     font-size: 14px;
+}
+
+.create-post-button:hover{
+    background-color: rgb(144, 102, 162);
+}
+
+.create-post-button:active{
+    background-color: rgb(144, 102, 162);
 }
 .currentuser-header-below{
     margin-left: 50px;
+    justify-self: flex-end;
+}
+.currentuser-header-rightside{
+ margin-left: 40px;
 }
 .edit-bio-button {
-    background-color: #eaddff;
+    background: #5a3e8795;
     border: none;
     border-radius: 10px;
     padding: 3px;
@@ -114,15 +186,17 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     font-size: 14px;
+
+    
 }
 
 
 .edit-bio-button:hover {
-    background-color: #d4c3ef;
+    background-color: rgb(144, 102, 162);
 }
 
 .edit-bio-button:active {
-    background-color: #c5aeea;
+    background-color: rgb(144, 102, 162);
 }
 
 body, html {
@@ -167,6 +241,50 @@ body, html {
     border-color: #eaddff;
 }
 
+.switch-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ensures label and switch are spaced nicely */
+    padding: 10px 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0; /* Optional: Adds a subtle divider */
+}
+
+.switch-label {
+    font-size: 1rem;
+    color: #333; /* Darker text color for readability */
+    margin-right: 10px;
+    font-weight: 500;
+}
+
+#settings-switch {
+    transform: scale(1.2); /* Enlarges the switch for better usability */
+    cursor: pointer;
+}
+
+.white-rounded-box {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.submit-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #45A049;
+}
+
+
 .submit-button {
     background-color: #eaddff;
     color: white;
@@ -198,4 +316,28 @@ body, html {
     opacity: 1;
 }
 
-
+.profile-picture {
+    width: 100px;
+    height: 100px; /* Let height adjust based on width */
+    border-radius: 50%; /* Round shape */  
+    border: 3px solid purple;
+    cursor: pointer;
+}
+.profile-upload:hover .profile-picture {
+    opacity: 0.8; /* Darkens the image on hover */
+}
+.profile-picture2 {
+    width: 60px;
+    height: 60px; /* Let height adjust based on width */
+    border-radius: 50%; /* Round shape */  
+    border: 3px solid purple;
+    cursor: pointer;
+}
+.profile-picture-smallIcon {
+    width: 35px;
+    height: 35px; /* Let height adjust based on width */
+    border-radius: 50%; /* Round shape */  
+    cursor: pointer;
+    border: 3px solid purple;
+    margin: 7px;
+}

@@ -5,11 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import PostContent from './postContent';
 import RepostWrapper from './RepostWrapper';
-
+import { IconButton } from '@mui/material';
+import CommentIcon from '@mui/icons-material/Comment';
+import RepeatIcon from '@mui/icons-material/Repeat';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 
 const Repost = RepostWrapper(PostContent);
 export default function UserPost({ post, username }) {  // { post object, username of post we are viewing }
-  const uri = 'http://localhost:5050/api';
+  const uri = process.env.REACT_APP_URI;
   const [likes, setLikes] = useState([]);
   const [dislikes, setDislikes] = useState([]);
   const [showLikeBox, setShowLikeBox] = useState(false);
@@ -17,8 +21,27 @@ export default function UserPost({ post, username }) {  // { post object, userna
   const [isAParent, setIsAParent] = useState(false);
   const [childPost, setChildPosts] = useState('');
   const navigate = useNavigate();
+  const [userLiked, setUserLiked] = useState(false);
+  const [userDisliked, setUserDisliked] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
 
 
+
+  useEffect(() => {
+    if (post) {
+      fetchProfilePicture();
+      fetchLikesByPostID(post);
+      fetchDislikesByPostID(post);
+    }
+  }, [post])
+  const fetchProfilePicture = async () => {
+    try {
+        const response = await axios.get(`${uri}/users/getProfilePicture/${post.author}`); // Adjust the endpoint as necessary
+        setProfileImage(response.data.profilePicture); // Update state with the retrieved profile picture
+    } catch (error) {
+        console.error('Error fetching profile picture:', error);
+    }
+};
 
   const handleLikeClick = () => {
     setShowLikeBox(!showLikeBox);
@@ -55,8 +78,8 @@ export default function UserPost({ post, username }) {  // { post object, userna
   };
 
   useEffect(() => {
-    if (post.repost != null) {
-      //console.log("is a parent post");
+    if (post.repost !== null) {
+
       setIsAParent(true);
       fetchChildPostByRepostID(post);
     }
@@ -65,32 +88,37 @@ export default function UserPost({ post, username }) {  // { post object, userna
   const fetchLikesByPostID = async (post) => {
     try {
       const response = await axios.get(`${uri}/posts/getPostLikes/${post._id}`, {});
-      if (response.data.accounts_that_liked) {
-        console.log("response.data: ", response.data);
-        setLikes([...response.data]);
-      }
+      //console.log("response.data: ", response.data);
+      if (response.data)
+      setLikes([...response.data] );
+      setUserLiked(response.data.includes(username));
+      
     } catch (error) {
       console.error('Error fetching posts:', error);
+      setLikes([]);
     }
   }
 
-  fetchLikesByPostID(post);
+  //fetchLikesByPostID(post);
   const fetchMyLikes = async () => {
     fetchLikesByPostID(post);
   }
 
   const fetchDislikesByPostID = async (post) => {
     try {
+      // either returns an empty array or accounts_that_disliked, otherwise error 
       const response = await axios.get(`${uri}/posts/getPostDislikes/${post._id}`, {});
-      if (response.data.accounts_that_disliked) {
+      if (response.data) {
         setDislikes([...response.data]);
+        setUserDisliked(response.data.includes(username)); 
       }
     } catch (error) {
       console.error('Error fetching posts:', error);
+      setDislikes([]);
     }
   }
 
-  fetchDislikesByPostID(post);
+  //fetchDislikesByPostID(post);
   const fetchMyDislikes = async () => {
     fetchDislikesByPostID(post);
   }
@@ -116,27 +144,27 @@ export default function UserPost({ post, username }) {  // { post object, userna
   return (
     <div>
       <div className="posts-container">
-        <PostContent post={post} username={username} isAParent={isAParent} />
-        <Repost post={post} username={username} isAParent={isAParent} childPost={childPost} />
+        <PostContent post={post} username={username} isAParent={isAParent} profileImage={profileImage} />
+        <Repost post={post} username={username} isAParent={isAParent} childPost={childPost} profileImage={profileImage} />
         <div className="post-stats">
           <p onClick={handleLikeClick}> {likes.length} likes</p>
           <p onClick={handleDislikeClick}> {dislikes.length} dislikes</p>
         </div>
         <div className="post-interaction">
-          <button onClick={() => { likePost(post, username) }}>
-            Like
-          </button>
-          <button onClick={() => { dislikePost(post, username) }}>
-            Dislike
-          </button>
-          <button onClick={() => { handleCommentClick(post) }}>
-            Comment
-          </button>
+          <IconButton className={`like-button ${userLiked ? 'liked' : ''}`} onClick={() => { likePost(post, username) }}>
+            <ThumbUpAltIcon color={userLiked ? 'primary' : 'inherit'}/>
+          </IconButton>
+          <IconButton className={`dislike-button ${userLiked ? 'disliked' : ''}`} onClick={() => { dislikePost(post, username) }}>
+            <ThumbDownAltIcon color={userDisliked ? 'primary' : 'inherit'}/>
+          </IconButton>
+          <IconButton className="comment-button" onClick={() => { handleCommentClick(post) }}>
+            <CommentIcon/>
+          </IconButton>
           {/* if 'isRepost' == true, don't render this button */}
           {!isAParent && (
-            <button onClick={() => { handleRepostClick(post) }}>
-              Repost
-            </button>
+            <IconButton className="repost-button" onClick={() => { handleRepostClick(post) }}>
+             <RepeatIcon/>
+            </IconButton>
           )}
         </div>
       </div>

@@ -44,9 +44,11 @@ exports.getComments = async (req, res) => {
     const { commentId } = req.params; 
 
     try {
-        
         const comment = await CommentModel.findById(commentId).populate('replies'); 
+        console.log("getComments - CommentModel.findById(commentId).populate('replies'); ", comment)
         if (!comment) {
+            console.log("!comment");
+
             return res.status(404).json({ message: 'Comment not found' });
         }
 
@@ -69,10 +71,12 @@ exports.getCommentLikes = async (req, res) => {
         const entry = await LikeModel.findOne({ postId: commentId });   
         //console.log("get comment likes: ", entry)
         if (!entry) {
-            return res.status(200).json({ message: 'comment does not contain likes' });
+            //console.log("!get comment likes: ", entry)
+
+            return res.status(200).json([]);
   
         }
-        return res.status(200).json(entry);
+        return res.status(200).json(entry.accounts_that_liked);
         // else {
         //     console.log("comment likes ",entry);
         //     res.status(200).json(entry);
@@ -87,6 +91,7 @@ exports.getCommentLikes = async (req, res) => {
 exports.getCommentDislikes = async (req, res) => {
     const { commentId } = req.params;
 
+
     try {
         // check if the comment even exists first 
         const comment = await CommentModel.findById(commentId);    
@@ -97,10 +102,10 @@ exports.getCommentDislikes = async (req, res) => {
         const entry = await DislikeModel.findOne({ postId: commentId });  
         //console.log("entry: ",entry)  ;
         if (!entry) {
-            return res.status(200).json({ message: 'comment does not contain dislikes' });
+            return res.status(200).json([]);
             
         }
-        return res.status(200).json(entry);
+        return res.status(200).json(entry.accounts_that_disliked);
         
     } catch (err) {
         console.error(err);

@@ -5,6 +5,7 @@ import SendIcon from '@mui/icons-material/Send';
 import DeleteIcon from '@mui/icons-material/Delete';
 import './messagelog.css';
 import { Link } from 'react-router-dom';
+import { Filter } from 'bad-words'
 
 
 export default function MessageLog({
@@ -21,7 +22,8 @@ export default function MessageLog({
     const otherParticipants = currentConversation
         ? currentConversation.users.filter(user => user !== currentUsername)
         : [];
-        
+
+    const filter = new Filter();
 
     return (
         <div className='messages-container'>
@@ -49,7 +51,7 @@ export default function MessageLog({
                 {messageList.map((message) => (
                     <div className='message' key={uuidv4()}>
                         <div className={message.sender === currentUsername ? "mine" : "yours"}>
-                            <span className="message-content">{message.message_content}</span>
+                            <span className="message-content">{filter.clean(message.message_content)}</span>
                         </div>
                     </div>
                 ))}

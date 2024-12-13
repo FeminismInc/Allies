@@ -15,8 +15,8 @@ export default function Profile() {
 
   const { username: routeUsername } = useParams(); // gets the username from url params
   const [isCurrentUser, setIsCurrentUser] = useState('');
-  
-  const uri = 'http://localhost:5050/api';
+
+  const uri = process.env.REACT_APP_URI;
 
 
   useEffect(() => {
@@ -36,6 +36,7 @@ export default function Profile() {
        console.error('Error fetching user:', error);
       })
       }); 
+    
 
 
   // useEffect(() => {
@@ -64,6 +65,7 @@ export default function Profile() {
       <ProfileHeaderForOtherUser
             username={routeUsername}
             isCurrentUser={isCurrentUser}/>
+        
         <div className="profile-tabs">
           <ProfileTabs username={routeUsername} />
         </div>

@@ -3,6 +3,9 @@ import './profileheader.css'
 import axios from "axios";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Link } from 'react-router-dom';
+import UserCard from '../../components/follow/followingComp';
+import FollowerCard from '../../components/follow/followerComp';
+import AWS from 'aws-sdk';
 
 
 const ProfileHeader = ({ username }) => {
@@ -10,16 +13,80 @@ const ProfileHeader = ({ username }) => {
     const [following, setFollowingList] = useState([]);
     const [showFollowing, setShowFollowing] = useState(false);
     const [showFollowers, setShowFollowers] = useState(false);
+    const [profileImage, setProfileImage] = useState(null);
+    const [bio, setBio] = useState('');
 
-    const uri = 'http://localhost:5050/api';
+    const uri = process.env.REACT_APP_URI;
+
+    const [awsConfig, setAwsConfig] = useState(null);
+
+    useEffect(() => {
+        // Fetch AWS configuration when component mounts
+        const fetchAwsConfig = async () => {
+            try {
+                
+                AWS.config.update({
+                    accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+                    secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+                    region: process.env.REACT_APP_AWS_REGION,
+                });
+                // Store bucket name if needed
+                setAwsConfig(process.env.REACT_APP_AWS_BUCKET_NAME);
+                console.log("Bucket Name:", process.env.REACT_APP_AWS_BUCKET_NAME);
+            } catch (error) {
+                console.error('Error fetching AWS config:', error);
+            }
+        };
+        fetchProfilePicture();
+        fetchAwsConfig();
+    }, []);
+    const s3 = new AWS.S3();
+
+    const fetchProfilePicture = async () => {
+        try {
+            const response = await axios.get(`${uri}/users/getProfilePicture/${username}`); // Adjust the endpoint as necessary
+            setProfileImage(response.data.profilePicture); // Update state with the retrieved profile picture
+        } catch (error) {
+            console.error('Error fetching profile picture:', error);
+        }
+    };
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const params = {
+                Bucket: awsConfig,
+                Key: `profile-pictures/${username}/${file.name}`, // Unique key for the uploaded image
+                Body: file,
+                ContentType: file.type,
+            };
+            console.log("Uploading with params:", params);
+            s3.upload(params, async (err, data) => {
+                if (err) {
+                    console.error("Error uploading image to S3:", err);
+                    return;
+                }
+                console.log("Successfully uploaded image to S3:", data.Location);
+                setProfileImage(data.Location); // Set the uploaded image URL
+                // Now store the image URL in MongoDB (implement this in your backend)
+                try {
+                    await axios.post(`${uri}/users/updateProfilePicture`, {
+                        imageUrl: data.Location,
+                    });
+                    console.log("Image URL stored in MongoDB");
+                } catch (error) {
+                    console.error("Error storing image URL in MongoDB:", error);
+                }
+            });
+        }
+    };
 
     const handleFollowingListClick = () => {
         setShowFollowing(!showFollowing);
     }
+
     const handleFollowerListClick = () => {
         setShowFollowers(!showFollowers);
     }
-    
 
     const fetchFollowers = async (username) => {
         try {
@@ -40,7 +107,7 @@ const ProfileHeader = ({ username }) => {
 
     const fetchMyFollowers = async () => {
         fetchFollowers(username);
-    }
+    };
 
     const fetchFollowing = async (username) => {
         try {
@@ -54,16 +121,49 @@ const ProfileHeader = ({ username }) => {
             console.error('Error fetching following:', error);
         }
         // setShowFollowing(!showFollowing)
-    }
+    };
+
+    const fetchBio = async (username) => {
+        try {
+            console.log(username);
+            axios.get(`${uri}/users/getBio/${username}`).then(response => {
+                console.log("response: ", response);
+                setBio(response.data);
+                
+            });
+          } catch (error) {
+            console.error('Error fetching following:', error);
+        }
+        // setShowFollowing(!showFollowing)
+    };
+
+    // const fetchBio = async (username) => {
+    //     try {
+    //         const response = axios.get(`${uri}/users/getBio/${username}`);
+    //         console.log( "response",response);
+    //         if (!response.data) {
+    //                 setBio('no bio');
+    //                 //console.log( "response",response.data);
+    //             }
+    //             else {
+    //             setBio(response.data);
+    //             }
+ 
+    //     } catch (error) {
+    //         console.error('Error fetching following:', error);
+    //     }
+        
+    // }
 
     const fetchMyFollowing = async () => {
         fetchFollowing(username);
-    }
+    };
 
     useEffect(() => {
         if (username){
             fetchMyFollowers();
             fetchMyFollowing();
+            fetchBio(username);
         }
 
     }, [username])
@@ -72,16 +172,34 @@ const ProfileHeader = ({ username }) => {
         <div>
             <div className="profile-container">
                 <div className='user-info'>
+                    <div onClick={() => document.getElementById('fileInput').click()} className="profile-upload">
+                        {profileImage ? (
+                            <img src={profileImage} alt="Profile" className="profile-picture" />
+                        ) : (
+                            <AccountCircleOutlinedIcon className="profile-picture" />
+                        )}
+                    </div>
+                    <input
+                        type="file"
+                        id="fileInput"
+                        style={{ display: 'none' }}
+                        accept="image/*"
+                        onChange={handleFileChange}
+                    />
                     <div className="header-username">
                         <h1>{username}</h1>
                     </div>
-                    <button className='followers' onClick = {handleFollowingListClick}>
+                    <button className='followers-button' onClick = {handleFollowingListClick}>
                        {following.length} following
                     </button>
-                    <button className='following' onClick = {handleFollowerListClick}>
+                    <button className='following-button' onClick = {handleFollowerListClick}>
                         {followers.length} followers
                     </button>
                     
+                </div>
+                <div className="profile-bio">
+                    <span>{bio}</span>
+
                 </div>
             </div>
             <div className={`white-rounded-box ${showFollowers ? 'show' : ''}`}>
@@ -90,14 +208,7 @@ const ProfileHeader = ({ username }) => {
                     {followers.length > 0 ? (
                         followers.map((follower, index) => (
                         <div key={index} className="followers">
-                            <div className="followers-header">
-                            <Link to={`/profile/${follower}`} onClick={handleFollowerListClick} className="username-link"> 
-                            <AccountCircleOutlinedIcon className="profile-picture" />
-                            <div className="followers-info">
-                                <span className="username">{follower}</span> 
-                            </div>
-                            </Link>
-                            </div>
+                            <FollowerCard username={follower}/>
                         </div>
                         ))
                     ) : (
@@ -112,14 +223,7 @@ const ProfileHeader = ({ username }) => {
                     {following.length > 0 ? (
                         following.map((following, index) => (
                         <div key={index} className="following">
-                            <div className="following-header">
-                            <Link to={`/profile/${following}`} onClick={handleFollowingListClick} className="username-link"> 
-                            <AccountCircleOutlinedIcon className="profile-picture" />
-                            <div className="following-info">
-                                <span className="username">{following}</span>
-                            </div>
-                            </Link> 
-                            </div>
+                            <UserCard username={following}/>
                         </div>
                         ))
                     ) : (

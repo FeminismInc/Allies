@@ -2,7 +2,6 @@
     display:flex;
     flex-direction: column;
 
-
 }
 /* Post header (user info) */
 .post-header {
@@ -19,9 +18,11 @@
   }
   
   .post-username{
-    font-size: 20px;
+    font-size: 25px;
     border: 0px;
     color: black;
+    
+    /* font-weight: bold; */
   
   }
   
@@ -37,9 +38,51 @@
   
   /* Post content */
   .post-content {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.5;
-    padding: 15px;
-    width: 95%;
-    justify-items: center;
+    padding: 15px 45px;
+    width: 90%;
+    text-align: left;
+
+
+    
+    
+    
+  
+
+    
+    
+  
+
+    
   }
+  
+  .post-media-container {
+    display: flex; /* Enable flexbox layout */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    width: 100%; /* Take full width */
+    height: 300px; /* Set a fixed height or min-height */
+    max-width: 100%; /* Make the container not exceed the parent width */
+    margin-top: 15px; /* Optional: Adds spacing above the image */
+    position: relative; /* Positioning context for the image */
+  }
+  
+  .post-media {
+    width: auto; /* Keeps aspect ratio intact */
+    height: 100%; /* Makes the image fill the height of the container */
+    object-fit: contain; /* Ensure image doesn't get distorted */
+    border-radius: 8px; /* Optional: Adds rounded corners */
+  }
+  
+  
+  
+.profile-picture-post {
+  width: 50px;
+  height: 50px; /* Let height adjust based on width */
+  border-radius: 50%; /* Round shape */  
+  border: 3px solid purple;
+  cursor: pointer;
+  margin-right: 10px;
+  
+}

@@ -1,5 +1,5 @@
 const express = require('express');
-const { createPost, createRepost, getChildPost, getFeedPosts, deletePost, getPostComments, getPostLikes, getPostDislikes, addLike, addDislike, addComment, getPost } = require('../controllers/postController');
+const { createPost, createRepost, getChildPost, getFeedPosts, deletePost, getPostComments, getPostLikes, getPostDislikes, addLike, addDislike, addComment, getPost, uploadMedia, getPostWithMedia } = require('../controllers/postController');
 
 const router = express.Router();
 
@@ -37,5 +37,8 @@ router.post('/addDislike/:postId', addDislike);
 router.post('/addComment/:postId', addComment);
 
 router.get('/getPost/:postId', getPost);
+
+router.post('/uploadMedia' ,uploadMedia);
+router.get('/getMedia/:mediaId' ,getPostWithMedia);
 
 module.exports = router;

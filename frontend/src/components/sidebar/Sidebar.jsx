@@ -16,7 +16,7 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 export default function Sidebar() {
     const[isOpen ,setIsOpen] = useState(true);
     const toggle = () => setIsOpen (!isOpen);
-    const uri = 'http://localhost:5050/api';
+    const uri = process.env.REACT_APP_URI;
     const [username, setUsername] = useState('');
 
     useEffect(() => {
@@ -56,12 +56,7 @@ export default function Sidebar() {
             name: "Search",
             icon: <SearchIcon />
         },
-
-       {
-            path: "/notifications",
-            name: "Notifications",
-            icon:<NotificationsOutlinedIcon/>
-        },
+       
         {
             path: "/",
             name: "Logout",
