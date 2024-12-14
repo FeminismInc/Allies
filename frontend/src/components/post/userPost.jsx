@@ -12,7 +12,7 @@ import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 
 const Repost = RepostWrapper(PostContent);
-export default function UserPost({ post, username }) {  // { post object, username of post we are viewing }
+export default function UserPost({ post, username }) {  // { post object, username logged in user }
   const uri = process.env.REACT_APP_URI;
   const [likes, setLikes] = useState([]);
   const [dislikes, setDislikes] = useState([]);

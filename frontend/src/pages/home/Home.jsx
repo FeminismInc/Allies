@@ -33,7 +33,7 @@ export default function Home() {
 
     useEffect(() => {
         if (username) {
-            console.log("logged in username", username );
+            //console.log("logged in username", username );
             fetchFeedPosts(username);
             
         }
@@ -53,13 +53,14 @@ export default function Home() {
                   <div key={index} className="post">
                     <UserPost
                     post = {post}
-                    username = {post.author}
+                    username = {username}
                     />
                     
                   </div>
                 ))
               ) : (
-                <p></p>
+                // center this
+                <div className="empty-feed">Seems like you are not following anybody. Follow other users to interact with their posts!</div>
               )}
             </div>
             </div>

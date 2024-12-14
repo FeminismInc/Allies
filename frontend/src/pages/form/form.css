@@ -29,6 +29,12 @@
     flex-direction: row;
 }
 
+.required{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 #otherPronouns{
     display: none;
 }

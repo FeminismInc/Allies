@@ -4,7 +4,7 @@ import './profiletabs.css';
 import UserPost from '../../components/post/userPost';
 import CachedIcon from '@mui/icons-material/Cached';
 
-export default function ProfileTabs({ username }) {
+export default function ProfileTabs({ routeUsername,username }) {   // {username of profile we are viewing, username of currently logged in user}
 
   const uri = process.env.REACT_APP_URI // http://54.176.5.254:5050/api
   const [activeTab, setActiveTab] = useState('posts');
@@ -12,10 +12,10 @@ export default function ProfileTabs({ username }) {
   const [likes, setLikes] = useState([]);
   const [dislikes, setDislikes] = useState([]);
 
-  const fetchPostsByUsername = async (username) => {
+  const fetchPostsByUsername = async (routeUsername) => {
     try {
-      console.log(username);
-      const response = await axios.get(`${uri}/users/getPosts/${username}`, {
+      console.log(routeUsername);
+      const response = await axios.get(`${uri}/users/getPosts/${routeUsername}`, {
       });
       setPosts(response.data);
     } catch (error) {
@@ -25,11 +25,11 @@ export default function ProfileTabs({ username }) {
 
   // Fetch posts when the "Posts" tab is active
   useEffect(() => {
-    if (activeTab === 'posts' && username) {
-      fetchPostsByUsername(username);
+    if (activeTab === 'posts' && routeUsername) {
+      fetchPostsByUsername(routeUsername);
       console.log(posts)
     }
-  }, [activeTab, username]);
+  }, [activeTab, routeUsername]);
 
 
   // Dummy data for media, and followers
