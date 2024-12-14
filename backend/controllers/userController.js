@@ -232,7 +232,6 @@ exports.removeFollowing = async (req, res, next) => {
       //     { $pull: { follower_accounts: userToUnfollow._id } }, // Remove the user's ID
       //     { new: true } // To return the updated document
 
-
       // if we're unfollowing someone, we update THEIR follower list and remove ourselves from it 
       const updateFollowers = await FollowersModel.findOneAndUpdate(
         { username: userToUnfollow.username },
@@ -250,6 +249,37 @@ exports.removeFollowing = async (req, res, next) => {
       console.log(updateFollowing);
 
       res.status(200).json({ message: "Successfully unfollowed", username: req.session.username });
+  } catch (err) {
+      next(err);
+  }
+};
+
+exports.removeFollower = async (req, res, next) => {
+  const { username } = req.body; 
+
+  try {
+      console.log("Username from request body:", username);
+
+      const userToRemove = await UserModel.findOne({ username: username });
+      console.log("User to remove:", userToRemove);
+
+      if (!userToRemove) {
+          return res.status(404).json({ message: "User not found" });
+      }
+      const updateFollowing = await FollowingModel.findOneAndUpdate(
+        { username: userToRemove.username },
+        { $pull: { accounts_followed: req.session.user_id } }, // Remove the user's ID
+        { new: true } // To return the updated document
+      );
+      const updateFollowers = await FollowersModel.findOneAndUpdate(
+          { username: req.session.username },
+          { $pull: { follower_accounts: userToRemove._id } }, 
+          { new: true }
+      );
+      console.log(updateFollowers);
+      console.log(updateFollowing);
+
+      res.status(200).json({ message: "Successfully removed follower", username: userToRemove.username });
   } catch (err) {
       next(err);
   }
