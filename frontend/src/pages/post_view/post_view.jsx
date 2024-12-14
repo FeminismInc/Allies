@@ -92,7 +92,7 @@ export default function PostViewPage(){
                 <div className='post'>
                     <UserPost
                         post = {post}
-                        username = {post.author}
+                        username = {username} //username of logged in user
                     />
                 </div>
 
@@ -100,7 +100,7 @@ export default function PostViewPage(){
                     
                         <Commentlog 
                             PostId = {post._id}
-                            username = {username}
+                            username = {username} //username of logged in user
                             message = {message}
                             setMessage={setMessage}
                             send={send}
