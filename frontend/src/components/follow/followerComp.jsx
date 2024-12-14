@@ -18,7 +18,8 @@ const FollowerCard = ({
     const handleFollowClick = async () => {
         try {
             if (isFollowing) {
-                const response = await axios.post(`${uri}/users/removeFollowing`, { username });
+                console.log("attmpting to block", followerUser)
+                const response = await axios.post(`${uri}/users/removeFollower`, { username:followerUser });
                 console.log(response.data);
                 setIsFollowing(false);
             } else {
