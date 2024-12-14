@@ -8,7 +8,7 @@ import FollowerCard from '../../components/follow/followerComp';
 import AWS from 'aws-sdk';
 
 
-const ProfileHeader = ({ username }) => {
+const ProfileHeader = ({ routeUsername,username,isCurrentUser }) => {
     const [followers, setFollowersList] = useState([]);
     const [following, setFollowingList] = useState([]);
     const [showFollowing, setShowFollowing] = useState(false);
@@ -45,18 +45,18 @@ const ProfileHeader = ({ username }) => {
 
     const fetchProfilePicture = async () => {
         try {
-            const response = await axios.get(`${uri}/users/getProfilePicture/${username}`); // Adjust the endpoint as necessary
+            const response = await axios.get(`${uri}/users/getProfilePicture/${routeUsername}`); // Adjust the endpoint as necessary
             setProfileImage(response.data.profilePicture); // Update state with the retrieved profile picture
         } catch (error) {
             console.error('Error fetching profile picture:', error);
         }
-    };
+    }
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             const params = {
                 Bucket: awsConfig,
-                Key: `profile-pictures/${username}/${file.name}`, // Unique key for the uploaded image
+                Key: `profile-pictures/${routeUsername}/${file.name}`, // Unique key for the uploaded image
                 Body: file,
                 ContentType: file.type,
             };
@@ -89,9 +89,9 @@ const ProfileHeader = ({ username }) => {
         setShowFollowers(!showFollowers);
     }
 
-    const fetchFollowers = async (username) => {
+    const fetchFollowers = async (routeUsername) => {
         try {
-            const response = await axios.get(`${uri}/users/followers/${username}`);
+            const response = await axios.get(`${uri}/users/followers/${routeUsername}`);
             
             // The response should include the follower accounts populated with usernames
             const followersList = response.data.follower_accounts;
@@ -107,13 +107,13 @@ const ProfileHeader = ({ username }) => {
     };
 
     const fetchMyFollowers = async () => {
-        fetchFollowers(username);
+        fetchFollowers(routeUsername);
     };
 
-    const fetchFollowing = async (username) => {
+    const fetchFollowing = async (routeUsername) => {
         try {
-            console.log(username);
-            axios.get(`${uri}/users/following/${username}`).then(response => {
+            console.log("fetching following of ",routeUsername);
+            axios.get(`${uri}/users/following/${routeUsername}`).then(response => {
                 const usernames = response.data.accounts_followed.map(following => following.username);
                 setFollowingList(usernames);
                 console.log("fetch following usernames: ",usernames);
@@ -124,25 +124,16 @@ const ProfileHeader = ({ username }) => {
         // setShowFollowing(!showFollowing)
     };
 
-    // const fetchBio = async (username) => {
-    //     try {
-    //         console.log(username);
-    //         axios.get(`${uri}/users/getBio/${username}`).then(response => {
-    //             //console.log("response: ", response);
-    //             setBio(response.data);
-                
-    //         })
-    //       } catch (error) {
-    //         console.error('Error fetching following:', error);
-    //     }
-    //     // setShowFollowing(!showFollowing)
-    // };
-    const fetchBio = async (username) => {
+    const fetchBio = async (routeUsername) => {
         try {
-            const response = await axios.get(`${uri}/users/getBio/${username}`);
-            setBio(response.data);
-        } catch (error) {
-            console.error('Error fetching bio:', error);
+            //console.log(username);
+            axios.get(`${uri}/users/getBio/${routeUsername}`).then(response => {
+                console.log("response: ", response);
+                setBio(response.data);
+                
+            });
+          } catch (error) {
+            console.error('Error fetching following:', error);
         }
     };
     
@@ -166,14 +157,14 @@ const ProfileHeader = ({ username }) => {
     // }
 
     const fetchMyFollowing = async () => {
-        fetchFollowing(username);
+        fetchFollowing(routeUsername);
     };
 
     useEffect(() => {
         if (username){
             fetchMyFollowers();
             fetchMyFollowing();
-            fetchBio(username);
+            fetchBio(routeUsername);
         }
 
     }, [username])
@@ -197,7 +188,7 @@ const ProfileHeader = ({ username }) => {
                         onChange={handleFileChange}
                     />
                     <div className="header-username">
-                        <h1>{username}</h1>
+                        <h1>{routeUsername}</h1>
                     </div>
                     <button className='followers-button' onClick = {handleFollowingListClick}>
                        {following.length} following
@@ -218,7 +209,7 @@ const ProfileHeader = ({ username }) => {
                     {followers.length > 0 ? (
                         followers.map((follower, index) => (
                         <div key={index} className="followers">
-                            <FollowerCard username={follower}/>
+                            <FollowerCard username={username} followerUser={follower} isCurrentUser={isCurrentUser}/>
                         </div>
                         ))
                     ) : (
@@ -233,7 +224,7 @@ const ProfileHeader = ({ username }) => {
                     {following.length > 0 ? (
                         following.map((following, index) => (
                         <div key={index} className="following">
-                            <UserCard username={following}/>
+                            <UserCard username={username} followingUser={following} isCurrentUser={isCurrentUser} />
                         </div>
                         ))
                     ) : (

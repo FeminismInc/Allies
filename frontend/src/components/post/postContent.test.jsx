@@ -39,8 +39,9 @@ describe("PostContent Component", () => {
             </Router>
         );
 
+
         // Assert that post details are displayed
-        expect(screen.getByText(username)).toBeInTheDocument();
+        expect(screen.getByText(`${mockPost.author}`)).toBeInTheDocument();
         expect(screen.getByText(`@${mockPost.author}`)).toBeInTheDocument();
         expect(screen.getByText("This is a test post")).toBeInTheDocument();
         expect(screen.getByText(new Date(mockPost.datetime).toLocaleString())).toBeInTheDocument();
@@ -76,7 +77,7 @@ describe("PostContent Component", () => {
 
         await waitFor(() => {
             expect(axios.get).toHaveBeenCalledWith(
-                "http://localhost:5050/api/users/getProfilePicture/testuser"
+                "http://localhost:5050/api/users/getProfilePicture/testauthor"
             );
             expect(screen.getByAltText("Profile")).toBeInTheDocument();
         });

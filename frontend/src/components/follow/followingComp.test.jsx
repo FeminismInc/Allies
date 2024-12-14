@@ -9,6 +9,8 @@ vi.mock('axios');
 
 describe('UserCard Component', () => {
   const mockUsername = 'testuser';
+  const mockFollowinguser = 'testuser2';
+  const mockIsCurrentUser = 'true';
   const mockProfileImage = 'http://example.com/profile.jpg';
   const mockUri = process.env.REACT_APP_URI;
 
@@ -19,11 +21,11 @@ describe('UserCard Component', () => {
   it('renders the username and default profile icon when no profile image exists', () => {
     render(
       <Router>
-        <UserCard username={mockUsername} />
+        <UserCard username={mockUsername} followingUser={mockFollowinguser} isCurrentUser={mockIsCurrentUser}/>
       </Router>
     );
 
-    expect(screen.getByText(mockUsername)).toBeInTheDocument();
+    expect(screen.getByText(mockFollowinguser)).toBeInTheDocument();
     expect(screen.getByTestId('AccountCircleOutlinedIcon')).toBeInTheDocument();
   });
 
@@ -32,7 +34,7 @@ describe('UserCard Component', () => {
 
     render(
       <Router>
-        <UserCard username={mockUsername} />
+        <UserCard username={mockUsername} followingUser={mockFollowinguser} isCurrentUser={mockIsCurrentUser}/>
       </Router>
     );
 
@@ -45,7 +47,7 @@ describe('UserCard Component', () => {
 
     render(
       <Router>
-        <UserCard username={mockUsername} />
+        <UserCard username={mockUsername} followingUser={mockFollowinguser} isCurrentUser={mockIsCurrentUser}/> 
       </Router>
     );
 
@@ -64,7 +66,7 @@ describe('UserCard Component', () => {
 
     render(
       <Router>
-        <UserCard username={mockUsername} />
+        <UserCard username={mockUsername} followingUser={mockFollowinguser} isCurrentUser={mockIsCurrentUser}/> 
       </Router>
     );
 
@@ -78,7 +80,7 @@ describe('UserCard Component', () => {
 
     render(
       <Router>
-        <UserCard username={mockUsername} />
+        <UserCard username={mockUsername} followingUser={mockFollowinguser} isCurrentUser={mockIsCurrentUser}/> 
       </Router>
     );
 

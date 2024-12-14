@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 
 const ForOtherUser = (WrappedComponent) => {
     return function ProfileHeaderForOtherUser(props) {
-        const { isCurrentUser,username } = props;
+        const { isCurrentUser,routeUsername,username } = props;
         const navigate = useNavigate();
         const handleMessageClick = () => {
-            navigate('/messages', { state: { username } });
+            navigate('/messages', { state: { routeUsername } });
         }; 
         // const [isCurrentUser, setIsCurrentUser] = useState(false);
         // console.log("iscurrentuser:",isCurrentUser);

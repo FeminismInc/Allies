@@ -9,6 +9,8 @@ vi.mock('axios');
 
 describe('FollowerCard Component', () => {
   const mockUsername = 'testuser';
+const mockIsCurrentUser = 'true';
+  const mockFollowerUser = 'followerUser';
   const mockProfileImage = 'http://example.com/profile.jpg';
 
   beforeEach(() => {
@@ -18,10 +20,10 @@ describe('FollowerCard Component', () => {
   it('renders the username and default profile icon when no profile image exists', () => {
     render(
       <Router>
-        <FollowerCard username={mockUsername} />
+        <FollowerCard followerUser={mockFollowerUser} username={mockUsername} />
       </Router>
     );
-    expect(screen.getByText(mockUsername)).toBeInTheDocument();
+    expect(screen.getByText(mockFollowerUser)).toBeInTheDocument();
     expect(screen.getByTestId('AccountCircleOutlinedIcon')).toBeInTheDocument();
   });
 
@@ -43,7 +45,7 @@ describe('FollowerCard Component', () => {
 
     render(
       <Router>
-        <FollowerCard username={mockUsername} />
+        <FollowerCard followerUser={mockFollowerUser} username={mockUsername} isCurrentUser={mockIsCurrentUser} />
       </Router>
     );
 
@@ -64,7 +66,7 @@ describe('FollowerCard Component', () => {
 
     render(
       <Router>
-        <FollowerCard username={mockUsername} />
+        <FollowerCard followerUser={mockFollowerUser} username={mockUsername} isCurrentUser={mockIsCurrentUser} />
       </Router>
     );
 
@@ -80,11 +82,11 @@ describe('FollowerCard Component', () => {
 
     render(
       <Router>
-        <FollowerCard username={mockUsername} />
+        <FollowerCard followerUser={mockFollowerUser} username={mockUsername} />
       </Router>
     );
 
-    await waitFor(() => expect(axios.get).toHaveBeenCalledWith(expect.stringContaining(`/users/getProfilePicture/${mockUsername}`)));
+    await waitFor(() => expect(axios.get).toHaveBeenCalledWith(expect.stringContaining(`/users/getProfilePicture/${mockFollowerUser}`)));
   });
 });
 

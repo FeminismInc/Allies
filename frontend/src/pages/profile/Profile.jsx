@@ -15,7 +15,7 @@ export default function Profile() {
 
   const { username: routeUsername } = useParams(); // gets the username from url params
   const [isCurrentUser, setIsCurrentUser] = useState('');
-
+  const [username, setUsername] = useState('');
   const uri = process.env.REACT_APP_URI;
 
 
@@ -25,17 +25,19 @@ export default function Profile() {
         console.log("routeUsername:", routeUsername);
          if (routeUsername && response.data.username && (routeUsername!==response.data.username)) { //if a username was provided in the url, then we are trying to view their profile 
           setIsCurrentUser(false);
+          setUsername(response.data.username)
           console.log("display other user's profile:", routeUsername);
       }
       else {  //otherwise, we are trying to view the currently logged in user's profile 
         setIsCurrentUser(true);
+        setUsername(routeUsername)
         
       }
     })
       .catch(error => {
        console.error('Error fetching user:', error);
       })
-      }); 
+      },[routeUsername]); 
     
 
 
@@ -60,14 +62,16 @@ export default function Profile() {
       </div>
       <div className="profile-container">
       <ProfileHeaderForCurrentUser
-            username={routeUsername}
+            routeUsername={routeUsername}
+            username={username}
             isCurrentUser={isCurrentUser}/>
       <ProfileHeaderForOtherUser
-            username={routeUsername}
+            routeUsername={routeUsername}
+            username={username}
             isCurrentUser={isCurrentUser}/>
         
         <div className="profile-tabs">
-          <ProfileTabs username={routeUsername} />
+          <ProfileTabs routeUsername={routeUsername} username={username} />
         </div>
       </div>
     </div>

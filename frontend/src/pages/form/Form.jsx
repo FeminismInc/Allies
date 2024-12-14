@@ -82,27 +82,27 @@ export default function ProfileForm() {
         <div className='userForm'>
             <form className="userInfo">
                 <div class="Username">
-                    <label for="username">Username: </label>
+                    <div className = "required"><label for="username">Username: *</label> <span>* = required</span></div>
                     <input type="text" value={username} onChange={(e) => { setUsername(e.target.value) }} name="username" id="username" placeholder='Enter your username' required />
                 </div>
                 <div class="Email">
-                    <label for="email">Enter your email: </label>
+                    <label for="email">Enter your email: *</label>
                     <input type="email" value={email} onChange={(e) => { setEmail(e.target.value) }} name="email" id="email" placeholder='Enter your email' required />
                 </div>
                 <div class="Password">
                     <div className='passHide'>
-                        <label for="password">Enter your password: </label>
+                        <label for="password">Enter your password: *</label>
                         <Button title = "Hide" id="passwordButton" color="#bfa1f0" onPress={hidePassword}> Hide</Button>
                     </div>
                     <input type="password" value={password} onChange={(e) => { setPassword(e.target.value) }} name="password" id="password" minlength="8" placeholder='Enter your password' required />
-                    <p className='passwordRec'>Use 8 or more characters with a mix of letters, numbers & symbols</p>
+                    <p className='passwordRec'>Recommended to use 8 or more characters with a mix of letters, numbers & symbols</p>
                 </div>
                 <div class="Handle">
-                    <label for="handle">Enter your Handle (Name): </label>
+                    <label for="handle">Enter your Handle (Name): *</label>
                     <input type="text" value={handle} onChange={(e) => { setHandle(e.target.value) }} name="handle" id="handle" placeholder='Enter your profile name' required />
                 </div>
                 <div className="Pronouns">
-                <legend>Preferred Pronouns?</legend>
+                <legend>Preferred Pronouns?*</legend>
                     <div className='Radio'>
                         <div className='radioButtons'>
                             <label><input type="radio" onClick={(e) => { setPronouns(e.target.value) }} name="radio" id = "she/her" value="she/her"/>She/Her</label>
@@ -116,7 +116,7 @@ export default function ProfileForm() {
                     </div>
                 </div>
                 <div className="Birthdate">
-                    <label for="birthdate">What is your birthday? </label>
+                    <label for="birthdate">What is your birthday? *</label>
                     <input type="date" value={birthdate} onChange={(e) => { setBirthdate(e.target.value) }} id="birthdate" name="birthdate"/>
                 </div>
                 <p className='termsOfService'>By creating an account, you agree to the Terms of Use and Privacy Policy. </p>

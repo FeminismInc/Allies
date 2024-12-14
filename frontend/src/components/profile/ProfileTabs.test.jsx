@@ -1,13 +1,9 @@
-
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ProfileTabs from './ProfileTabs';
 import UserPost from '../../components/post/userPost';
-import PostContent from '../../components/post/postContent';
 import axios from 'axios';
 import { MemoryRouter } from 'react-router-dom';
 import { it, vi, describe, beforeEach, expect } from 'vitest';
-
-//all pass
 
 // Mock axios and child components
 vi.mock('axios');
@@ -15,13 +11,10 @@ vi.mock('../../components/post/userPost', () => ({
   __esModule: true,
   default: vi.fn(() => <div>Mocked UserPost</div>),
 }));
-vi.mock('../../components/post/postContent', () => ({
-  __esModule: true,
-  default: vi.fn(() => <div>Mocked PostContent</div>),
-}));
 
 describe('ProfileTabs Component', () => {
-  const username = 'testuser';
+  const routeUsername = 'testuser';
+  const username = 'loggedInUser';
   const mockPosts = [
     { id: 1, author: 'testuser', datetime: '2023-11-23T12:00:00Z', text: 'Test Post 1' },
     { id: 2, author: 'testuser', datetime: '2023-11-23T14:00:00Z', text: 'Test Post 2' },
@@ -31,27 +24,28 @@ describe('ProfileTabs Component', () => {
     vi.clearAllMocks();
   });
 
-  it('should render "posts" tab as active by default and fetch posts', async () => {
+  it('should render the "posts" tab as active by default and fetch posts', async () => {
     // Arrange
     axios.get.mockResolvedValueOnce({ data: mockPosts });
 
     // Act
     render(
       <MemoryRouter>
-        <ProfileTabs username={username} />
+        <ProfileTabs routeUsername={routeUsername} username={username} />
       </MemoryRouter>
     );
 
-    // Assert
+    // Assert the active tab
     const postsTab = screen.getByRole('button', { name: /posts/i });
     expect(postsTab).toHaveClass('active');
 
+    // Wait for the fetch call
     await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith(
-          `http://localhost:5050/api/users/getPosts/${username}`,
-          expect.objectContaining({})
-        );
-      });
+      expect(axios.get).toHaveBeenCalledWith(
+        `http://localhost:5050/api/users/getPosts/${routeUsername}`,
+        expect.objectContaining({})
+      );
+    });
 
     // Ensure UserPost is rendered for each post
     expect(UserPost).toHaveBeenCalledTimes(mockPosts.length);
@@ -63,63 +57,53 @@ describe('ProfileTabs Component', () => {
       expect.objectContaining({ post: mockPosts[1], username }),
       {}
     );
-  });   
-      
-    
-      it('should display "No posts found" if there are no posts', async () => {
-        // Arrange
-        axios.get.mockResolvedValueOnce({ data: [] });
-    
-        // Act
-        render(
-          <MemoryRouter>
-            <ProfileTabs username={username} />
-          </MemoryRouter>
-        );
-    
-        // Assert
-        const postsTab = screen.getByRole('button', { name: /posts/i });
-        fireEvent.click(postsTab);
-    
-        await waitFor(() => expect(screen.getByText('No posts found.')).toBeInTheDocument());
-      });
-    
-    
-//     it('should switch to media tab and render media content', () => {
-//         //arrange
-//         render(
-//             <MemoryRouter>
-//               <ProfileTabs username={username} />
-//             </MemoryRouter>
-//           );
-//         const mediaTab = screen.getByRole('button', { name: /media/i });
+  });
 
-//         //act
-//         fireEvent.click(mediaTab);
+  it('should display "No posts found" if there are no posts', async () => {
+    // Arrange
+    axios.get.mockResolvedValueOnce({ data: [] });
 
-//         //assert
-//         expect(screen.getByText('Lex_the_cat')).toBeInTheDocument();
-//         expect(screen.getByAltText('Media')).toBeInTheDocument();
-//        // expect(mediaTab.className).toContain('active')
-//         // 
-//        // expect(screen.getByText('Lex_the_cat')).toBeInTheDocument();
-//   });
+    // Act
+    render(
+      <MemoryRouter>
+        <ProfileTabs routeUsername={routeUsername} username={username} />
+      </MemoryRouter>
+    );
+
+    // Assert
+    await waitFor(() => expect(screen.getByText('No posts found.')).toBeInTheDocument());
+  });
+
+  it('should fetch posts only when the "posts" tab is active', async () => {
+    // Act
+    render(
+      <MemoryRouter>
+        <ProfileTabs routeUsername={routeUsername} username={username} />
+      </MemoryRouter>
+    );
+
+    const postsTab = screen.getByRole('button', { name: /posts/i });
+
+    // Assert fetch call only on active tab
+    expect(axios.get).toHaveBeenCalledTimes(1); // Only called initially
+    fireEvent.click(postsTab);
+    expect(axios.get).toHaveBeenCalledTimes(1); // No extra calls as tab is already active
+  });
+
+  it('should handle fetch errors gracefully', async () => {
+    // Arrange
+    axios.get.mockRejectedValueOnce(new Error('Network error'));
     
 
-   
-     it('should call fetchPostsByUsername only when the posts tab is active', async () => {
-        // Act
-        render(
-          <MemoryRouter>
-            <ProfileTabs username="" />
-          </MemoryRouter>
-        );
-    
-        const postsTab = screen.getByRole('button', { name: /posts/i });
-        fireEvent.click(postsTab);
-    
-        // Assert
-        expect(axios.get).not.toHaveBeenCalled();
-      });
-    });
+    // Act
+    render(
+      <MemoryRouter>
+        <ProfileTabs routeUsername={routeUsername} username={username} />
+      </MemoryRouter>
+    );
 
+    // Assert
+    await waitFor(() => expect(screen.getByText('No posts found.')).toBeInTheDocument());
+    expect(axios.get).toHaveBeenCalledTimes(1);
+  });
+});

@@ -23,6 +23,7 @@ vi.mock('react-router-dom', () => ({
 
 describe('ProfileHeader Component', () => {
   const mockUsername = 'testuser';
+  const mockRouteUsername = 'testuser2';
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -45,11 +46,11 @@ describe('ProfileHeader Component', () => {
   describe('ForOtherUser Wrapper', () => {
     it('navigates to messages on message button click', () => {
       const WrappedHeader = ForOtherUser(ProfileHeader);
-      render(<WrappedHeader username={mockUsername} isCurrentUser={false} />);
+      render(<WrappedHeader routeUsername={mockRouteUsername} username={mockUsername} isCurrentUser={false} />);
       
       const messageButton = screen.getByLabelText('message-button');
       fireEvent.click(messageButton);
-      expect(navigateMock).toHaveBeenCalledWith('/messages', { state: { username: mockUsername } });
+      expect(navigateMock).toHaveBeenCalledWith('/messages', { state: { routeUsername: mockRouteUsername } });
     });
   });
 

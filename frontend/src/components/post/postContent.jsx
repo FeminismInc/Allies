@@ -35,7 +35,7 @@ export default function PostContent({ post, username, isAParent }) {
 
   const fetchProfilePicture = async () => {
     try {
-        const response = await axios.get(`${uri}/users/getProfilePicture/${username}`); // Adjust the endpoint as necessary
+        const response = await axios.get(`${uri}/users/getProfilePicture/${post.author}`); // Adjust the endpoint as necessary
         setProfileImage(response.data.profilePicture); // Update state with the retrieved profile picture
     } catch (error) {
         console.error('Error fetching profile picture:', error);
@@ -53,8 +53,8 @@ export default function PostContent({ post, username, isAParent }) {
               <AccountCircleOutlinedIcon className="profile-picture" />
                 )}
         <div className="post-info">
-          <Link to={`/profile/${username}`} className="username-link">
-            <span className="post-username">{username}</span>
+          <Link to={`/profile/${post.author}`} className="username-link">
+            <span className="post-username">{post.author}</span>
           </Link>
 
           <span className="post-handle">@{post.author}</span>
