@@ -1,301 +1,232 @@
-
-
-/* 
-i think comments controller is outdated...
-
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as commentsController from '../controllers/commentsController';
-import CommentModel from '../models/Comments.js';
+import { describe, it, expect, vi } from 'vitest';
+import { addComment, getComments, getCommentLikes, getCommentDislikes, addLike, addDislike } from '../controllers/commentsController';
+import CommentModel from '../models/Comments';
 import LikeModel from '../models/Likes';
 import DislikeModel from '../models/Dislikes';
 
-//mocking models
 vi.mock('../models/Comments');
 vi.mock('../models/Likes');
 vi.mock('../models/Dislikes');
 
-describe('Comments Controller', () => {
-    let mockRequest;
-    let mockResponse;
-
-    beforeEach(() => {
-        //reset mocks
-        vi.clearAllMocks();
-
-        //setting up mock request and response
-        mockRequest = {
-            params: {},
-            body: {}
+describe('commentsController', () => {
+  describe('addComment', () => {
+    it('should add a reply to an existing comment', async () => {
+        // arrange
+        const req = {
+          params: { commentId: 'comment123' },
+          body: { author: 'User1', text: 'This is a reply' },
         };
-
-        mockResponse = {
-            status: vi.fn().mockReturnThis(),
-            json: vi.fn()
+        const res = {
+          status: vi.fn().mockReturnThis(),
+          json: vi.fn(),
         };
+        const mockComment = {
+          _id: 'comment123',
+          replies: [],
+          save: vi.fn().mockResolvedValue({}),
+        };
+        CommentModel.findById = vi.fn().mockResolvedValue(mockComment);
+      
+        // act
+        await addComment(req, res);
+      
+        // assert
+        expect(CommentModel.findById).toHaveBeenCalledWith('comment123');
+        expect(mockComment.replies).toHaveLength(1);
+        expect(mockComment.save).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(201);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: 'Reply added successfully' }));
+      });
+      
+
+    it('should return 404 if comment does not exist', async () => {
+      // arrange
+      const req = { params: { commentId: 'nonexistent' }, body: {} };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      CommentModel.findById.mockResolvedValue(null);
+
+      // act
+      await addComment(req, res);
+
+      // assert
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Comment not found' });
+    });
+  });
+
+  describe('getComments', () => {
+    it('should return all replies for a specific comment', async () => {
+      // arrange
+      const req = { params: { commentId: 'comment123' } };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      const mockComment = { replies: ['reply1', 'reply2'] };
+      CommentModel.findById.mockResolvedValue(mockComment);
+
+      // act
+      await getComments(req, res);
+
+      // assert
+      expect(CommentModel.findById).toHaveBeenCalledWith('comment123');
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockComment.replies);
     });
 
-    describe('addComment', () => {
-        it('should successfully add a reply to an existing comment', async () => {
-            //arrange
-            const commentId = 'comment123';
-            const newReplyId = 'reply123';
-            const replyData = {
-                author: 'Test User',
-                text: 'Test Reply'
-            };
+    it('should return 404 if comment does not exist', async () => {
+      // arrange
+      const req = { params: { commentId: 'nonexistent' } };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      CommentModel.findById.mockResolvedValue(null);
 
-            mockRequest.params = { commentId };
-            mockRequest.body = replyData;
+      // act
+      await getComments(req, res);
 
-            const mockComment = {
-                _id: commentId,
-                replies: [],
-                save: vi.fn()
-            };
+      // assert
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Comment not found' });
+    });
+  });
 
-            const mockNewReply = {
-                _id: newReplyId,
-                ...replyData,
-                likes: [],
-                dislikes: [],
-                replies: [],
-                save: vi.fn()
-            };
+  describe('addLike', () => {
+    it('should add a like to a comment', async () => {
+      // arrange
+      const req = { params: { commentId: 'comment123' }, body: { username: 'User1' } };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      const mockEntry = { accounts_that_liked: [], save: vi.fn() };
+      CommentModel.findById.mockResolvedValue({});
+      LikeModel.findOne.mockResolvedValue(mockEntry);
 
-            CommentModel.findById.mockResolvedValue(mockComment);
-            CommentModel.mockImplementation(() => mockNewReply);
+      // act
+      await addLike(req, res);
 
-            //act
-            await commentsController.addComment(mockRequest, mockResponse);
-
-            //assert
-            expect(CommentModel.findById).toHaveBeenCalledWith(commentId);
-            expect(mockComment.replies).toContain(newReplyId);
-            expect(mockComment.save).toHaveBeenCalled();
-            expect(mockResponse.status).toHaveBeenCalledWith(201);
-            expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Reply added successfully',
-                reply: mockNewReply
-            });
-        });
-
-        it('should return 404 when a comment is not found', async () => {
-            //arrange
-            mockRequest.params = { commentId : 'nonexistent' };
-            CommentModel.findById.mockResolvedValue(null);
-
-            //act
-            await commentsController.addComment(mockRequest, mockResponse);
-
-            //assert
-            expect(mockResponse.status).toHaveBeenCalledWith(404);
-            expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Comment not found'
-            });
-        });
+      // assert
+      expect(LikeModel.findOne).toHaveBeenCalledWith({ postId: 'comment123' });
+      expect(mockEntry.accounts_that_liked).toContain('User1');
+      expect(mockEntry.save).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Comment liked successfully' });
     });
 
-    describe('getComments', () => {
-        it('should successfully retrieve replies for a comment', async () => {
-            //arrange
-            const commentId = 'comment123';
-            const mockReplies = [
-                { _id: 'reply1', text: 'Reply 1' },
-                { _id: 'reply2', text: 'Reply 2' }
-            ];
+    it('should toggle like if already liked', async () => {
+      // arrange
+      const req = { params: { commentId: 'comment123' }, body: { username: 'User1' } };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      const mockEntry = { accounts_that_liked: ['User1'], save: vi.fn() };
+      CommentModel.findById.mockResolvedValue({});
+      LikeModel.findOne.mockResolvedValue(mockEntry);
 
-            mockRequest.params = { commentId };
+      // act
+      await addLike(req, res);
 
-            const mockComment = {
-                _id: commentId,
-                replies: mockReplies
-            };
+      // assert
+      expect(mockEntry.accounts_that_liked).not.toContain('User1');
+      expect(mockEntry.save).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Comment liked successfully' });
+    });
+  });
 
-            CommentModel.findById.mockReturnValue({
-                populate: vi.fn().mockResolvedValue(mockComment)
-            });
+  describe('getCommentLikes', () => {
+    it('should return likes for a specific comment', async () => {
+      // arrange
+      const req = { params: { commentId: 'comment123' } };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      const mockLikes = { postId: 'comment123', accounts_that_liked: ['User1', 'User2'] };
+      CommentModel.findById.mockResolvedValue({});
+      LikeModel.findOne.mockResolvedValue(mockLikes);
 
-            //act
-            await commentsController.getComments(mockRequest, mockResponse);
+      // act
+      await getCommentLikes(req, res);
 
-            //assert
-            expect(CommentModel.findById).toHaveBeenCalledWith(commentId);
-            expect(mockResponse.status).toHaveBeenCalledWith(200);
-            expect(mockResponse.json).toHaveBeenCalledWith(mockReplies);
-        });
-
-        it('should return 404 when a comment is not found', async () => {
-            //arrange
-            mockRequest.params = { commentId: 'nonexistent' };
-            CommentModel.findById.mockResolvedValue(null);
-
-            //act
-            await commmentsController.addComment(mockRequest, mockResponse);
-
-            //assert
-            expect(mockResponse.status).toHaveBeenCalledWith(404);
-            expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Comment not found'
-            });
-        });
+      // assert
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockLikes);
     });
 
-    describe('getComments', () => {
-        it('should successfully retrive replies for a comment', async () => {
-            //arrange
-            const commentId = 'comment123';
-            const mockReplies = [
-                { _id: 'reply1', text: 'Reply1' },
-                { _id: 'reply2', text: 'Reply2' }
-            ];
+    it('should return message if no likes exist', async () => {
+      // arrange
+      const req = { params: { commentId: 'comment123' } };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      CommentModel.findById.mockResolvedValue({});
+      LikeModel.findOne.mockResolvedValue(null);
 
-            mockRequest.params = { commentId };
+      // act
+      await getCommentLikes(req, res);
 
-            const mockComment = {
-                _id: commentId,
-                replies: mockReplies
-            };
+      // assert
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ message: 'comment does not contain likes' });
+    });
+  });
 
-            CommentModel.findById.mockReturnValue({
-                populate: vi.fn().mockResolvedValue(mockComment)
-            });
+  describe('getCommentDislikes', () => {
+    it('should return dislikes for a specific comment', async () => {
+      // arrange
+      const req = { params: { commentId: 'comment123' } };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      const mockDislikes = { postId: 'comment123', accounts_that_disliked: ['User1', 'User2'] };
+      CommentModel.findById.mockResolvedValue({});
+      DislikeModel.findOne.mockResolvedValue(mockDislikes);
 
-            //act
-            await commentsController.getComments(mockRequest, mockResponse);
+      // act
+      await getCommentDislikes(req, res);
 
-            //assert
-            expect(CommentModel.findById).toHaveBeenCalledWith(commentId);
-            expect(mockResponse.status).toHaveBeenCalledWith(200);
-            expect(mockResponse.json).toHaveBeenCalledWith(mockReplies);
-        });
-
-        it('should return 404 when comment is not found', async () => {
-            //arrange
-            mockRequest.params = { commentId: 'nonexistent' };
-            CommentModel.findById.mockReturnValue({
-                populate: vi.fn().mockResolvedValue(null)
-            });
-
-            //act
-            await commentsController.getComments(mockRequest, mockResponse);
-
-            //assert
-            expect(mockResponse.status).toHaveBeenCalledWith(404);
-            expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Comment not found'
-            });
-        });
+      // assert
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockDislikes);
     });
 
-    describe('addLike', () => {
-        it('should successfully add a like to a comment', async () => {
-            //arrange
-            const commentId = 'comment123';
-            const userId = 'user123';
+    it('should return message if no dislikes exist', async () => {
+      // arrange
+      const req = { params: { commentId: 'comment123' } };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      CommentModel.findById.mockResolvedValue({});
+      DislikeModel.findOne.mockResolvedValue(null);
 
-            mockRequest.params = { commentId };
-            mockRequest.body = { userId };
+      // act
+      await getCommentDislikes(req, res);
 
-            CommentModel.findById.mockResolvedValue({ _id: commentId });
-            LikeModel.findOne.mockResolvedValue(null);
-            LikeModel.create.mockResolvedValue({
-                comment: commentId,
-                accounts_that_liked: [userId]
-            });
+      // assert
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ message: 'comment does not contain dislikes' });
+    });
+  });
 
-            //act
-            await commentsController.addLike(mockRequest, mockResponse);
+  describe('addDislike', () => {
+    it('should add a dislike to a comment', async () => {
+      // arrange
+      const req = { params: { commentId: 'comment123' }, body: { username: 'User1' } };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      const mockEntry = { accounts_that_disliked: [], save: vi.fn() };
+      CommentModel.findById.mockResolvedValue({});
+      DislikeModel.findOne.mockResolvedValue(mockEntry);
 
-            //assert
-            expect(LikeModel.create).toHaveBeenCalledWith({
-                comment: commentId,
-                accounts_that_liked: [userId]
-            });
-            expect(mockResponse.status).toHaveBeenCalledWith(200);
-            expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Comment liked successfully'
-            });
-        });
+      // act
+      await addDislike(req, res);
 
-        it('should prevent duplicate likes from the same user', async () => {
-            //arrange
-            const commentId = 'comment123';
-            const userId = 'user123';
-
-            mockRequest.params = { commentId };
-            mockRequest.body = { userId };
-
-            CommentModel.findById.mockResolvedValue({ _id: commentId });
-            LikeModel.findOne.mockResolvedValue({
-                comment: commentId,
-                accounts_that_liked: [userId]
-            });
-
-            //act
-            await commentsController.addLike(mockRequest, mockResponse);
-
-            //assert
-            expect(mockResponse.status).toHaveBeenCalledWith(400);
-            expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'You have already liked this comment'
-            });
-        });
+      // assert
+      expect(DislikeModel.findOne).toHaveBeenCalledWith({ postId: 'comment123' });
+      expect(mockEntry.accounts_that_disliked).toContain('User1');
+      expect(mockEntry.save).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ message: 'comment disliked successfully' });
     });
 
+    it('should toggle dislike if already disliked', async () => {
+      // arrange
+      const req = { params: { commentId: 'comment123' }, body: { username: 'User1' } };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      const mockEntry = { accounts_that_disliked: ['User1'], save: vi.fn() };
+      CommentModel.findById.mockResolvedValue({});
+      DislikeModel.findOne.mockResolvedValue(mockEntry);
 
-    describe('addDislike', () => {
-        it('should successfully add a dislike to a comment', async () => {
-            //arrange
-            const commentid = 'comment123';
-            const userId = 'user123';
+      // act
+      await addDislike(req, res);
 
-            mockRequest.params = { commentId };
-            mockRequest.body = { userId };
-
-            CommentModel.findById.mockResolvedValue({ _id: commentId });
-            DislikeModel.findOne.mockResolvedValue(null);
-            DislikeModel.create.mockResolvedValue({
-                comment: commentId,
-                accounts_that_disliked: [userId]
-            });
-
-            //act
-            await commentsController.addDislike(mockRequest, mockResponse);
-
-            //assert
-            expect(DislikeModel.create).toHaveBeenCalledWith({
-                comment: commentId,
-                accounts_that_disliked: [userId]
-            });
-            expect(mockResponse.status).toHaveBeenCalledWith(200);
-            expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'Comment disliked successfully'
-            });
-        });
-
-        it('should prevent duplicate dislikes from the same user', async () => {
-            //arrange
-            const commentId = 'comment123';
-            const userId = 'user123';
-
-            mockRequest.params = { commentId };
-            mockRequest.body = { userId };
-
-            CommentModel.findByid.mockResolvedValue({ _id: commentId });
-            DislikeModel.findOne.mockResolvedValue({
-                comment: commentId,
-                accounts_that_disliked: [userId]
-            });
-
-            //act
-            await commentsController.addDislike(mockRequest, mockResponse);
-
-            //assert
-            expect(mockResponse.status).toHaveBeenCalledWith(400);
-            expect(mockResponse.json).toHaveBeenCalledWith({
-                message: 'You have already disliked this comment'
-            });
-        });
+      // assert
+      expect(mockEntry.accounts_that_disliked).not.toContain('User1');
+      expect(mockEntry.save).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ message: 'comment disliked successfully' });
     });
+  });
 });
-*/

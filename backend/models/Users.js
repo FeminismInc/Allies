@@ -1,9 +1,7 @@
-
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-
-  _id: { type: mongoose.Schema.Types.ObjectId, auto: true }, 
+  _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
   birthday: Date,
   email: String,
   password: String,
@@ -13,27 +11,25 @@ const UserSchema = new mongoose.Schema({
   bio: String,
   pronouns: String,
   profile_picture: String,
-  blocked: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], 
+  blocked: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Followers' }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Following' }],
   followRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   followRequestsSent: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  posts: [{ 
+  posts: [{
     type: mongoose.Schema.Types.ObjectId,
- }],
-  tagged_media: [{ 
-    type: mongoose.Schema.Types.ObjectId, 
- }],
-  conversations: [{ 
-    type: mongoose.Schema.Types.ObjectId, 
+  }],
+  tagged_media: [{
+    type: mongoose.Schema.Types.ObjectId,
+  }],
+  conversations: [{
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'convos',
- }],
+  }],
   public_boolean: Boolean,
+}, { collection: 'UserDetail' });
 
-
-},{ collection: 'UserDetail' });
-
-const UserModel = mongoose.model('users', UserSchema, 'UserDetail');
+// Check if the model already exists in mongoose.models to avoid overwriting
+const UserModel = mongoose.models.users || mongoose.model('users', UserSchema);
 
 module.exports = UserModel;
-
