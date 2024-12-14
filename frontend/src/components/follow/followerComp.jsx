@@ -55,7 +55,7 @@ const FollowerCard = ({
                 </div>
             </div>
             </Link>
-            {isCurrentUser? (<button onClick={handleFollowClick}>
+            {isCurrentUser? (<button className='block' onClick={handleFollowClick}>
                 {isFollowing ? "Block" : "UnBlock"}
             </button>) :(<p></p>)
             }

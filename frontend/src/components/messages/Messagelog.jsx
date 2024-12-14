@@ -40,6 +40,7 @@ export default function MessageLog({
                         : 'No other participants'}
                 </span>
                 <IconButton
+                aria-label="delete-button"
                     className="delete-button"
                     onClick={() => {deleteConversation()}}>
                 <DeleteIcon   

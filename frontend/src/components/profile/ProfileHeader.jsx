@@ -38,6 +38,7 @@ const ProfileHeader = ({ routeUsername,username,isCurrentUser }) => {
             }
         };
         fetchProfilePicture();
+        fetchBio(username); //for unit resting purposes
         fetchAwsConfig();
     }, []);
     const s3 = new AWS.S3();
@@ -134,8 +135,8 @@ const ProfileHeader = ({ routeUsername,username,isCurrentUser }) => {
           } catch (error) {
             console.error('Error fetching following:', error);
         }
-        // setShowFollowing(!showFollowing)
     };
+    
 
     // const fetchBio = async (username) => {
     //     try {

@@ -49,7 +49,7 @@ const RepostWrapper = (WrappedComponent) => {
                     {/* <Link to={`/PostView/${post._id}`} className="repost">
                     <WrappedComponent post={childPost} username={username} isAParent={false} />
                     </Link>  */}
-                    <button onClick={handleChildPostClick} className='childPost'>
+                    <button onClick={handleChildPostClick} className='childPost' aria-label="View Child Post">
                     <WrappedComponent post={childPost} username={childPost.author} isAParent={false} />
                     </button>  
                     </div>

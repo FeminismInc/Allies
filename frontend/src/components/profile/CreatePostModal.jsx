@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './createPostModal.css';
 import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+
 
 const CreatePostModal = ({ showModal, closeModal, onPostCreated,username }) => {
     const uri = process.env.REACT_APP_URI;
-    const navigate = useNavigate();
+
 
     const [text, setText] = useState('');
 
@@ -16,7 +16,7 @@ const CreatePostModal = ({ showModal, closeModal, onPostCreated,username }) => {
         try {
             await axios.post(`${uri}/posts/createPost`, { text });
             closeModal(); 
-            // navigate(`/profile/${username}`) ;//replace this with code that refreshes the page after post creation 
+            
         } 
         catch(e) {
             console.log('Something went wrong creating a post')

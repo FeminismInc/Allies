@@ -17,9 +17,10 @@ export default function ProfileTabs({ routeUsername,username }) {   // {username
       console.log(routeUsername);
       const response = await axios.get(`${uri}/users/getPosts/${routeUsername}`, {
       });
-      setPosts(response.data);
+      setPosts(response.data|| []);
     } catch (error) {
       console.error('Error fetching posts:', error);
+      setPosts([]); // Ensure state is updated to prevent issues
     }
   }
 

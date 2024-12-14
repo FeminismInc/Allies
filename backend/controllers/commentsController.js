@@ -91,7 +91,6 @@ exports.getCommentLikes = async (req, res) => {
 exports.getCommentDislikes = async (req, res) => {
     const { commentId } = req.params;
 
-
     try {
         // check if the comment even exists first 
         const comment = await CommentModel.findById(commentId);    
@@ -100,7 +99,7 @@ exports.getCommentDislikes = async (req, res) => {
             return res.status(404).json({ message: 'comment does not exist' });
         }    
         const entry = await DislikeModel.findOne({ postId: commentId });  
-        //console.log("entry: ",entry)  ;
+        console.log("entry: ",entry.accounts_that_disliked)  ;
         if (!entry) {
             return res.status(200).json([]);
             
@@ -169,7 +168,7 @@ exports.addDislike = async (req, res) => {
             await entry.save();
         }
 
-        res.status(200).json({ message: 'comment disliked successfully' });
+        res.status(200).json({ message: 'Comment Disliked successfully' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error disliking comment' });

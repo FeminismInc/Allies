@@ -16,6 +16,7 @@ export default function PostContent({ post, username, isAParent }) {
   
 
   useEffect(() => {
+    if (!post || !post.media) return;
     const fetchPostWithMedia = async () => {
       try {
         if(post.media){
@@ -30,7 +31,7 @@ export default function PostContent({ post, username, isAParent }) {
     };
     fetchProfilePicture();
     fetchPostWithMedia();
-  }, [post.media]);
+  }, [post]);
 
   const fetchProfilePicture = async () => {
     try {
