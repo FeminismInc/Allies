@@ -230,17 +230,16 @@ describe('messageController', () => {
         _id: 'message123',
         sender: 'user1',
         destination: 'user2',
-        id: 'message123',
-        datetime: expect.any(Number),
-        message_content: 'Hello, user2!'
+        message_content: 'Hello, user2!',
+        createdAt: new Date().toISOString()
       };
-      MessageModel.prototype.save = vi.fn().mockResolvedValue(mockSavedMessage);
+      MessageModel.create.mockResolvedValue(mockSavedMessage);
   
       // act
-      await hcreateMessage(req, res);
+      await createMessage(req, res);
   
       // assert
-      expect(MessageModel.prototype.save).toHaveBeenCalled();
+      expect(MessageModel.create).toHaveBeenCalledWith(req.body);
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith(mockSavedMessage);
     });
@@ -256,7 +255,7 @@ describe('messageController', () => {
         }
       };
       const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
-      MessageModel.prototype.save = vi.fn().mockRejectedValue(new Error('Database error'));
+      MessageModel.create.mockRejectedValue(new Error('Database error'));
   
       // act
       await createMessage(req, res);
@@ -266,5 +265,38 @@ describe('messageController', () => {
       expect(res.json).toHaveBeenCalledWith({ message: 'Error creating message' });
     });
   });
+
+  describe('getMessagesByDest', () => {
+    it('should retrieve all messages by destination', async () => {
+      // arrange
+      const req = { params: { destination: 'user2' } };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      const mockMessages = [
+        { sender: 'user1', destination: 'user2', message_content: 'Hello!' }
+      ];
+      MessageModel.find.mockResolvedValue(mockMessages);
   
+      // act
+      await getMessagesByDest(req, res);
+  
+      // assert
+      expect(MessageModel.find).toHaveBeenCalledWith({ destination: 'user2' });
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockMessages);
+    });
+  
+    it('should return 500 on error', async () => {
+      // arrange
+      const req = { params: { destination: 'user2' } };
+      const res = { status: vi.fn().mockReturnThis(), json: vi.fn() };
+      MessageModel.find.mockRejectedValue(new Error('Database error'));
+  
+      // act
+      await getMessagesByDest(req, res);
+  
+      // assert
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Error fetching messages' });
+    });
+  });
 });
