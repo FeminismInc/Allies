@@ -1,12 +1,14 @@
-
 const mongoose = require('mongoose');
 
 const LikesSchema = new mongoose.Schema({
-  postId : mongoose.SchemaTypes.ObjectId,
-  accounts_that_liked: [{type: String }],
-}, { collection: 'Likes' });  // Specify the collection name 'Likes'
-  
-  // Create the model from the schema
-  const LikeModel = mongoose.model('likes', LikesSchema);
+  postId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Comments' // Optionally add a reference to the related collection
+  },
+  accounts_that_liked: [{ type: String }], // Array of usernames that liked
+}, { collection: 'Likes' });
 
-  module.exports = LikeModel;
+// Use existing model if available, otherwise create a new one
+const LikeModel = mongoose.models.likes || mongoose.model('likes', LikesSchema);
+
+module.exports = LikeModel;
